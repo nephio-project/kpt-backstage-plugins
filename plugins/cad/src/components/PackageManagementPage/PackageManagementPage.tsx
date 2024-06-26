@@ -18,7 +18,6 @@ import {
   Breadcrumbs,
   ContentHeader,
   Progress,
-  Tabs,
 } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
 import { makeStyles, Typography } from '@material-ui/core';
@@ -32,6 +31,7 @@ import {
 } from '../../utils/repositorySummary';
 import { DashboardTabContent } from './components/DashboardTabContent';
 import { RepositoriesTabContent } from './components/RepositoriesTabContent';
+import { Tabs } from '../Controls';
 
 export const useStyles = makeStyles({
   repositoriesTablesSection: {

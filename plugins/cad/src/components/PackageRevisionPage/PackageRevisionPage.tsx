@@ -18,7 +18,6 @@ import {
   Breadcrumbs,
   ContentHeader,
   Progress,
-  Tabs,
 } from '@backstage/core-components';
 import { errorApiRef, useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { makeStyles, Typography } from '@material-ui/core';
@@ -88,6 +87,7 @@ import {
 } from '../../utils/revisionSummary';
 import { toLowerCase } from '../../utils/string';
 import { Badge, ConfirmationDialog } from '../Controls';
+import { Tabs } from '../Controls';
 import { LandingPageLink, PackageLink, RepositoryLink } from '../Links';
 import { AdvancedPackageRevisionOptions } from './components/AdvancedPackageRevisionOptions';
 import { ConditionsTable } from './components/ConditionsTable';

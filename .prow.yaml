@@ -4,7 +4,7 @@ presubmits:
     always_run: true
     spec:
       containers:
-        - image: node:16-alpine3.16
+        - image: node:18.20-alpine3.20
           command:
             - '/bin/sh'
             - '-c'
@@ -20,7 +20,7 @@ presubmits:
     always_run: true
     spec:
       containers:
-        - image: node:16-alpine3.16
+        - image: node:18.20-alpine3.20
           command:
             - '/bin/sh'
             - '-c'

@@ -19,7 +19,6 @@ import {
   ContentHeader,
   LinkButton,
   Progress,
-  Tabs,
 } from '@backstage/core-components';
 import { useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { Typography } from '@material-ui/core';
@@ -51,6 +50,7 @@ import {
   getRepositorySummaries,
   getRepositorySummary,
 } from '../../utils/repositorySummary';
+import { Tabs } from '../Controls';
 import { LandingPageLink } from '../Links';
 import { AdvancedRepositoryOptions } from './components/AdvancedRepositoryOptions';
 import { PackagesTabContent } from './components/PackagesTabContent';

@@ -25,4 +25,5 @@ export { PackageIcon } from './PackageIcon';
 export { RadioGroup } from './RadioGroup';
 export type { RadioOption } from './RadioGroup';
 export { Select } from './Select';
+export { Tabs } from './Tabs';
 export { YamlViewer } from './YamlViewer';

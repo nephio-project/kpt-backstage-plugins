@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Stage 1 - Create yarn install skeleton layer
-FROM node:16-bullseye-slim AS packages
+FROM node:18.20-bullseye-slim AS packages
 
 WORKDIR /app
 COPY package.json yarn.lock ./
@@ -25,7 +25,7 @@ RUN find packages \! -name "package.json" -mindepth 2 -maxdepth 2 -exec rm -rf {
 
 
 # Stage 2 - Install dependencies and build packages
-FROM node:16-bullseye-slim AS build
+FROM node:18.20-bullseye-slim AS build
 
 WORKDIR /app
 COPY --from=packages /app .
@@ -44,7 +44,7 @@ RUN yarn --cwd packages/backend build
 
 
 # Stage 3 - Build the base image
-FROM node:16-bullseye-slim as base-backstage-app
+FROM node:18.20-bullseye-slim as base-backstage-app
 
 WORKDIR /app
 
