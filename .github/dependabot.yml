@@ -1,0 +1,54 @@
+
+# SPDX-license-identifier: Apache-2.0
+##############################################################################
+# Copyright (c) 2024 The Nephio Authors.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Apache License, Version 2.0
+# which accompanies this distribution, and is available at
+# http://www.apache.org/licenses/LICENSE-2.0
+##############################################################################
+#
+# This file is generated, do not edit it manually
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 99
+
+
+  - package-ecosystem: docker
+    directory: .
+    schedule:
+      interval: weekly
+
+
+  - package-ecosystem: npm
+    directory: .
+    schedule:
+      interval: daily
+
+
+  - package-ecosystem: npm
+    directory: plugins/cad
+    schedule:
+      interval: daily
+
+
+  - package-ecosystem: npm
+    directory: plugins/cad-backend
+    schedule:
+      interval: daily
+
+
+  - package-ecosystem: npm
+    directory: packages/backend
+    schedule:
+      interval: daily
+
+
+  - package-ecosystem: npm
+    directory: packages/app
+    schedule:
+      interval: daily
