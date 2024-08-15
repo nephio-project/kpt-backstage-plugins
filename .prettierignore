@@ -5,3 +5,4 @@ coverage
 **/CHANGELOG.md
 .prow.yaml
 .github/workflows/**
+.github/**
