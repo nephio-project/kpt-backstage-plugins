@@ -16,6 +16,9 @@ name: CI
 
 on:
   pull_request:
+    paths:
+      - '**'
+      - '!.github/**'
 
 permissions:  # added using https://github.com/step-security/secure-repo
   contents: read
