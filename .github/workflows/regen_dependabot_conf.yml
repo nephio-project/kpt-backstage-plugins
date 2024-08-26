@@ -50,6 +50,7 @@ jobs:
           base: ${{ github.head_ref }}
           commit-message: Regenerating Dependabot configuration
           author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+          labels: ok-to-test
           title: '[Dependabot] Regenerating Dependabot configuration'
           body: |
             This is auto-generated Pull Request to regenerate Dependabot configuration
