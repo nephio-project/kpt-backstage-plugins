@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=18.20.0"
+    "node": "18"
   },
   "scripts": {
     "dev": "NODE_ENV=development concurrently \"yarn start\" \"yarn start-backend\"",
