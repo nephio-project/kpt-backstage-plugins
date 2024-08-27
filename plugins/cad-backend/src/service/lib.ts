@@ -29,6 +29,12 @@ export const getKubernetesConfig = (
     case ClusterLocatorMethodType.CURRENT_CONTEXT:
       kubeConfig.loadFromDefault();
       break;
+    case ClusterLocatorMethodType.LOCAL_PROXY:
+      kubeConfig.loadFromClusterAndUser(
+        { name: 'local-proxy', server: 'http://localhost:8001' },
+        { name: 'local-user' }
+      )
+      break;
     default:
       throw new Error(
         `Unknown cluster locator method type, ${clusterLocatorMethodType}`,

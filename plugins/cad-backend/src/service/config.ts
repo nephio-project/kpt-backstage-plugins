@@ -24,6 +24,7 @@ export enum GitOpsDeliveryTool {
 export enum ClusterLocatorMethodType {
   CURRENT_CONTEXT = 'current-context',
   IN_CLUSTER = 'in-cluster',
+  LOCAL_PROXY = 'local-proxy'
 }
 
 export enum ClusterLocatorAuthProvider {
@@ -31,6 +32,7 @@ export enum ClusterLocatorAuthProvider {
   GOOGLE = 'google',
   OIDC = 'oidc',
   SERVICE_ACCOUNT = 'service-account',
+  NONE = 'none',
 }
 
 export enum OIDCTokenProvider {
