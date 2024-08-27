@@ -18,10 +18,8 @@ import { TextField } from '@material-ui/core';
 import { clone } from 'lodash';
 import React, { Fragment, useMemo, useRef, useState } from 'react';
 import { Volume } from '../../../../../../types/Pod';
-import {
-  LabelSelector,
-  StatefulSetUpdateStrategy,
-} from '../../../../../../types/StatefulSet';
+import { LabelSelector } from '../../../../../../types/Selectors';
+import { StatefulSetUpdateStrategy } from '../../../../../../types/StatefulSet';
 import {
   getDeployableResources,
   PackageResource,

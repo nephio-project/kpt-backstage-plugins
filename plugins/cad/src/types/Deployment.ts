@@ -16,6 +16,7 @@
 
 import { KubernetesKeyValueObject } from './KubernetesResource';
 import { PodTemplateSpec } from './Pod';
+import { LabelSelector } from './Selectors';
 
 export type Deployment = {
   apiVersion: string;
@@ -39,10 +40,6 @@ export type DeploymentSpec = {
   minReadySeconds?: number;
   progressDeadlineSeconds?: number;
   revisionHistoryLimit?: number;
-};
-
-export type LabelSelector = {
-  matchLabels: KubernetesKeyValueObject;
 };
 
 export type DeploymentStrategy = {

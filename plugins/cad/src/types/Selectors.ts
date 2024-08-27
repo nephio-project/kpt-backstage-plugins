@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { KubernetesKeyValueObject } from './KubernetesResource';
 
-/*
- * TODO Similar type definitions are heavily duplicated across types directory.
- *      Introduce generic types which can be used instead.
- */
-export type WorkloadCluster = {
-  readonly apiVersion: string;
-  readonly kind: string;
-  readonly metadata: WorkloadClusterMetadata;
-  readonly spec: WorkloadClusterSpec;
+export type LabelSelector = {
+  matchLabels: KubernetesKeyValueObject;
 };
 
-export type WorkloadClusterMetadata = {
-  readonly name: string;
-  readonly namespace?: string;
-  readonly labels?: KubernetesKeyValueObject;
-  readonly annotations?: KubernetesKeyValueObject;
+export type LabelAndExpressionSelector = {
+  readonly matchLabels: KubernetesKeyValueObject;
+  readonly matchExpressions: readonly KubernetesLabelSelectorRequirement[];
 };
 
-export type WorkloadClusterSpec = {
-  readonly clusterName: string;
-  readonly cnis?: readonly string[];
-  readonly masterInterface?: string;
+export type KubernetesLabelSelectorRequirement = {
+  readonly key: string;
+  readonly operator: KubernetesLabelSelectorOperator;
+  readonly values?: readonly string[];
 };
+
+export enum KubernetesLabelSelectorOperator {
+  In = 'In',
+  NotIn = 'NotIn',
+  Exists = 'Exists',
+  DoesNotExist = 'DoesNotExist',
+}

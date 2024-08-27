@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { TextField } from '@material-ui/core';
+import { useSetStateAndCall } from '../../../../../hooks/useSetStateAndCall';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import {
   WorkloadCluster,
   WorkloadClusterMetadata,
   WorkloadClusterSpec,
 } from '../../../../../types/WorkloadCluster';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   EditorAccordion,
   ResourceMetadataAccordion,
   ValueListEditorAccordion,
 } from '../Controls';
 import { useEditorStyles } from '../styles';
-import { TextField } from '@material-ui/core';
 
-// FIXME This function is wildly duplicated across editor code.
 type OnUpdatedYamlFn = (yaml: string) => void;
 
 type ResourceEditorProps = {
@@ -41,18 +42,11 @@ type State = {
   spec: WorkloadClusterSpec;
 };
 
-const getDescription = (spec: WorkloadClusterSpec) =>
-  [
-    `Name: ${spec.clusterName}`,
-    spec.masterInterface ? `master interface: ${spec.masterInterface}` : null,
-  ]
-    .filter(Boolean)
-    .join(', ');
-
 export const WorkloadClusterEditor = ({
   yaml,
   onUpdatedYaml,
 }: ResourceEditorProps) => {
+  const classes = useEditorStyles();
   const resourceYaml = loadYaml(yaml) as WorkloadCluster;
 
   const createResourceState = (): State => ({
@@ -63,17 +57,9 @@ export const WorkloadClusterEditor = ({
   const [state, setState] = useState<State>(createResourceState());
   const [expanded, setExpanded] = useState<string>();
 
-  const classes = useEditorStyles();
-
-  useEffect(() => {
-    onUpdatedYaml(
-      dumpYaml({
-        ...resourceYaml,
-        metadata: state.metadata,
-        spec: state.spec,
-      }),
-    );
-  }, [state, onUpdatedYaml, resourceYaml]); // FIXME
+  const setStateAndCall = useSetStateAndCall([state, setState], newState => {
+    onUpdatedYaml(dumpYaml({ ...resourceYaml, ...newState }));
+  });
 
   return (
     <div className={classes.root}>
@@ -81,14 +67,14 @@ export const WorkloadClusterEditor = ({
         id="metadata"
         state={[expanded, setExpanded]}
         value={state.metadata}
-        onUpdate={metadata => setState(s => ({ ...s, metadata }))}
+        onUpdate={metadata => setStateAndCall(s => ({ ...s, metadata }))}
       />
 
       <EditorAccordion
         id="configuration"
         title="Configuration"
         state={[expanded, setExpanded]}
-        description={getDescription(state.spec)}
+        description={getWorkloadClusterConfigurationDescription(state.spec)}
       >
         <Fragment>
           <TextField
@@ -96,7 +82,7 @@ export const WorkloadClusterEditor = ({
             variant="outlined"
             value={state.spec.clusterName}
             onChange={e => {
-              setState(s => ({
+              setStateAndCall(s => ({
                 ...s,
                 spec: { ...s.spec, clusterName: e.target.value },
               }));
@@ -109,7 +95,7 @@ export const WorkloadClusterEditor = ({
             variant="outlined"
             value={state.spec.masterInterface}
             onChange={e => {
-              setState(s => ({
+              setStateAndCall(s => ({
                 ...s,
                 spec: {
                   ...s.spec,
@@ -128,7 +114,7 @@ export const WorkloadClusterEditor = ({
         state={[expanded, setExpanded]}
         valueList={state.spec.cnis ?? []}
         onUpdatedValueList={cnis => {
-          setState(s => ({
+          setStateAndCall(s => ({
             ...s,
             spec: { ...s.spec, cnis: cnis.length > 0 ? cnis : undefined },
           }));
@@ -137,3 +123,13 @@ export const WorkloadClusterEditor = ({
     </div>
   );
 };
+
+const getWorkloadClusterConfigurationDescription = (
+  spec: WorkloadClusterSpec,
+) =>
+  [
+    `Name: ${spec.clusterName}`,
+    spec.masterInterface ? `master interface: ${spec.masterInterface}` : null,
+  ]
+    .filter(Boolean)
+    .join(', ');

@@ -22,16 +22,16 @@ import {
   Deployment,
   DeploymentMetadata,
   DeploymentStrategy,
-  LabelSelector,
 } from '../../../../../types/Deployment';
 import {
   Container,
   PodSecurityContext,
   Volume,
 } from '../../../../../types/Pod';
+import { LabelSelector } from '../../../../../types/Selectors';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
-import { ResourceMetadataAccordion } from '../Controls/ResourceMetadataAccordion';
+import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
 import {
   Deletable,

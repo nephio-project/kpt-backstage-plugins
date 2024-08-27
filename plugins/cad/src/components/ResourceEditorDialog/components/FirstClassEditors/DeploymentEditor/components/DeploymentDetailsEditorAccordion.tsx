@@ -17,11 +17,9 @@
 import { TextField } from '@material-ui/core';
 import { clone } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
-import {
-  DeploymentStrategy,
-  LabelSelector,
-} from '../../../../../../types/Deployment';
+import { DeploymentStrategy } from '../../../../../../types/Deployment';
 import { Volume } from '../../../../../../types/Pod';
+import { LabelSelector } from '../../../../../../types/Selectors';
 import { getNumber } from '../../../../../../utils/string';
 import { KeyValueEditorAccordion } from '../../Controls';
 import {
