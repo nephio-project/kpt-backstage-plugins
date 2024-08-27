@@ -37,7 +37,7 @@ jobs:
           wget https://raw.githubusercontent.com/nephio-project/test-infra/main/tools/dependabot/generate_dependabot.py -O /tmp/generate_dependabot.py
           python3 /tmp/generate_dependabot.py
 
-      - uses: tibdex/github-app-token@v1
+      - uses: tibdex/github-app-token@v2
         id: generate-token
         with:
           app_id: ${{ secrets.HELPER_APP_ID }}
