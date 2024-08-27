@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { TextField } from '@material-ui/core';
+import { SelectItem } from '@backstage/core-components';
 import React, { useState } from 'react';
+import { Select } from '../../../../Controls';
 import { useSetStateAndCall } from '../../../../../hooks/useSetStateAndCall';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import {
@@ -25,6 +26,13 @@ import {
 } from '../../../../../types/Token';
 import { EditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
+
+const DELETION_POLICY_DEFAULT = 'default';
+const DELETION_POLICY_SELECT_ITEMS: SelectItem[] = [
+  { value: DELETION_POLICY_DEFAULT, label: 'Default' },
+  { value: 'delete', label: 'Delete' },
+  { value: 'orphan', label: 'Orphan' },
+];
 
 type OnUpdatedYamlFn = (yaml: string) => void;
 
@@ -72,19 +80,21 @@ export const NephioTokenEditor = ({
         state={[expanded, setExpanded]}
         description={getNephioTokenDescription(state.spec)}
       >
-        <TextField
+        <Select
           label="Deletion policy"
-          variant="outlined"
-          value={state.spec.lifecycle?.deletionPolicy ?? ''}
-          onChange={e => {
+          items={DELETION_POLICY_SELECT_ITEMS}
+          selected={
+            state.spec.lifecycle?.deletionPolicy ?? DELETION_POLICY_DEFAULT
+          }
+          onChange={value => {
             setStateAndCall(s => ({
               ...s,
-              spec: e.target.value
-                ? { lifecycle: { deletionPolicy: e.target.value } }
-                : {},
+              spec:
+                value !== DELETION_POLICY_DEFAULT
+                  ? { lifecycle: { deletionPolicy: value } }
+                  : {},
             }));
           }}
-          fullWidth
         />
       </EditorAccordion>
     </div>
@@ -92,6 +102,6 @@ export const NephioTokenEditor = ({
 };
 
 const getNephioTokenDescription = (spec: NephioTokenSpec) =>
-  spec.lifecycle?.deletionPolicy
-    ? `Deletion policy: ${spec.lifecycle.deletionPolicy}`
-    : '';
+  `Deletion policy: ${
+    spec.lifecycle?.deletionPolicy ?? DELETION_POLICY_DEFAULT
+  }`;
