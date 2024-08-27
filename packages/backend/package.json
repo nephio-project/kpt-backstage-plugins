@@ -27,7 +27,7 @@
     "@kpt/backstage-plugin-cad-backend": "*",
     "app": "link:../app",
     "better-sqlite3": "^7.5.0",
-    "dockerode": "^3.3.1",
+    "dockerode": "^4.0.2",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "luxon": "^2.0.2",
