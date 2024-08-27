@@ -15,6 +15,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    labels:
+      - "ok-to-test"
     open-pull-requests-limit: 99
 
 
@@ -22,33 +24,45 @@ updates:
     directory: .
     schedule:
       interval: weekly
+    labels:
+      - "ok-to-test"
 
 
   - package-ecosystem: npm
     directory: .
     schedule:
       interval: daily
+    labels:
+      - "ok-to-test"
 
 
   - package-ecosystem: npm
     directory: plugins/cad
     schedule:
       interval: daily
+    labels:
+      - "ok-to-test"
 
 
   - package-ecosystem: npm
     directory: plugins/cad-backend
     schedule:
       interval: daily
+    labels:
+      - "ok-to-test"
 
 
   - package-ecosystem: npm
     directory: packages/backend
     schedule:
       interval: daily
+    labels:
+      - "ok-to-test"
 
 
   - package-ecosystem: npm
     directory: packages/app
     schedule:
       interval: daily
+    labels:
+      - "ok-to-test"
