@@ -33,6 +33,7 @@ import { ServiceAccountEditor } from './FirstClassEditors/ServiceAccountEditor';
 import { ServiceEditor } from './FirstClassEditors/ServiceEditor';
 import { SetLabelsEditor } from './FirstClassEditors/SetLabelsEditor';
 import { PackageVariantSetEditor } from './FirstClassEditors/PackageVariantSetEditor';
+import { NephioTokenEditor } from './FirstClassEditors/NephioTokenEditor';
 import { WorkloadClusterEditor } from './FirstClassEditors/WorkloadClusterEditor';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
@@ -110,6 +111,9 @@ export const FirstClassEditorSelector = ({
 
     case 'fn.kpt.dev/v1alpha1/SetLabels':
       return <SetLabelsEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
+
+    case 'infra.nephio.org/v1alpha1/Token':
+      return <NephioTokenEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'infra.nephio.org/v1alpha1/WorkloadCluster':
       return (
