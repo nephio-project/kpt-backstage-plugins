@@ -23,6 +23,7 @@ import {
   DeploymentEditor,
   StatefulSetEditor,
 } from './FirstClassEditors/DeploymentEditor';
+import { CapacityEditor } from './FirstClassEditors/CapacityEditor';
 import { IngressEditor } from './FirstClassEditors/IngressEditor';
 import { KptfileEditor } from './FirstClassEditors/KptfileEditor';
 import { NamespaceEditor } from './FirstClassEditors/NamespaceEditor';
@@ -149,6 +150,9 @@ export const FirstClassEditorSelector = ({
           packageResources={packageResources}
         />
       );
+
+    case 'req.nephio.org/v1alpha1/Capacity':
+      return <CapacityEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'v1/ConfigMap':
       return <ConfigMapEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
