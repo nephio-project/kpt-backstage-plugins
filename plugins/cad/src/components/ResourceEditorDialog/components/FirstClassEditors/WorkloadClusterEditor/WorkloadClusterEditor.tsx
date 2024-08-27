@@ -42,6 +42,16 @@ type State = {
   spec: WorkloadClusterSpec;
 };
 
+const getWorkloadClusterConfigurationDescription = (
+  spec: WorkloadClusterSpec,
+) =>
+  [
+    `Name: ${spec.clusterName}`,
+    spec.masterInterface ? `master interface: ${spec.masterInterface}` : null,
+  ]
+    .filter(Boolean)
+    .join(', ');
+
 export const WorkloadClusterEditor = ({
   yaml,
   onUpdatedYaml,
@@ -123,13 +133,3 @@ export const WorkloadClusterEditor = ({
     </div>
   );
 };
-
-const getWorkloadClusterConfigurationDescription = (
-  spec: WorkloadClusterSpec,
-) =>
-  [
-    `Name: ${spec.clusterName}`,
-    spec.masterInterface ? `master interface: ${spec.masterInterface}` : null,
-  ]
-    .filter(Boolean)
-    .join(', ');

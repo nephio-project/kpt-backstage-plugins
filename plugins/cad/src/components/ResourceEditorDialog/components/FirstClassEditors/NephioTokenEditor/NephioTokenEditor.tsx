@@ -46,6 +46,11 @@ type State = {
   spec: NephioTokenSpec;
 };
 
+const getNephioTokenDescription = (spec: NephioTokenSpec) =>
+  `Deletion policy: ${
+    spec.lifecycle?.deletionPolicy ?? DELETION_POLICY_DEFAULT
+  }`;
+
 export const NephioTokenEditor = ({
   yaml,
   onUpdatedYaml,
@@ -100,8 +105,3 @@ export const NephioTokenEditor = ({
     </div>
   );
 };
-
-const getNephioTokenDescription = (spec: NephioTokenSpec) =>
-  `Deletion policy: ${
-    spec.lifecycle?.deletionPolicy ?? DELETION_POLICY_DEFAULT
-  }`;
