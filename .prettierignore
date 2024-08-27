@@ -5,4 +5,5 @@ coverage
 **/CHANGELOG.md
 .prow.yaml
 .github/workflows/**
-.github/dependabot.yml
+.github/**
+
