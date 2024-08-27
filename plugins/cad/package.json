@@ -60,7 +60,7 @@
     "@types/js-yaml": "^4.0.0",
     "@types/lodash": "^4.17.4",
     "@types/node": "*",
-    "cross-fetch": "^3.1.5",
+    "cross-fetch": "^4.0.0",
     "msw": "^0.35.0"
   },
   "files": [
