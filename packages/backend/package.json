@@ -23,7 +23,7 @@
     "@backstage/plugin-catalog-backend": "^1.22.0",
     "@backstage/plugin-permission-common": "^0.7.13",
     "@backstage/plugin-permission-node": "^0.7.29",
-    "@backstage/plugin-proxy-backend": "^0.4.16",
+    "@backstage/plugin-proxy-backend": "^0.5.5",
     "@kpt/backstage-plugin-cad-backend": "*",
     "app": "link:../app",
     "better-sqlite3": "^7.5.0",
