@@ -24,6 +24,7 @@ export enum GitOpsDeliveryTool {
 export enum ClusterLocatorMethodType {
   CURRENT_CONTEXT = 'current-context',
   IN_CLUSTER = 'in-cluster',
+  LOCAL_PROXY = 'local-proxy',
 }
 
 export enum ClusterLocatorAuthProvider {
@@ -31,6 +32,7 @@ export enum ClusterLocatorAuthProvider {
   GOOGLE = 'google',
   OIDC = 'oidc',
   SERVICE_ACCOUNT = 'service-account',
+  NONE = 'none',
 }
 
 export enum OIDCTokenProvider {
@@ -39,17 +41,11 @@ export enum OIDCTokenProvider {
   OKTA = 'okta',
 }
 
-export const getMaxRequestSize = (config: Config): string => {
-  const maxRequestSize = config.getOptionalString('maxRequestSize') ?? '1mb';
+export const getMaxRequestSize = (config: Config): string =>
+  config.getOptionalString('maxRequestSize') ?? '1mb';
 
-  return maxRequestSize;
-};
-
-export const getResourcesNamespace = (config: Config): string => {
-  const namespace = config.getString('resourcesNamespace');
-
-  return namespace;
-};
+export const getResourcesNamespace = (config: Config): string =>
+  config.getString('resourcesNamespace');
 
 export const getGitOpsDeliveryTool = (config: Config): GitOpsDeliveryTool => {
   const gitOpsTool = config.getString('gitOpsDeliveryTool');

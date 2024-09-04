@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2024 The Nephio Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { KubernetesKeyValueObject } from './KubernetesResource';
 
-export type KubernetesResource = {
-  kind: string;
-  apiVersion: string;
-  metadata: KubernetesResourceMetadata;
+export type NephioToken = {
+  readonly apiVersion: string;
+  readonly kind: string;
+  readonly metadata: NephioTokenMetadata;
+  readonly spec: NephioTokenSpec;
 };
 
-export type KubernetesResourceMetadata = {
-  name: string;
-  namespace?: string;
-  labels?: KubernetesKeyValueObject;
-  annotations?: KubernetesKeyValueObject;
+export type NephioTokenMetadata = {
+  readonly name: string;
+  readonly namespace?: string;
+  readonly labels?: KubernetesKeyValueObject;
+  readonly annotations?: KubernetesKeyValueObject;
 };
 
-export type KubernetesKeyValueObject = {
-  [key: string]: string;
+export type NephioTokenSpec = {
+  readonly lifecycle?: {
+    readonly deletionPolicy?: string;
+  };
 };
-
-export type KubernetesValueList = readonly string[];

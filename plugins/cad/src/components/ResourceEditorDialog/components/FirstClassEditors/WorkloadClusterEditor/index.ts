@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2024 The Nephio Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,4 @@
  * limitations under the License.
  */
 
-export type KubernetesResource = {
-  kind: string;
-  apiVersion: string;
-  metadata: KubernetesResourceMetadata;
-};
-
-export type KubernetesResourceMetadata = {
-  name: string;
-  namespace?: string;
-  labels?: KubernetesKeyValueObject;
-  annotations?: KubernetesKeyValueObject;
-};
-
-export type KubernetesKeyValueObject = {
-  [key: string]: string;
-};
-
-export type KubernetesValueList = readonly string[];
+export { WorkloadClusterEditor } from './WorkloadClusterEditor';

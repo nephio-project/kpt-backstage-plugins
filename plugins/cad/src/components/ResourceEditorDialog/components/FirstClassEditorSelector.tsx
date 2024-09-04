@@ -23,6 +23,7 @@ import {
   DeploymentEditor,
   StatefulSetEditor,
 } from './FirstClassEditors/DeploymentEditor';
+import { CapacityEditor } from './FirstClassEditors/CapacityEditor';
 import { IngressEditor } from './FirstClassEditors/IngressEditor';
 import { KptfileEditor } from './FirstClassEditors/KptfileEditor';
 import { NamespaceEditor } from './FirstClassEditors/NamespaceEditor';
@@ -33,6 +34,8 @@ import { ServiceAccountEditor } from './FirstClassEditors/ServiceAccountEditor';
 import { ServiceEditor } from './FirstClassEditors/ServiceEditor';
 import { SetLabelsEditor } from './FirstClassEditors/SetLabelsEditor';
 import { PackageVariantSetEditor } from './FirstClassEditors/PackageVariantSetEditor';
+import { NephioTokenEditor } from './FirstClassEditors/NephioTokenEditor';
+import { WorkloadClusterEditor } from './FirstClassEditors/WorkloadClusterEditor';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
 type OnNoNamedEditorFn = () => void;
@@ -110,6 +113,14 @@ export const FirstClassEditorSelector = ({
     case 'fn.kpt.dev/v1alpha1/SetLabels':
       return <SetLabelsEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
+    case 'infra.nephio.org/v1alpha1/Token':
+      return <NephioTokenEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
+
+    case 'infra.nephio.org/v1alpha1/WorkloadCluster':
+      return (
+        <WorkloadClusterEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />
+      );
+
     case 'kpt.dev/v1/Kptfile':
       return (
         <KptfileEditor
@@ -139,6 +150,9 @@ export const FirstClassEditorSelector = ({
           packageResources={packageResources}
         />
       );
+
+    case 'req.nephio.org/v1alpha1/Capacity':
+      return <CapacityEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'v1/ConfigMap':
       return <ConfigMapEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;

@@ -23,15 +23,15 @@ import {
   PodSecurityContext,
   Volume,
 } from '../../../../../types/Pod';
+import { LabelSelector } from '../../../../../types/Selectors';
 import {
-  LabelSelector,
   StatefulSet,
   StatefulSetMetadata,
   StatefulSetUpdateStrategy,
 } from '../../../../../types/StatefulSet';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
-import { ResourceMetadataAccordion } from '../Controls/ResourceMetadataAccordion';
+import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
 import {
   Deletable,

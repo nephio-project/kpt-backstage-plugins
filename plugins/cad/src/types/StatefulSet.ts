@@ -17,6 +17,7 @@
 import { KubernetesKeyValueObject } from './KubernetesResource';
 import { PersistentVolumeClaim } from './PersistentVolumeClaim';
 import { PodTemplateSpec } from './Pod';
+import { LabelSelector } from './Selectors';
 
 export type StatefulSet = {
   apiVersion: string;
@@ -42,10 +43,6 @@ export type StatefulSetSpec = {
   revisionHistoryLimit?: number;
   minReadySeconds?: number;
   volumeClaimTemplates?: PersistentVolumeClaim[];
-};
-
-export type LabelSelector = {
-  matchLabels: KubernetesKeyValueObject;
 };
 
 export type StatefulSetUpdateStrategy = {

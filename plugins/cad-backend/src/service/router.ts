@@ -62,6 +62,7 @@ const getClientAuthentication = (
 
     case ClusterLocatorAuthProvider.SERVICE_ACCOUNT:
     case ClusterLocatorAuthProvider.CURRENT_CONTEXT:
+    case ClusterLocatorAuthProvider.NONE:
       return 'none';
 
     default:
