@@ -35,7 +35,7 @@ import { ServiceEditor } from './FirstClassEditors/ServiceEditor';
 import { SetLabelsEditor } from './FirstClassEditors/SetLabelsEditor';
 import { PackageVariantSetEditor } from './FirstClassEditors/PackageVariantSetEditor';
 import { NephioTokenEditor } from './FirstClassEditors/NephioTokenEditor';
-import { WorkloadClusterEditor } from './FirstClassEditors/WorkloadClusterEditor';
+import { WorkloadClusterParametricEditor } from './ParametricEditor/WorkloadClusterParametricEditor';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
 type OnNoNamedEditorFn = () => void;
@@ -118,7 +118,10 @@ export const FirstClassEditorSelector = ({
 
     case 'infra.nephio.org/v1alpha1/WorkloadCluster':
       return (
-        <WorkloadClusterEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />
+        <WorkloadClusterParametricEditor
+          yamlText={yaml}
+          onResourceChange={onUpdatedYaml}
+        />
       );
 
     case 'kpt.dev/v1/Kptfile':
