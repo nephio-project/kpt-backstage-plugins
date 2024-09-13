@@ -1,14 +1,18 @@
+import { isFunction } from 'lodash';
 import { Dispatch, SetStateAction, useCallback } from 'react';
 
-type SetStateAndCallFn<S> = (createNewState: (currentState: S) => S) => void;
+type SetStateAndCallFn<S> = (setStateAction: SetStateAction<S>) => void;
 
 export const useSetStateAndCall = <S extends object>(
   [state, setState]: [S, Dispatch<SetStateAction<S>>],
   callback: (newState: S) => void,
 ): SetStateAndCallFn<S> =>
   useCallback(
-    createNewState => {
-      const newState = createNewState(state);
+    setStateAction => {
+      const newState = isFunction(setStateAction)
+        ? setStateAction(state)
+        : setStateAction;
+
       setState(newState);
       callback(newState);
     },

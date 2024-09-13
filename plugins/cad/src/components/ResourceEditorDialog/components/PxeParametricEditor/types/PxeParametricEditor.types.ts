@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-import * as changeCase from 'change-case';
+import { Dispatch, SetStateAction } from 'react';
 
-export const generateDefaultValueName = (path: string): string => {
-  const pathSegments = path.split('.');
-  return pathSegments.length > 0
-    ? changeCase.sentenceCase(pathSegments[pathSegments.length - 1])
-    : 'Value';
-};
+// TODO Semantically "null" should be used instead of "undefined".
+// Consider project-wide refactoring alongside the update of prettier settings.
+export type PxeExpandedSectionState = string | undefined;
+export type PxeExpandedSectionStateTuple = [
+  PxeExpandedSectionState,
+  Dispatch<SetStateAction<PxeExpandedSectionState>>,
+];
+
+export type PxeResourceChangeRequestHandler = (
+  path: string,
+  newValue: any,
+) => void;

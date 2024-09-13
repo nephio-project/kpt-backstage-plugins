@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
+import { TextField } from '@material-ui/core';
 import { get } from 'lodash';
 import React from 'react';
-import { ParametricEditorNodeProps } from './ParametricEditorNode';
-import { PESingleLineTextWidget } from './ParametricEditor.types';
-import { TextField } from '@material-ui/core';
-import { generateDefaultValueName } from './utils/generateDefaultValueName';
+import { PxeSingleLineTextWidgetEntry } from '../types/PxeConfiguration.types';
+import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
+import { generateDefaultValueName } from '../utils/generateLabelsForWidgets';
 
-export const SingleLineTextWidget: React.FC<
-  ParametricEditorNodeProps
-> = props => {
-  const { resourceChunk, onResourceChangeRequest } = props;
-  const entry = props.configurationEntry as PESingleLineTextWidget;
-  const path = entry.path;
+export const PxeSingleLineTextWidgetNode: React.FC<
+  PxeParametricEditorNodeProps
+> = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
+  const entry = configurationEntry as PxeSingleLineTextWidgetEntry;
+  const valuePath = entry.valuePath;
 
   return (
     <TextField
-      label={generateDefaultValueName(path)} // FIXME
+      label={generateDefaultValueName(entry)}
       variant="outlined"
-      value={get(resourceChunk, path)}
+      value={get(resourceChunk, valuePath)}
       onChange={e => {
-        onResourceChangeRequest(path, e.target.value);
+        onResourceChangeRequest(valuePath, e.target.value);
       }}
       fullWidth
     />

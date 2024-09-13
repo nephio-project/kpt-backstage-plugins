@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-import { load } from 'js-yaml';
+import { dump, load } from 'js-yaml';
 
 export const parseYaml = <T extends object>(
   yamlText: string,
 ): { yamlObject: T } => ({
   yamlObject: load(yamlText) as T,
 });
+
+export const stringifyYaml = <T extends object>(yamlObject: T): string =>
+  dump(yamlObject, {
+    // TODO The fact of hard-setting of formatting options leads to multiple changes in the editor output.
+    // Solution probably requires switching to "yaml" package.
+    noArrayIndent: true,
+    quotingType: '"',
+  });

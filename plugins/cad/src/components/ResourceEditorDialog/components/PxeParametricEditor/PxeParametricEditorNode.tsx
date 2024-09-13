@@ -16,31 +16,33 @@
 
 import React from 'react';
 import {
-  ParametricEditorEntry,
-  ParametricEditorExpansionStateTuple,
-  ParametricEditorWidgetType,
+  PxeExpandedSectionStateTuple,
   PxeResourceChangeRequestHandler,
-} from './ParametricEditor.types';
-import { SectionWidget } from './SectionWidget';
-import { SingleLineTextWidget } from './SingleLineTextWidget';
+} from './types/PxeParametricEditor.types';
+import {
+  PxeConfigurationEntry,
+  PxeConfigurationEntryType,
+} from './types/PxeConfiguration.types';
+import { PxeSectionNode } from './PxeSectionNode';
+import { PxeSingleLineTextWidgetNode } from './widgetNodes/PxeSingleLineTextWidgetNode';
 
-export type ParametricEditorNodeProps = {
-  readonly configurationEntry: ParametricEditorEntry;
+export type PxeParametricEditorNodeProps = {
+  readonly configurationEntry: PxeConfigurationEntry;
   readonly resourceChunk: object;
-  readonly expansionStateTuple: ParametricEditorExpansionStateTuple;
+  readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
 };
 
 const NODE_BY_ENTRY_TYPE_RECORD: Record<
-  ParametricEditorWidgetType,
-  React.FC<ParametricEditorNodeProps>
+  PxeConfigurationEntryType,
+  React.FC<PxeParametricEditorNodeProps>
 > = {
-  Section: SectionWidget,
-  SingleLineText: SingleLineTextWidget,
+  Section: PxeSectionNode,
+  SingleLineText: PxeSingleLineTextWidgetNode,
 };
 
-export const ParametricEditorNode: React.FC<
-  ParametricEditorNodeProps
+export const PxeParametricEditorNode: React.FC<
+  PxeParametricEditorNodeProps
 > = props => {
   const { configurationEntry } = props;
   const ConcreteEditorNode = NODE_BY_ENTRY_TYPE_RECORD[configurationEntry.type];

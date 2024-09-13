@@ -15,31 +15,31 @@
  */
 
 import React from 'react';
-import { ParametricEditor } from './ParametricEditor';
+import { PxeParametricEditor } from './PxeParametricEditor';
 import {
-  ParametricEditorConfiguration,
-  ParametricEditorWidgetType,
-} from './ParametricEditor.types';
+  PxeConfiguration,
+  PxeConfigurationEntryType,
+} from './types/PxeConfiguration.types';
 
 export type WorkloadClusterParametricEditorProps = {
   readonly yamlText: string;
   readonly onResourceChange: (yaml: string) => void;
 };
 
-const CONIGURATION: ParametricEditorConfiguration = {
+const CONIGURATION: PxeConfiguration = {
   topLevelProperties: ['metadata', 'spec'],
   entries: [
     {
-      type: ParametricEditorWidgetType.Section,
+      type: PxeConfigurationEntryType.Section,
       name: 'Configuration',
       entries: [
         {
-          type: ParametricEditorWidgetType.SingleLineText,
-          path: 'spec.clusterName',
+          type: PxeConfigurationEntryType.SingleLineText,
+          valuePath: 'spec.clusterName',
         },
         {
-          type: ParametricEditorWidgetType.SingleLineText,
-          path: 'spec.masterInterface',
+          type: PxeConfigurationEntryType.SingleLineText,
+          valuePath: 'spec.masterInterface',
         },
       ],
     },
@@ -48,12 +48,10 @@ const CONIGURATION: ParametricEditorConfiguration = {
 
 export const WorkloadClusterParametricEditor: React.FC<
   WorkloadClusterParametricEditorProps
-> = ({ yamlText, onResourceChange }) => {
-  return (
-    <ParametricEditor
-      configuration={CONIGURATION}
-      yamlText={yamlText}
-      onResourceChange={onResourceChange}
-    />
-  );
-};
+> = ({ yamlText, onResourceChange }) => (
+  <PxeParametricEditor
+    configuration={CONIGURATION}
+    yamlText={yamlText}
+    onResourceChange={onResourceChange}
+  />
+);
