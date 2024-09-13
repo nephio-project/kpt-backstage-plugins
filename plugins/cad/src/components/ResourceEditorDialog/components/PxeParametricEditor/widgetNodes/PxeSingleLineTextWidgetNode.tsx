@@ -24,16 +24,15 @@ import { generateDefaultValueName } from '../utils/generateLabelsForWidgets';
 export const PxeSingleLineTextWidgetNode: React.FC<
   PxeParametricEditorNodeProps
 > = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
-  const entry = configurationEntry as PxeSingleLineTextWidgetEntry;
-  const valuePath = entry.valuePath;
+  const widgetEntry = configurationEntry as PxeSingleLineTextWidgetEntry;
 
   return (
     <TextField
-      label={generateDefaultValueName(entry)}
+      label={generateDefaultValueName(widgetEntry)}
       variant="outlined"
-      value={get(resourceChunk, valuePath)}
+      value={get(resourceChunk, widgetEntry.valuePath) ?? ''}
       onChange={e => {
-        onResourceChangeRequest(valuePath, e.target.value);
+        onResourceChangeRequest({ widgetEntry, newValue: e.target.value });
       }}
       fullWidth
     />

@@ -15,13 +15,15 @@
  */
 
 import * as changeCase from 'change-case';
+import { get } from 'lodash';
 import {
   PxeConfigurationEntry,
   PxeConfigurationEntryType,
   PxeSectionEntry,
   PxeWidgetEntry,
 } from '../types/PxeConfiguration.types';
-import { get } from 'lodash';
+import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
+import { isEmptyPxeValue } from './isEmptyPxeValue';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
@@ -45,17 +47,17 @@ export const generateDefaultValueName = (
 // Handle "required" entry property.
 export const generateDefaultSectionDescription = (
   sectionEntry: PxeSectionEntry,
-  resourceChunk: object,
+  resourceChunk: PxeResourceChunk,
 ): string =>
   sectionEntry.entries
     .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
     .map(childEntry => {
-      const { valuePath } = childEntry as PxeWidgetEntry;
+      const { valuePath, isRequired } = childEntry as PxeWidgetEntry;
       const value = get(resourceChunk, valuePath);
       const valueName = generateDefaultValueName(childEntry);
 
-      return !['', null, undefined].includes(value)
-        ? `${valueName}: ${value}`
+      return !isEmptyPxeValue(value) || isRequired
+        ? `${valueName}: ${value ?? ''}`
         : null;
     })
     .filter(segment => segment !== null)

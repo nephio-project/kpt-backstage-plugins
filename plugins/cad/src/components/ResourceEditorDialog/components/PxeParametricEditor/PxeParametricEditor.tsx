@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import { pick, set } from 'lodash';
+import { pick } from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { useSetStateAndCall } from '../../../../hooks/useSetStateAndCall';
 import { useEditorStyles } from '../FirstClassEditors/styles';
+import { PxeConfiguration } from './types/PxeConfiguration.types';
 import {
   PxeExpandedSectionState,
   PxeResourceChangeRequestHandler,
 } from './types/PxeParametricEditor.types';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
-import { PxeConfiguration } from './types/PxeConfiguration.types';
+import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
 
 export type PxeParametricEditorProps = {
   readonly configuration: PxeConfiguration;
@@ -54,9 +55,13 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
 
   const handleResourceChangeRequest: PxeResourceChangeRequestHandler =
     useCallback(
-      (path, newValue): void =>
-        // TODO Field-test this solution. Works, but is modifying state directly really safe?
-        setResourceAndNotifyOnChange(set(resource, path, newValue)),
+      ({ widgetEntry, newValue }): void =>
+        setResourceAndNotifyOnChange(
+          createResourceChunkAfterChangeRequest(resource, {
+            widgetEntry,
+            newValue,
+          }),
+        ),
       [resource, setResourceAndNotifyOnChange],
     );
 

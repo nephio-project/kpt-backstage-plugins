@@ -15,6 +15,10 @@
  */
 
 import { Dispatch, SetStateAction } from 'react';
+import { PxeWidgetEntry } from './PxeConfiguration.types';
+
+export type PxeResourceChunk = object;
+export type PxeValue = string;
 
 // TODO Semantically "null" should be used instead of "undefined".
 // Consider project-wide refactoring alongside the update of prettier settings.
@@ -24,7 +28,11 @@ export type PxeExpandedSectionStateTuple = [
   Dispatch<SetStateAction<PxeExpandedSectionState>>,
 ];
 
+export type PxeResourceChangeRequest = {
+  readonly widgetEntry: PxeWidgetEntry;
+  readonly newValue: PxeValue;
+};
+
 export type PxeResourceChangeRequestHandler = (
-  path: string,
-  newValue: any,
+  changeRequest: PxeResourceChangeRequest,
 ) => void;

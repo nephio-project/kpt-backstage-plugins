@@ -18,6 +18,7 @@ import React from 'react';
 import {
   PxeExpandedSectionStateTuple,
   PxeResourceChangeRequestHandler,
+  PxeResourceChunk,
 } from './types/PxeParametricEditor.types';
 import {
   PxeConfigurationEntry,
@@ -28,7 +29,7 @@ import { PxeSingleLineTextWidgetNode } from './widgetNodes/PxeSingleLineTextWidg
 
 export type PxeParametricEditorNodeProps = {
   readonly configurationEntry: PxeConfigurationEntry;
-  readonly resourceChunk: object;
+  readonly resourceChunk: PxeResourceChunk;
   readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
 };

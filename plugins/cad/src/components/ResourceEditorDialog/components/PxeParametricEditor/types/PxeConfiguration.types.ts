@@ -38,6 +38,7 @@ export type PxeWidgetEntry = PxeSingleLineTextWidgetEntry;
 
 type PxeWidgetEntryBase = {
   readonly valuePath: string;
+  readonly isRequired?: boolean;
 };
 
 export type PxeSingleLineTextWidgetEntry = PxeWidgetEntryBase & {

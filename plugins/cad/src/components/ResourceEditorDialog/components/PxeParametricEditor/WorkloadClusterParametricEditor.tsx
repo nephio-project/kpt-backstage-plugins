@@ -26,7 +26,7 @@ export type WorkloadClusterParametricEditorProps = {
   readonly onResourceChange: (yaml: string) => void;
 };
 
-const CONIGURATION: PxeConfiguration = {
+const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['metadata', 'spec'],
   entries: [
     {
@@ -36,6 +36,7 @@ const CONIGURATION: PxeConfiguration = {
         {
           type: PxeConfigurationEntryType.SingleLineText,
           valuePath: 'spec.clusterName',
+          isRequired: true,
         },
         {
           type: PxeConfigurationEntryType.SingleLineText,
@@ -50,7 +51,7 @@ export const WorkloadClusterParametricEditor: React.FC<
   WorkloadClusterParametricEditorProps
 > = ({ yamlText, onResourceChange }) => (
   <PxeParametricEditor
-    configuration={CONIGURATION}
+    configuration={CONFIGURATION}
     yamlText={yamlText}
     onResourceChange={onResourceChange}
   />
