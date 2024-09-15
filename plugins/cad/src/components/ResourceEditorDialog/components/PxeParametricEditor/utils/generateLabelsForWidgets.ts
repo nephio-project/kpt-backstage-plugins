@@ -17,9 +17,9 @@
 import * as changeCase from 'change-case';
 import { get } from 'lodash';
 import {
-  PxeConfigurationEntry,
   PxeConfigurationEntryType,
   PxeSectionEntry,
+  PxeValueDescriptor,
   PxeWidgetEntry,
 } from '../types/PxeConfiguration.types';
 import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
@@ -27,38 +27,48 @@ import { isEmptyPxeValue } from './isEmptyPxeValue';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateDefaultValueName = (
-  configurationEntry: PxeConfigurationEntry,
+export const generateDefaultValueLabel = (
+  valueDescriptor: PxeValueDescriptor,
 ): string => {
-  if (configurationEntry.type === PxeConfigurationEntryType.Section) {
-    throw new Error(
-      'generateDefaultValueName() called for entry of Section type.',
-    );
-  }
-
-  const pathSegments = configurationEntry.valuePath.split('.');
+  const pathSegments = valueDescriptor.path.split('.');
   return pathSegments.length > 0
     ? changeCase.sentenceCase(pathSegments[pathSegments.length - 1])
     : FALLBACK_DEFAULT_VALUE_NAME;
 };
 
-// TODO Naive and non-performant implementation.
-// Consider configuration preprocessing (different types for inputted and final configuration).
-// Handle "required" entry property.
+// TODO Fix @typescript-eslint/no-use-before-define rule and move these two helper functions to the end of file.
+const generateValueDescription = (
+  valueDescriptor: PxeValueDescriptor,
+  resourceChunk: PxeResourceChunk,
+): string | null => {
+  const { isRequired, path } = valueDescriptor;
+  const valueName = generateDefaultValueLabel(valueDescriptor);
+  const value = get(resourceChunk, path);
+
+  const hasDescription = !isEmptyPxeValue(value) || isRequired;
+  return hasDescription ? `${valueName}: ${value ?? ''}` : null;
+};
+
+const generateValueDescriptionsForWidget = (
+  widgetEntry: PxeWidgetEntry,
+  resourceChunk: PxeResourceChunk,
+): string[] =>
+  widgetEntry.values
+    .map(valueDescriptor =>
+      generateValueDescription(valueDescriptor, resourceChunk),
+    )
+    .filter(segment => segment !== null) as string[];
+
 export const generateDefaultSectionDescription = (
   sectionEntry: PxeSectionEntry,
   resourceChunk: PxeResourceChunk,
 ): string =>
   sectionEntry.entries
     .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
-    .map(childEntry => {
-      const { valuePath, isRequired } = childEntry as PxeWidgetEntry;
-      const value = get(resourceChunk, valuePath);
-      const valueName = generateDefaultValueName(childEntry);
-
-      return !isEmptyPxeValue(value) || isRequired
-        ? `${valueName}: ${value ?? ''}`
-        : null;
-    })
-    .filter(segment => segment !== null)
+    .flatMap(childEntry =>
+      generateValueDescriptionsForWidget(
+        childEntry as PxeWidgetEntry,
+        resourceChunk,
+      ),
+    )
     .join(', ');

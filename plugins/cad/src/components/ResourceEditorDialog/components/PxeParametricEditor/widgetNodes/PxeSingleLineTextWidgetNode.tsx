@@ -19,20 +19,21 @@ import { get } from 'lodash';
 import React from 'react';
 import { PxeSingleLineTextWidgetEntry } from '../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
-import { generateDefaultValueName } from '../utils/generateLabelsForWidgets';
+import { generateDefaultValueLabel } from '../utils/generateLabelsForWidgets';
 
 export const PxeSingleLineTextWidgetNode: React.FC<
   PxeParametricEditorNodeProps
 > = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
   const widgetEntry = configurationEntry as PxeSingleLineTextWidgetEntry;
+  const valueDescriptor = widgetEntry.values[0];
 
   return (
     <TextField
-      label={generateDefaultValueName(widgetEntry)}
+      label={generateDefaultValueLabel(valueDescriptor)}
       variant="outlined"
-      value={get(resourceChunk, widgetEntry.valuePath) ?? ''}
+      value={get(resourceChunk, valueDescriptor.path) ?? ''}
       onChange={e => {
-        onResourceChangeRequest({ widgetEntry, newValue: e.target.value });
+        onResourceChangeRequest({ valueDescriptor, newValue: e.target.value });
       }}
       fullWidth
     />

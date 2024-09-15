@@ -55,17 +55,15 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
 
   const handleResourceChangeRequest: PxeResourceChangeRequestHandler =
     useCallback(
-      ({ widgetEntry, newValue }): void =>
+      (changeRequest): void =>
         setResourceAndNotifyOnChange(
-          createResourceChunkAfterChangeRequest(resource, {
-            widgetEntry,
-            newValue,
-          }),
+          createResourceChunkAfterChangeRequest(resource, changeRequest),
         ),
       [resource, setResourceAndNotifyOnChange],
     );
 
   const classes = useEditorStyles();
+  // TODO Implement section/accordion grouping for adjacent sections. Reuse logic with SectionNode.
   return (
     <div className={classes.root}>
       {entries.map((entry, index) => (

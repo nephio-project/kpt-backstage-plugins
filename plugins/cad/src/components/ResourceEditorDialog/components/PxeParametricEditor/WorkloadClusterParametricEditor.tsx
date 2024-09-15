@@ -28,19 +28,63 @@ export type WorkloadClusterParametricEditorProps = {
 
 const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['metadata', 'spec'],
+  // TODO Implement factory functions for configuration creation.
   entries: [
+    {
+      type: PxeConfigurationEntryType.Section,
+      name: 'Resource Metadata',
+      entries: [
+        {
+          type: PxeConfigurationEntryType.SingleLineText,
+          values: [
+            {
+              path: 'metadata.name',
+              isRequired: true,
+            },
+          ],
+        },
+        {
+          type: PxeConfigurationEntryType.SingleLineText,
+          values: [
+            {
+              path: 'metadata.namespace',
+              isRequired: false,
+            },
+          ],
+        },
+        {
+          type: PxeConfigurationEntryType.Section,
+          name: 'Labels',
+          entries: [],
+        },
+        {
+          type: PxeConfigurationEntryType.Section,
+          name: 'Annotations',
+          entries: [],
+        },
+      ],
+    },
     {
       type: PxeConfigurationEntryType.Section,
       name: 'Configuration',
       entries: [
         {
           type: PxeConfigurationEntryType.SingleLineText,
-          valuePath: 'spec.clusterName',
-          isRequired: true,
+          values: [
+            {
+              path: 'spec.clusterName',
+              isRequired: true,
+            },
+          ],
         },
         {
           type: PxeConfigurationEntryType.SingleLineText,
-          valuePath: 'spec.masterInterface',
+          values: [
+            {
+              path: 'spec.masterInterface',
+              isRequired: false,
+            },
+          ],
         },
       ],
     },

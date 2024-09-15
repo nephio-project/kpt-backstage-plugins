@@ -32,15 +32,20 @@ export enum PxeConfigurationEntryType {
   SingleLineText = 'SingleLineText',
 }
 
-// Widget entry types
+export type PxeValueDescriptor = {
+  readonly path: string;
+  readonly isRequired: boolean;
+};
+
+type PxeWidgetEntryBase = {
+  readonly values: readonly PxeValueDescriptor[];
+};
+
+// Widgets
 
 export type PxeWidgetEntry = PxeSingleLineTextWidgetEntry;
 
-type PxeWidgetEntryBase = {
-  readonly valuePath: string;
-  readonly isRequired?: boolean;
-};
-
-export type PxeSingleLineTextWidgetEntry = PxeWidgetEntryBase & {
+export interface PxeSingleLineTextWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.SingleLineText;
-};
+  readonly values: readonly [PxeValueDescriptor];
+}

@@ -25,14 +25,15 @@ export const createResourceChunkAfterChangeRequest = (
   resourceChunk: PxeResourceChunk,
   changeRequest: PxeResourceChangeRequest,
 ) => {
-  const { widgetEntry, newValue } = changeRequest;
+  const { valueDescriptor, newValue } = changeRequest;
+  const { isRequired, path } = valueDescriptor;
 
   // TODO Using cloneDeep may lead to performance issues. Consider different implementation.
   const newResourceChunk = cloneDeep(resourceChunk);
-  if (!isEmptyPxeValue(newValue) || widgetEntry.isRequired) {
-    set(newResourceChunk, widgetEntry.valuePath, newValue);
+  if (!isEmptyPxeValue(newValue) || isRequired) {
+    set(newResourceChunk, path, newValue);
   } else {
-    unset(newResourceChunk, widgetEntry.valuePath);
+    unset(newResourceChunk, path);
   }
 
   return newResourceChunk;

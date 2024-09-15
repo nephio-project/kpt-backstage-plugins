@@ -15,7 +15,7 @@
  */
 
 import { Dispatch, SetStateAction } from 'react';
-import { PxeWidgetEntry } from './PxeConfiguration.types';
+import { PxeValueDescriptor } from './PxeConfiguration.types';
 
 export type PxeResourceChunk = object;
 export type PxeValue = string;
@@ -29,7 +29,7 @@ export type PxeExpandedSectionStateTuple = [
 ];
 
 export type PxeResourceChangeRequest = {
-  readonly widgetEntry: PxeWidgetEntry;
+  readonly valueDescriptor: PxeValueDescriptor;
   readonly newValue: PxeValue;
 };
 
