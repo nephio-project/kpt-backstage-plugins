@@ -18,11 +18,16 @@ import { pick } from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { useSetStateAndCall } from '../../../../hooks/useSetStateAndCall';
 import { useEditorStyles } from '../FirstClassEditors/styles';
-import { PxeConfiguration } from './types/PxeConfiguration.types';
+import {
+  PxeConfiguration,
+  PxeConfigurationEntryType,
+} from './types/PxeConfiguration.types';
 import {
   PxeExpandedSectionState,
   PxeResourceChangeRequestHandler,
 } from './types/PxeParametricEditor.types';
+import { chunkByTrait } from './utils/general/chunkByTrait';
+import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
@@ -63,12 +68,16 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
     );
 
   const classes = useEditorStyles();
-  // TODO Implement section/accordion grouping for adjacent sections. Reuse logic with SectionNode.
+
+  const groupedEntries = chunkByTrait(entries, entry =>
+    entry.type === PxeConfigurationEntryType.Section ? 'section' : null,
+  );
+
   return (
     <div className={classes.root}>
-      {entries.map((entry, index) => (
+      {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
         <PxeParametricEditorNode
-          key={index}
+          key={`${groupIndex}-${itemIndex}`}
           configurationEntry={entry}
           resourceChunk={resource}
           parentExpandedSectionState={[expandedSection, setExpandedSection]}
