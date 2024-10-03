@@ -24,11 +24,12 @@ export type PxeConfigurationEntry = PxeSectionEntry | PxeWidgetEntry;
 export type PxeSectionEntry = {
   readonly type: PxeConfigurationEntryType.Section;
   readonly name: string;
-  readonly entries: PxeConfigurationEntry[];
+  readonly entries: readonly PxeConfigurationEntry[];
 };
 
 export enum PxeConfigurationEntryType {
   Section = 'Section',
+  Roster = 'Roster',
   SingleLineText = 'SingleLineText',
 }
 
@@ -37,13 +38,28 @@ export type PxeValueDescriptor = {
   readonly isRequired: boolean;
 };
 
+// FIXME Should be a part of roster's value descriptor.
+export enum PxeRosterType {
+  Array = 'Array',
+  Object = 'Object',
+}
+
 type PxeWidgetEntryBase = {
   readonly values: readonly PxeValueDescriptor[];
 };
 
 // Widgets
 
-export type PxeWidgetEntry = PxeSingleLineTextWidgetEntry;
+export type PxeWidgetEntry =
+  | PxeRosterWidgetEntry
+  | PxeSingleLineTextWidgetEntry;
+
+export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
+  readonly type: PxeConfigurationEntryType.Roster;
+  readonly values: readonly [PxeValueDescriptor];
+  readonly rosterType: PxeRosterType;
+  readonly itemEntries: readonly PxeConfigurationEntry[];
+}
 
 export interface PxeSingleLineTextWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.SingleLineText;

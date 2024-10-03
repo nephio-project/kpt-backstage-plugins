@@ -19,6 +19,7 @@ import { PxeParametricEditor } from './PxeParametricEditor';
 import {
   PxeConfiguration,
   PxeConfigurationEntryType,
+  PxeRosterType,
 } from './types/PxeConfiguration.types';
 
 export type WorkloadClusterParametricEditorProps = {
@@ -55,7 +56,38 @@ const CONFIGURATION: PxeConfiguration = {
         {
           type: PxeConfigurationEntryType.Section,
           name: 'Labels',
-          entries: [],
+          entries: [
+            {
+              type: PxeConfigurationEntryType.Roster,
+              values: [
+                {
+                  path: 'metadata.labels',
+                  isRequired: false,
+                },
+              ],
+              rosterType: PxeRosterType.Object,
+              itemEntries: [
+                {
+                  type: PxeConfigurationEntryType.SingleLineText,
+                  values: [
+                    {
+                      path: 'key',
+                      isRequired: true,
+                    },
+                  ],
+                },
+                {
+                  type: PxeConfigurationEntryType.SingleLineText,
+                  values: [
+                    {
+                      path: 'value',
+                      isRequired: false,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
         {
           type: PxeConfigurationEntryType.Section,

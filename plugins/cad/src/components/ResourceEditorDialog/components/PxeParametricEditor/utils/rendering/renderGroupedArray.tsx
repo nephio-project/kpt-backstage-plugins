@@ -1,5 +1,10 @@
 import React, { ReactNode } from 'react';
 
+const DEFAULT_RENDER_GROUPING_FUNCTION = (
+  groupContent: ReactNode,
+  groupIndex: number,
+) => <div key={`group-${groupIndex}`}>{groupContent}</div>;
+
 export const renderGroupedArray = <T,>(
   groupedArray: readonly T[][],
   renderItemFunction: (
@@ -7,9 +12,10 @@ export const renderGroupedArray = <T,>(
     groupIndex: number,
     itemIndex: number,
   ) => ReactNode,
-  renderGrouping: (groupContent: ReactNode) => ReactNode = groupContent => (
-    <div>{groupContent}</div>
-  ),
+  renderGrouping: (
+    groupContent: ReactNode,
+    groupIndex: number,
+  ) => ReactNode = DEFAULT_RENDER_GROUPING_FUNCTION,
 ) =>
   groupedArray.map((group, groupIndex) =>
     group.length === 1
@@ -18,5 +24,6 @@ export const renderGroupedArray = <T,>(
           group.map((item, itemIndex) =>
             renderItemFunction(item, groupIndex, itemIndex),
           ),
+          groupIndex,
         ),
   );
