@@ -31,9 +31,9 @@ export const arrayWithItemInserted = <T>(
   insertAt: number,
   newItem: T,
 ): readonly T[] => [
-  ...array.slice(0, replaceAt),
+  ...array.slice(0, insertAt),
   newItem,
-  ...array.slice(replaceAt),
+  ...array.slice(insertAt),
 ];
 
 // FIXME Fill in JsDoc.
