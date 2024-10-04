@@ -14,189 +14,27 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { PxeParametricEditor } from '../PxeParametricEditor/PxeParametricEditor';
-import {
-  PxeConfiguration,
-  PxeConfigurationEntryType,
-  PxeRosterType,
-} from '../PxeParametricEditor/types/PxeConfiguration.types';
+import { createEditorFromConfiguration } from './createEditorFromConfiguration';
+import { metadataEditorSection } from './configuration/metadataEditorSection';
+import { editorSection } from './configuration/editorSection';
+import { arrayTypeRoster } from './configuration/roster';
+import { singleLineTextWidget } from './configuration/singleLineTextWidget';
 
-export type WorkloadClusterParametricEditorProps = {
-  readonly yamlText: string;
-  readonly onResourceChange: (yaml: string) => void;
-};
-
-const CONFIGURATION: PxeConfiguration = {
+export const WorkloadClusterParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
-  // TODO Implement factory functions for configuration creation.
   entries: [
-    {
-      type: PxeConfigurationEntryType.Section,
-      name: 'Resource Metadata',
-      entries: [
-        {
-          type: PxeConfigurationEntryType.SingleLineText,
-          values: [
-            {
-              path: 'metadata.name',
-              isRequired: true,
-            },
-          ],
-        },
-        {
-          type: PxeConfigurationEntryType.SingleLineText,
-          values: [
-            {
-              path: 'metadata.namespace',
-              isRequired: false,
-            },
-          ],
-        },
-        {
-          type: PxeConfigurationEntryType.Section,
-          name: 'Labels',
-          entries: [
-            {
-              type: PxeConfigurationEntryType.Roster,
-              values: [
-                {
-                  path: 'metadata.labels',
-                  isRequired: false,
-                },
-              ],
-              rosterType: PxeRosterType.Object,
-              itemEntries: [
-                {
-                  type: PxeConfigurationEntryType.RowLayout,
-                  entries: [
-                    {
-                      type: PxeConfigurationEntryType.SingleLineText,
-                      values: [
-                        {
-                          path: 'key',
-                          isRequired: true,
-                        },
-                      ],
-                    },
-                    {
-                      type: PxeConfigurationEntryType.SingleLineText,
-                      values: [
-                        {
-                          path: 'value',
-                          isRequired: false,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: PxeConfigurationEntryType.Section,
-          name: 'Annotations',
-          entries: [
-            {
-              type: PxeConfigurationEntryType.Roster,
-              values: [
-                {
-                  path: 'metadata.annotations',
-                  isRequired: false,
-                },
-              ],
-              rosterType: PxeRosterType.Object,
-              itemEntries: [
-                {
-                  type: PxeConfigurationEntryType.RowLayout,
-                  entries: [
-                    {
-                      type: PxeConfigurationEntryType.SingleLineText,
-                      values: [
-                        {
-                          path: 'key',
-                          isRequired: true,
-                        },
-                      ],
-                    },
-                    {
-                      type: PxeConfigurationEntryType.SingleLineText,
-                      values: [
-                        {
-                          path: 'value',
-                          isRequired: false,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      type: PxeConfigurationEntryType.Section,
-      name: 'Configuration',
-      entries: [
-        {
-          type: PxeConfigurationEntryType.SingleLineText,
-          values: [
-            {
-              path: 'spec.clusterName',
-              isRequired: true,
-            },
-          ],
-        },
-        {
-          type: PxeConfigurationEntryType.SingleLineText,
-          values: [
-            {
-              path: 'spec.masterInterface',
-              isRequired: false,
-            },
-          ],
-        },
-        {
-          type: PxeConfigurationEntryType.Section,
-          name: 'CNIs',
-          entries: [
-            {
-              type: PxeConfigurationEntryType.Roster,
-              values: [
-                {
-                  path: 'spec.cnis',
-                  isRequired: false,
-                },
-              ],
-              rosterType: PxeRosterType.Array,
-              itemEntries: [
-                {
-                  type: PxeConfigurationEntryType.SingleLineText,
-                  values: [
-                    {
-                      path: 'value',
-                      isRequired: false,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
+    metadataEditorSection({ isNamespacedResource: true }),
+    editorSection(
+      { name: 'Configuration' },
+      singleLineTextWidget({ path: 'spec.clusterName', isRequired: true }),
+      singleLineTextWidget({ path: 'spec.masterInterface' }),
+      editorSection(
+        { name: 'CNIs' },
+        arrayTypeRoster(
+          { path: 'spec.cnis', isRequired: false },
+          singleLineTextWidget({ path: 'value' }),
+        ),
+      ),
+    ),
   ],
-};
-
-export const WorkloadClusterParametricEditor: React.FC<
-  WorkloadClusterParametricEditorProps
-> = ({ yamlText, onResourceChange }) => (
-  <PxeParametricEditor
-    configuration={CONFIGURATION}
-    yamlText={yamlText}
-    onResourceChange={onResourceChange}
-  />
-);
+});
