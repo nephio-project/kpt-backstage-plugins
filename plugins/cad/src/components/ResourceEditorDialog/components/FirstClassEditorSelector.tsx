@@ -35,7 +35,7 @@ import { ServiceEditor } from './FirstClassEditors/ServiceEditor';
 import { SetLabelsEditor } from './FirstClassEditors/SetLabelsEditor';
 import { PackageVariantSetEditor } from './FirstClassEditors/PackageVariantSetEditor';
 import { NephioTokenEditor } from './FirstClassEditors/NephioTokenEditor';
-import { WorkloadClusterParametricEditor } from './PxeParametricEditor/WorkloadClusterParametricEditor';
+import { WorkloadClusterParametricEditor } from './ParametricFirstClassEditors/WorkloadClusterParametricEditor';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
 type OnNoNamedEditorFn = () => void;

@@ -15,12 +15,12 @@
  */
 
 import React from 'react';
-import { PxeParametricEditor } from './PxeParametricEditor';
+import { PxeParametricEditor } from '../PxeParametricEditor/PxeParametricEditor';
 import {
   PxeConfiguration,
   PxeConfigurationEntryType,
   PxeRosterType,
-} from './types/PxeConfiguration.types';
+} from '../PxeParametricEditor/types/PxeConfiguration.types';
 
 export type WorkloadClusterParametricEditorProps = {
   readonly yamlText: string;
@@ -97,7 +97,43 @@ const CONFIGURATION: PxeConfiguration = {
         {
           type: PxeConfigurationEntryType.Section,
           name: 'Annotations',
-          entries: [],
+          entries: [
+            {
+              type: PxeConfigurationEntryType.Roster,
+              values: [
+                {
+                  path: 'metadata.annotations',
+                  isRequired: false,
+                },
+              ],
+              rosterType: PxeRosterType.Object,
+              itemEntries: [
+                {
+                  type: PxeConfigurationEntryType.RowLayout,
+                  entries: [
+                    {
+                      type: PxeConfigurationEntryType.SingleLineText,
+                      values: [
+                        {
+                          path: 'key',
+                          isRequired: true,
+                        },
+                      ],
+                    },
+                    {
+                      type: PxeConfigurationEntryType.SingleLineText,
+                      values: [
+                        {
+                          path: 'value',
+                          isRequired: false,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     },
@@ -120,6 +156,33 @@ const CONFIGURATION: PxeConfiguration = {
             {
               path: 'spec.masterInterface',
               isRequired: false,
+            },
+          ],
+        },
+        {
+          type: PxeConfigurationEntryType.Section,
+          name: 'CNIs',
+          entries: [
+            {
+              type: PxeConfigurationEntryType.Roster,
+              values: [
+                {
+                  path: 'spec.cnis',
+                  isRequired: false,
+                },
+              ],
+              rosterType: PxeRosterType.Array,
+              itemEntries: [
+                {
+                  type: PxeConfigurationEntryType.SingleLineText,
+                  values: [
+                    {
+                      path: 'value',
+                      isRequired: false,
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },
