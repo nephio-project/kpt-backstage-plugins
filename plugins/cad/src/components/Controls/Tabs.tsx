@@ -75,7 +75,7 @@ export const Tabs = (props: TabsProps) => {
         ))}
       </MUITabs>
       {props.tabs.map(({ content }, index) => (
-        <div className={classes.content} hidden={value !== index}>
+        <div className={classes.content} key={index} hidden={value !== index}>
           {content}
         </div>
       ))}

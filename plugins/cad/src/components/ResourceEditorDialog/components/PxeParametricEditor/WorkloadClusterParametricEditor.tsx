@@ -68,20 +68,25 @@ const CONFIGURATION: PxeConfiguration = {
               rosterType: PxeRosterType.Object,
               itemEntries: [
                 {
-                  type: PxeConfigurationEntryType.SingleLineText,
-                  values: [
+                  type: PxeConfigurationEntryType.RowLayout,
+                  entries: [
                     {
-                      path: 'key',
-                      isRequired: true,
+                      type: PxeConfigurationEntryType.SingleLineText,
+                      values: [
+                        {
+                          path: 'key',
+                          isRequired: true,
+                        },
+                      ],
                     },
-                  ],
-                },
-                {
-                  type: PxeConfigurationEntryType.SingleLineText,
-                  values: [
                     {
-                      path: 'value',
-                      isRequired: false,
+                      type: PxeConfigurationEntryType.SingleLineText,
+                      values: [
+                        {
+                          path: 'value',
+                          isRequired: false,
+                        },
+                      ],
                     },
                   ],
                 },

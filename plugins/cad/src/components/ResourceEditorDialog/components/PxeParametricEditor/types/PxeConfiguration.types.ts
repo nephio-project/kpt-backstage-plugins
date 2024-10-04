@@ -19,7 +19,10 @@ export type PxeConfiguration = {
   readonly entries: readonly PxeConfigurationEntry[];
 };
 
-export type PxeConfigurationEntry = PxeSectionEntry | PxeWidgetEntry;
+export type PxeConfigurationEntry =
+  | PxeSectionEntry
+  | PxeLayoutEntry
+  | PxeWidgetEntry;
 
 export type PxeSectionEntry = {
   readonly type: PxeConfigurationEntryType.Section;
@@ -27,9 +30,18 @@ export type PxeSectionEntry = {
   readonly entries: readonly PxeConfigurationEntry[];
 };
 
+// TODO Probably needs separate types for different layouts.
+export interface PxeLayoutEntry {
+  readonly type: PxeConfigurationEntryType.RowLayout;
+  readonly entries: readonly PxeConfigurationEntry[];
+}
+
 export enum PxeConfigurationEntryType {
   Section = 'Section',
   Roster = 'Roster',
+
+  RowLayout = 'RowLayout',
+
   SingleLineText = 'SingleLineText',
 }
 

@@ -25,6 +25,7 @@ import {
   PxeConfigurationEntryType,
 } from './types/PxeConfiguration.types';
 import { PxeSectionNode } from './PxeSectionNode';
+import { PxeRowLayoutNode } from './layoutNodes/PxeRowLayoutNode';
 import { PxeRosterWidgetNode } from './widgetNodes/PxeRosterWidgetNode';
 import { PxeSingleLineTextWidgetNode } from './widgetNodes/PxeSingleLineTextWidgetNode';
 
@@ -40,6 +41,8 @@ const NODE_BY_ENTRY_TYPE_RECORD: Record<
   React.FC<PxeParametricEditorNodeProps>
 > = {
   Section: PxeSectionNode,
+  RowLayout: PxeRowLayoutNode,
+
   Roster: PxeRosterWidgetNode,
   SingleLineText: PxeSingleLineTextWidgetNode,
 };
