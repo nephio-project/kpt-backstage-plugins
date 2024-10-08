@@ -23,7 +23,6 @@ import {
   DeploymentEditor,
   StatefulSetEditor,
 } from './FirstClassEditors/DeploymentEditor';
-import { CapacityEditor } from './FirstClassEditors/CapacityEditor';
 import { IngressEditor } from './FirstClassEditors/IngressEditor';
 import { KptfileEditor } from './FirstClassEditors/KptfileEditor';
 import { NamespaceEditor } from './FirstClassEditors/NamespaceEditor';
@@ -34,8 +33,9 @@ import { ServiceAccountEditor } from './FirstClassEditors/ServiceAccountEditor';
 import { ServiceEditor } from './FirstClassEditors/ServiceEditor';
 import { SetLabelsEditor } from './FirstClassEditors/SetLabelsEditor';
 import { PackageVariantSetEditor } from './FirstClassEditors/PackageVariantSetEditor';
-import { NephioTokenEditor } from './FirstClassEditors/NephioTokenEditor';
-import { WorkloadClusterParametricEditor } from './ParametricFirstClassEditors/WorkloadClusterParametricEditor';
+import { NephioCapacityParametricEditor } from './ParametricFirstClassEditors/NephioCapacityParametricEditor';
+import { NephioTokenParametricEditor } from './ParametricFirstClassEditors/NephioTokenParametricEditor';
+import { NephioWorkloadClusterParametricEditor } from './ParametricFirstClassEditors/NephioWorkloadClusterParametricEditor';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
 type OnNoNamedEditorFn = () => void;
@@ -114,11 +114,16 @@ export const FirstClassEditorSelector = ({
       return <SetLabelsEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'infra.nephio.org/v1alpha1/Token':
-      return <NephioTokenEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
+      return (
+        <NephioTokenParametricEditor
+          yamlText={yaml}
+          onResourceChange={onUpdatedYaml}
+        />
+      );
 
     case 'infra.nephio.org/v1alpha1/WorkloadCluster':
       return (
-        <WorkloadClusterParametricEditor
+        <NephioWorkloadClusterParametricEditor
           yamlText={yaml}
           onResourceChange={onUpdatedYaml}
         />
@@ -155,7 +160,12 @@ export const FirstClassEditorSelector = ({
       );
 
     case 'req.nephio.org/v1alpha1/Capacity':
-      return <CapacityEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
+      return (
+        <NephioCapacityParametricEditor
+          yamlText={yaml}
+          onResourceChange={onUpdatedYaml}
+        />
+      );
 
     case 'v1/ConfigMap':
       return <ConfigMapEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;

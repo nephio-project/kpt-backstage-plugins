@@ -16,19 +16,19 @@
 
 import { nanoid } from 'nanoid';
 import React, { useRef, useState } from 'react';
-import { EditorAccordion } from '../FirstClassEditors/Controls';
-import { PxeExpandedSectionState } from './types/PxeParametricEditor.types';
+import { EditorAccordion } from '../../FirstClassEditors/Controls';
+import { PxeExpandedSectionState } from '../types/PxeParametricEditor.types';
 import {
   PxeConfigurationEntryType,
   PxeSectionEntry,
-} from './types/PxeConfiguration.types';
-import { chunkByTrait } from './utils/general/chunkByTrait';
-import { generateDefaultSectionDescription } from './utils/generateLabelsForWidgets';
-import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
+} from '../types/PxeConfiguration.types';
+import { chunkByTrait } from '../utils/general/chunkByTrait';
+import { generateDefaultSectionDescription } from '../utils/generateLabelsForWidgets';
+import { renderGroupedArray } from '../utils/rendering/renderGroupedArray';
 import {
   PxeParametricEditorNode,
   PxeParametricEditorNodeProps,
-} from './PxeParametricEditorNode';
+} from '../PxeParametricEditorNode';
 
 export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry: configurationEntryUncasted,

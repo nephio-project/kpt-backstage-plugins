@@ -15,17 +15,16 @@
  */
 
 import {
+  PxeConfigurationEntry,
   PxeConfigurationEntryType,
-  PxeSingleLineTextWidgetEntry,
-} from '../../PxeParametricEditor/types/PxeConfiguration.types';
+  PxeSectionEntry,
+} from '../types/PxeConfiguration.types';
 
-export const singleLineTextWidget = ({
-  path,
-  isRequired = false,
-}: {
-  path: string;
-  isRequired?: boolean;
-}): PxeSingleLineTextWidgetEntry => ({
-  type: PxeConfigurationEntryType.SingleLineText,
-  values: [{ path, isRequired }],
+export const sectionConfigurationEntry = (
+  { name }: { name: string },
+  ...childEntries: PxeConfigurationEntry[]
+): PxeSectionEntry => ({
+  type: PxeConfigurationEntryType.Section,
+  name,
+  entries: childEntries,
 });

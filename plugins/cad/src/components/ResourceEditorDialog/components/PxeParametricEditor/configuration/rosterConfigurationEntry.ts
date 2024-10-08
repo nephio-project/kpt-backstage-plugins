@@ -19,10 +19,10 @@ import {
   PxeConfigurationEntryType,
   PxeRosterType,
   PxeRosterWidgetEntry,
-} from '../../PxeParametricEditor/types/PxeConfiguration.types';
+} from '../types/PxeConfiguration.types';
 
 // TODO Refactor these two functions.
-export const objectTypeRoster = (
+export const objectTypeRosterConfigurationEntry = (
   {
     path,
     isRequired = false,
@@ -38,7 +38,7 @@ export const objectTypeRoster = (
   itemEntries,
 });
 
-export const arrayTypeRoster = (
+export const arrayTypeRosterConfigurationEntry = (
   {
     path,
     isRequired = false,

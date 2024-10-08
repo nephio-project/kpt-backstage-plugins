@@ -24,10 +24,11 @@ import {
   PxeConfigurationEntry,
   PxeConfigurationEntryType,
 } from './types/PxeConfiguration.types';
-import { PxeSectionNode } from './PxeSectionNode';
-import { PxeRowLayoutNode } from './layoutNodes/PxeRowLayoutNode';
-import { PxeRosterWidgetNode } from './widgetNodes/PxeRosterWidgetNode';
-import { PxeSingleLineTextWidgetNode } from './widgetNodes/PxeSingleLineTextWidgetNode';
+import { PxeSectionNode } from './nodes/PxeSectionNode';
+import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
+import { PxeRosterWidgetNode } from './nodes/widget/PxeRosterWidgetNode';
+import { PxeSingleLineTextWidgetNode } from './nodes/widget/PxeSingleLineTextWidgetNode';
+import { PxeSelectValueWidgetNode } from './nodes/widget/PxeSelectValueWidgetNode';
 
 export type PxeParametricEditorNodeProps = {
   readonly configurationEntry: PxeConfigurationEntry;
@@ -40,11 +41,13 @@ const NODE_BY_ENTRY_TYPE_RECORD: Record<
   PxeConfigurationEntryType,
   React.FC<PxeParametricEditorNodeProps>
 > = {
-  Section: PxeSectionNode,
-  RowLayout: PxeRowLayoutNode,
+  [PxeConfigurationEntryType.Section]: PxeSectionNode,
 
-  Roster: PxeRosterWidgetNode,
-  SingleLineText: PxeSingleLineTextWidgetNode,
+  [PxeConfigurationEntryType.RowLayout]: PxeRowLayoutNode,
+
+  [PxeConfigurationEntryType.Roster]: PxeRosterWidgetNode,
+  [PxeConfigurationEntryType.SingleLineText]: PxeSingleLineTextWidgetNode,
+  [PxeConfigurationEntryType.SelectValue]: PxeSelectValueWidgetNode,
 };
 
 export const PxeParametricEditorNode: React.FC<

@@ -14,28 +14,37 @@
  * limitations under the License.
  */
 
-import { TextField } from '@material-ui/core';
 import { get } from 'lodash';
 import React from 'react';
-import { PxeSingleLineTextWidgetEntry } from '../types/PxeConfiguration.types';
-import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
-import { generateDefaultValueLabel } from '../utils/generateLabelsForWidgets';
+import { Select } from '../../../../../Controls';
+import { PxeSelectValueWidgetEntry } from '../../types/PxeConfiguration.types';
+import { generateDefaultValueLabel } from '../../utils/generateLabelsForWidgets';
+import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 
-export const PxeSingleLineTextWidgetNode: React.FC<
+const DEFAULT_VALUE = '__DEFAULT_VALUE__';
+
+export const PxeSelectValueWidgetNode: React.FC<
   PxeParametricEditorNodeProps
 > = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
-  const widgetEntry = configurationEntry as PxeSingleLineTextWidgetEntry;
+  const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
   const valueDescriptor = widgetEntry.values[0];
 
+  const selectItems = widgetEntry.options.map(({ value, label }) => ({
+    value: value !== undefined ? String(value) : DEFAULT_VALUE,
+    label,
+  }));
+
   return (
-    <TextField
+    <Select
       label={generateDefaultValueLabel(valueDescriptor)}
-      variant="outlined"
-      value={get(resourceChunk, valueDescriptor.path) ?? ''}
-      onChange={e => {
-        onResourceChangeRequest({ valueDescriptor, newValue: e.target.value });
+      items={selectItems}
+      selected={get(resourceChunk, valueDescriptor.path) ?? DEFAULT_VALUE}
+      onChange={value => {
+        onResourceChangeRequest({
+          valueDescriptor,
+          newValue: value !== DEFAULT_VALUE ? value : undefined,
+        });
       }}
-      fullWidth
     />
   );
 };

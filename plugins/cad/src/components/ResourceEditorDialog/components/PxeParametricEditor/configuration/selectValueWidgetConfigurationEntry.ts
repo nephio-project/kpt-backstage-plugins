@@ -15,14 +15,21 @@
  */
 
 import {
-  PxeConfigurationEntry,
   PxeConfigurationEntryType,
-  PxeLayoutEntry,
-} from '../../PxeParametricEditor/types/PxeConfiguration.types';
+  PxeSelectValueWidgetEntry,
+  PxeValueOption,
+} from '../types/PxeConfiguration.types';
 
-export const rowLayout = (
-  ...childEntries: PxeConfigurationEntry[]
-): PxeLayoutEntry => ({
-  type: PxeConfigurationEntryType.RowLayout,
-  entries: childEntries,
+export const selectValueWidgetConfigurationEntry = ({
+  path,
+  options,
+  isRequired = false,
+}: {
+  path: string;
+  options: readonly PxeValueOption[];
+  isRequired?: boolean;
+}): PxeSelectValueWidgetEntry => ({
+  type: PxeConfigurationEntryType.SelectValue,
+  values: [{ path, isRequired }],
+  options,
 });

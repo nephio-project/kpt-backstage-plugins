@@ -15,11 +15,11 @@
  */
 
 import React from 'react';
-import { PxeLayoutEntry } from '../types/PxeConfiguration.types';
+import { PxeLayoutEntry } from '../../types/PxeConfiguration.types';
 import {
   PxeParametricEditorNode,
   PxeParametricEditorNodeProps,
-} from '../PxeParametricEditorNode';
+} from '../../PxeParametricEditorNode';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({

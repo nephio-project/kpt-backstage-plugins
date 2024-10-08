@@ -15,8 +15,8 @@
  */
 
 import React from 'react';
-import { PxeConfiguration } from '../PxeParametricEditor/types/PxeConfiguration.types';
-import { PxeParametricEditor } from '../PxeParametricEditor/PxeParametricEditor';
+import { PxeConfiguration } from './types/PxeConfiguration.types';
+import { PxeParametricEditor } from './PxeParametricEditor';
 
 type ConfiguredEditorProps = {
   readonly yamlText: string;

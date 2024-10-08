@@ -19,26 +19,26 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { get, noop } from 'lodash';
 import React, { Fragment } from 'react';
-import { IconButton } from '../../../../Controls';
-import { useEditorStyles } from '../../FirstClassEditors/styles';
+import { IconButton } from '../../../../../Controls';
+import { useEditorStyles } from '../../../FirstClassEditors/styles';
 import {
   PxeParametricEditorNode,
   PxeParametricEditorNodeProps,
-} from '../PxeParametricEditorNode';
+} from '../../PxeParametricEditorNode';
 import {
   PxeRosterType,
   PxeRosterWidgetEntry,
-} from '../types/PxeConfiguration.types';
+} from '../../types/PxeConfiguration.types';
 import {
   PxeResourceChangeRequest,
   PxeValue,
-} from '../types/PxeParametricEditor.types';
-import { createResourceChunkAfterChangeRequest } from '../utils/createResourceChunkAfterChangeRequest';
-import { generateDefaultValueLabel } from '../utils/generateLabelsForWidgets';
+} from '../../types/PxeParametricEditor.types';
+import { createResourceChunkAfterChangeRequest } from '../../utils/createResourceChunkAfterChangeRequest';
+import { generateDefaultValueLabel } from '../../utils/generateLabelsForWidgets';
 import {
   arrayWithItemRemoved,
   arrayWithItemReplaced,
-} from '../utils/general/immutableArrays';
+} from '../../utils/general/immutableArrays';
 
 type PxeRosterItemResourceChunk = {
   readonly key: string;
@@ -137,7 +137,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   return (
     <Fragment>
       {itemChunks.map((itemChunk, itemIndex) => (
-        <div className={rosterClasses.item}>
+        <div className={rosterClasses.item} key={itemIndex}>
           <div className={rosterClasses.itemContent}>
             {itemEntries.map((itemEntry, entryIndex) => (
               <PxeParametricEditorNode

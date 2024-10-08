@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { PxeValue } from './PxeParametricEditor.types';
 
 export type PxeConfiguration = {
   readonly topLevelProperties: readonly string[];
@@ -43,6 +44,7 @@ export enum PxeConfigurationEntryType {
   RowLayout = 'RowLayout',
 
   SingleLineText = 'SingleLineText',
+  SelectValue = 'SelectValue',
 }
 
 export type PxeValueDescriptor = {
@@ -50,11 +52,15 @@ export type PxeValueDescriptor = {
   readonly isRequired: boolean;
 };
 
-// FIXME Should be a part of roster's value descriptor.
 export enum PxeRosterType {
   Array = 'Array',
   Object = 'Object',
 }
+
+export type PxeValueOption = {
+  readonly value: PxeValue;
+  readonly label: string;
+};
 
 type PxeWidgetEntryBase = {
   readonly values: readonly PxeValueDescriptor[];
@@ -64,11 +70,13 @@ type PxeWidgetEntryBase = {
 
 export type PxeWidgetEntry =
   | PxeRosterWidgetEntry
-  | PxeSingleLineTextWidgetEntry;
+  | PxeSingleLineTextWidgetEntry
+  | PxeSelectValueWidgetEntry;
 
 export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.Roster;
   readonly values: readonly [PxeValueDescriptor];
+  // FIXME Should be a part of roster's value descriptor.
   readonly rosterType: PxeRosterType;
   readonly itemEntries: readonly PxeConfigurationEntry[];
 }
@@ -76,4 +84,11 @@ export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
 export interface PxeSingleLineTextWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.SingleLineText;
   readonly values: readonly [PxeValueDescriptor];
+}
+
+export interface PxeSelectValueWidgetEntry extends PxeWidgetEntryBase {
+  readonly type: PxeConfigurationEntryType.SelectValue;
+  readonly values: readonly [PxeValueDescriptor];
+  // FIXME Should be a part of select's value descriptor.
+  readonly options: readonly PxeValueOption[];
 }

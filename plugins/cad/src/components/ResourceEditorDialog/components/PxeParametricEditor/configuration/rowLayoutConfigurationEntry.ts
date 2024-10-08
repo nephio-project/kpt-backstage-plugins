@@ -17,14 +17,12 @@
 import {
   PxeConfigurationEntry,
   PxeConfigurationEntryType,
-  PxeSectionEntry,
-} from '../../PxeParametricEditor/types/PxeConfiguration.types';
+  PxeLayoutEntry,
+} from '../types/PxeConfiguration.types';
 
-export const editorSection = (
-  { name }: { name: string },
+export const rowLayoutConfigurationEntry = (
   ...childEntries: PxeConfigurationEntry[]
-): PxeSectionEntry => ({
-  type: PxeConfigurationEntryType.Section,
-  name,
+): PxeLayoutEntry => ({
+  type: PxeConfigurationEntryType.RowLayout,
   entries: childEntries,
 });
