@@ -36,7 +36,20 @@ export const generateDefaultValueLabel = (
     : FALLBACK_DEFAULT_VALUE_NAME;
 };
 
-// TODO Fix @typescript-eslint/no-use-before-define rule and move these two helper functions to the end of file.
+export const generateDefaultSectionDescription = (
+  sectionEntry: PxeSectionEntry,
+  resourceChunk: PxeResourceChunk,
+): string =>
+  sectionEntry.entries
+    .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
+    .flatMap(childEntry =>
+      generateValueDescriptionsForWidget(
+        childEntry as PxeWidgetEntry,
+        resourceChunk,
+      ),
+    )
+    .join(', ');
+
 const generateValueDescription = (
   valueDescriptor: PxeValueDescriptor,
   resourceChunk: PxeResourceChunk,
@@ -58,17 +71,3 @@ const generateValueDescriptionsForWidget = (
       generateValueDescription(valueDescriptor, resourceChunk),
     )
     .filter(segment => segment !== null) as string[];
-
-export const generateDefaultSectionDescription = (
-  sectionEntry: PxeSectionEntry,
-  resourceChunk: PxeResourceChunk,
-): string =>
-  sectionEntry.entries
-    .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
-    .flatMap(childEntry =>
-      generateValueDescriptionsForWidget(
-        childEntry as PxeWidgetEntry,
-        resourceChunk,
-      ),
-    )
-    .join(', ');

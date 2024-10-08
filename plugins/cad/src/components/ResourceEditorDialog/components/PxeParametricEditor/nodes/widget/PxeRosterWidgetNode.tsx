@@ -45,40 +45,6 @@ type PxeRosterItemResourceChunk = {
   readonly value: PxeValue;
 };
 
-// FIXME Move functions to end of the file after eslint configuration change.
-const useStyles = makeStyles(() => ({
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemContent: {
-    flex: '1 1 auto',
-  },
-  itemActions: {
-    flex: '0 0 auto',
-    paddingLeft: '16px',
-  },
-}));
-
-const itemChunksFromValue = (
-  value: PxeValue,
-): readonly PxeRosterItemResourceChunk[] =>
-  Object.entries(value ?? {}).map(([itemKey, itemValue]) => ({
-    key: itemKey,
-    value: itemValue as PxeValue,
-  }));
-
-const valueFromItemChunks = (
-  itemChunks: readonly PxeRosterItemResourceChunk[],
-  rosterType: PxeRosterType,
-): PxeValue =>
-  rosterType === PxeRosterType.Object
-    ? Object.fromEntries(
-        itemChunks.map(itemChunk => [itemChunk.key, itemChunk.value]),
-      )
-    : itemChunks.map(itemChunk => itemChunk.value);
-
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry,
   resourceChunk,
@@ -172,3 +138,36 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
     </Fragment>
   );
 };
+
+const itemChunksFromValue = (
+  value: PxeValue,
+): readonly PxeRosterItemResourceChunk[] =>
+  Object.entries(value ?? {}).map(([itemKey, itemValue]) => ({
+    key: itemKey,
+    value: itemValue as PxeValue,
+  }));
+
+const valueFromItemChunks = (
+  itemChunks: readonly PxeRosterItemResourceChunk[],
+  rosterType: PxeRosterType,
+): PxeValue =>
+  rosterType === PxeRosterType.Object
+    ? Object.fromEntries(
+        itemChunks.map(itemChunk => [itemChunk.key, itemChunk.value]),
+      )
+    : itemChunks.map(itemChunk => itemChunk.value);
+
+const useStyles = makeStyles(() => ({
+  item: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  itemContent: {
+    flex: '1 1 auto',
+  },
+  itemActions: {
+    flex: '0 0 auto',
+    paddingLeft: '16px',
+  },
+}));

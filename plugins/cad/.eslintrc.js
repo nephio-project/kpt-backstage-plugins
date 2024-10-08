@@ -14,4 +14,8 @@
  * limitations under the License.
  */
 
-module.exports = require('@backstage/cli/config/eslint-factory')(__dirname);
+module.exports = require('@backstage/cli/config/eslint-factory')(__dirname, {
+  rules: {
+    '@typescript-eslint/no-use-before-define': 'off',
+  },
+});
