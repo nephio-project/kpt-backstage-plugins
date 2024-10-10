@@ -17,11 +17,10 @@
 import {
   PxeConfigurationEntry,
   PxeConfigurationEntryType,
-  PxeRosterType,
   PxeRosterWidgetEntry,
+  PxeValueType,
 } from '../types/PxeConfiguration.types';
 
-// TODO Refactor these two functions.
 export const objectTypeRosterConfigurationEntry = (
   {
     path,
@@ -33,8 +32,7 @@ export const objectTypeRosterConfigurationEntry = (
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeRosterWidgetEntry => ({
   type: PxeConfigurationEntryType.Roster,
-  rosterType: PxeRosterType.Object,
-  values: [{ path, isRequired }],
+  values: [{ path, type: PxeValueType.Object, isRequired }],
   itemEntries,
 });
 
@@ -49,7 +47,6 @@ export const arrayTypeRosterConfigurationEntry = (
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeRosterWidgetEntry => ({
   type: PxeConfigurationEntryType.Roster,
-  rosterType: PxeRosterType.Array,
-  values: [{ path, isRequired }],
+  values: [{ path, type: PxeValueType.Array, isRequired }],
   itemEntries,
 });

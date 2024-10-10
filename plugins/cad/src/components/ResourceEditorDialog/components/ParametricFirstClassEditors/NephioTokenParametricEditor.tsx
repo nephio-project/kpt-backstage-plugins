@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { PxeValueType } from '../PxeParametricEditor/types/PxeConfiguration.types';
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
 import { metadataEditorSection } from './partial/metadataEditorSection';
@@ -28,12 +29,13 @@ export const NephioTokenParametricEditor = createEditorFromConfiguration({
       { name: 'Lifecycle' },
       selectValue({
         path: 'spec.lifecycle.deletionPolicy',
+        type: PxeValueType.String,
+        isRequired: false,
         options: [
           { value: undefined, label: 'Default' },
           { value: 'delete', label: 'Delete' },
           { value: 'orphan', label: 'Orphan' },
         ],
-        isRequired: false,
       }),
     ),
   ],

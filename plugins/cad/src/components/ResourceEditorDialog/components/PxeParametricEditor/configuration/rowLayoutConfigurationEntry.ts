@@ -17,12 +17,12 @@
 import {
   PxeConfigurationEntry,
   PxeConfigurationEntryType,
-  PxeLayoutEntry,
+  PxeRowLayoutEntry,
 } from '../types/PxeConfiguration.types';
 
 export const rowLayoutConfigurationEntry = (
   ...childEntries: PxeConfigurationEntry[]
-): PxeLayoutEntry => ({
+): PxeRowLayoutEntry => ({
   type: PxeConfigurationEntryType.RowLayout,
   entries: childEntries,
 });

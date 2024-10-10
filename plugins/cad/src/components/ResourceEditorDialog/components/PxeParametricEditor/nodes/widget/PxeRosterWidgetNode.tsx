@@ -26,8 +26,8 @@ import {
   PxeParametricEditorNodeProps,
 } from '../../PxeParametricEditorNode';
 import {
-  PxeRosterType,
   PxeRosterWidgetEntry,
+  PxeValueType,
 } from '../../types/PxeConfiguration.types';
 import {
   PxeResourceChangeRequest,
@@ -40,19 +40,21 @@ import {
   arrayWithItemReplaced,
 } from '../../utils/general/immutableArrays';
 
-type PxeRosterItemResourceChunk = {
+type RosterItemResourceChunk = {
   readonly key: string;
   readonly value: PxeValue;
 };
+
+type RosterValueType = PxeValueType.Object | PxeValueType.Array;
 
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry,
   resourceChunk,
   onResourceChangeRequest,
 }) => {
-  const rosterEntry = configurationEntry as PxeRosterWidgetEntry;
-  const { values, rosterType, itemEntries } = rosterEntry;
+  const { values, itemEntries } = configurationEntry as PxeRosterWidgetEntry;
   const valueDescriptor = values[0];
+  const rosterValueType = valueDescriptor.type as RosterValueType;
 
   const itemChunks = itemChunksFromValue(
     get(resourceChunk, valueDescriptor.path),
@@ -65,26 +67,30 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
     const newItemChunk = createResourceChunkAfterChangeRequest(
       itemChunks[itemIndex],
       changeRequest,
-    ) as PxeRosterItemResourceChunk;
+    ) as RosterItemResourceChunk;
 
     onResourceChangeRequest({
       valueDescriptor,
       newValue: valueFromItemChunks(
         arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk),
-        rosterType,
+        rosterValueType,
       ),
     });
   };
 
   const handleItemAddition = () => {
-    const newItemChunk: PxeRosterItemResourceChunk = {
-      key: rosterType === PxeRosterType.Array ? String(itemChunks.length) : '',
+    const newItemChunk: RosterItemResourceChunk = {
+      key:
+        rosterValueType === PxeValueType.Array ? String(itemChunks.length) : '',
       value: undefined,
     };
 
     onResourceChangeRequest({
       valueDescriptor,
-      newValue: valueFromItemChunks([...itemChunks, newItemChunk], rosterType),
+      newValue: valueFromItemChunks(
+        [...itemChunks, newItemChunk],
+        rosterValueType,
+      ),
     });
   };
 
@@ -93,7 +99,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
       valueDescriptor,
       newValue: valueFromItemChunks(
         arrayWithItemRemoved(itemChunks, itemIndex),
-        rosterType,
+        rosterValueType,
       ),
     });
   };
@@ -141,17 +147,17 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
 
 const itemChunksFromValue = (
   value: PxeValue,
-): readonly PxeRosterItemResourceChunk[] =>
+): readonly RosterItemResourceChunk[] =>
   Object.entries(value ?? {}).map(([itemKey, itemValue]) => ({
     key: itemKey,
     value: itemValue as PxeValue,
   }));
 
 const valueFromItemChunks = (
-  itemChunks: readonly PxeRosterItemResourceChunk[],
-  rosterType: PxeRosterType,
+  itemChunks: readonly RosterItemResourceChunk[],
+  rosterType: RosterValueType,
 ): PxeValue =>
-  rosterType === PxeRosterType.Object
+  rosterType === PxeValueType.Object
     ? Object.fromEntries(
         itemChunks.map(itemChunk => [itemChunk.key, itemChunk.value]),
       )

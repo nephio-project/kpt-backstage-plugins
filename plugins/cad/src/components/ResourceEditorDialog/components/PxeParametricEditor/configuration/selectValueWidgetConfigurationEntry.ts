@@ -18,18 +18,21 @@ import {
   PxeConfigurationEntryType,
   PxeSelectValueWidgetEntry,
   PxeValueOption,
+  PxeValueType,
 } from '../types/PxeConfiguration.types';
 
 export const selectValueWidgetConfigurationEntry = ({
   path,
-  options,
+  type = PxeValueType.Any,
   isRequired = false,
+  options,
 }: {
   path: string;
-  options: readonly PxeValueOption[];
+  type?: PxeValueType;
   isRequired?: boolean;
+  options: readonly PxeValueOption[];
 }): PxeSelectValueWidgetEntry => ({
   type: PxeConfigurationEntryType.SelectValue,
-  values: [{ path, isRequired }],
+  values: [{ path, type, isRequired }],
   options,
 });

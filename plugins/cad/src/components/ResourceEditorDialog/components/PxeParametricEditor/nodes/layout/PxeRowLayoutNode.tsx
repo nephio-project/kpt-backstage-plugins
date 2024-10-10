@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { PxeLayoutEntry } from '../../types/PxeConfiguration.types';
+import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import {
   PxeParametricEditorNode,
   PxeParametricEditorNodeProps,
@@ -36,7 +36,7 @@ export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = ({
   onResourceChangeRequest,
   resourceChunk,
 }) => {
-  const { entries } = configurationEntry as PxeLayoutEntry;
+  const { entries } = configurationEntry as PxeRowLayoutEntry;
 
   const classes = useStyles();
   return (

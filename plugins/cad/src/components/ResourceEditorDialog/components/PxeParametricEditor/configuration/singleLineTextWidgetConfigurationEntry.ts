@@ -17,15 +17,18 @@
 import {
   PxeConfigurationEntryType,
   PxeSingleLineTextWidgetEntry,
+  PxeValueType,
 } from '../types/PxeConfiguration.types';
 
 export const singleLineTextWidgetConfigurationEntry = ({
   path,
+  type = PxeValueType.String,
   isRequired = false,
 }: {
   path: string;
+  type?: PxeValueType.String | PxeValueType.Number;
   isRequired?: boolean;
 }): PxeSingleLineTextWidgetEntry => ({
   type: PxeConfigurationEntryType.SingleLineText,
-  values: [{ path, isRequired }],
+  values: [{ path, type, isRequired }],
 });

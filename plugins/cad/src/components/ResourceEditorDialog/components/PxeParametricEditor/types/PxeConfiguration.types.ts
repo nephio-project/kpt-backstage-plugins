@@ -20,22 +20,12 @@ export type PxeConfiguration = {
   readonly entries: readonly PxeConfigurationEntry[];
 };
 
+// Entries
+
 export type PxeConfigurationEntry =
   | PxeSectionEntry
-  | PxeLayoutEntry
+  | PxeRowLayoutEntry
   | PxeWidgetEntry;
-
-export type PxeSectionEntry = {
-  readonly type: PxeConfigurationEntryType.Section;
-  readonly name: string;
-  readonly entries: readonly PxeConfigurationEntry[];
-};
-
-// TODO Probably needs separate types for different layouts.
-export interface PxeLayoutEntry {
-  readonly type: PxeConfigurationEntryType.RowLayout;
-  readonly entries: readonly PxeConfigurationEntry[];
-}
 
 export enum PxeConfigurationEntryType {
   Section = 'Section',
@@ -47,24 +37,38 @@ export enum PxeConfigurationEntryType {
   SelectValue = 'SelectValue',
 }
 
+// Values
+
+export enum PxeValueType {
+  Any = 'Any',
+  String = 'String',
+  Number = 'Number',
+  Object = 'Object',
+  Array = 'Array',
+}
+
 export type PxeValueDescriptor = {
   readonly path: string;
+  readonly type: PxeValueType;
   readonly isRequired: boolean;
 };
 
-export enum PxeRosterType {
-  Array = 'Array',
-  Object = 'Object',
+// Section
+
+export type PxeSectionEntry = {
+  readonly type: PxeConfigurationEntryType.Section;
+  readonly name: string;
+  readonly entries: readonly PxeConfigurationEntry[];
+};
+
+// Layouts
+
+export type PxeLayoutEntry = PxeRowLayoutEntry;
+
+export interface PxeRowLayoutEntry {
+  readonly type: PxeConfigurationEntryType.RowLayout;
+  readonly entries: readonly PxeConfigurationEntry[];
 }
-
-export type PxeValueOption = {
-  readonly value: PxeValue;
-  readonly label: string;
-};
-
-type PxeWidgetEntryBase = {
-  readonly values: readonly PxeValueDescriptor[];
-};
 
 // Widgets
 
@@ -73,22 +77,26 @@ export type PxeWidgetEntry =
   | PxeSingleLineTextWidgetEntry
   | PxeSelectValueWidgetEntry;
 
+type PxeWidgetEntryBase = {
+  readonly type: PxeConfigurationEntryType;
+  readonly values: readonly PxeValueDescriptor[];
+};
+
 export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.Roster;
-  readonly values: readonly [PxeValueDescriptor];
-  // FIXME Should be a part of roster's value descriptor.
-  readonly rosterType: PxeRosterType;
   readonly itemEntries: readonly PxeConfigurationEntry[];
 }
 
 export interface PxeSingleLineTextWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.SingleLineText;
-  readonly values: readonly [PxeValueDescriptor];
 }
 
 export interface PxeSelectValueWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.SelectValue;
-  readonly values: readonly [PxeValueDescriptor];
-  // FIXME Should be a part of select's value descriptor.
   readonly options: readonly PxeValueOption[];
 }
+
+export type PxeValueOption = {
+  readonly value: PxeValue;
+  readonly label: string;
+};
