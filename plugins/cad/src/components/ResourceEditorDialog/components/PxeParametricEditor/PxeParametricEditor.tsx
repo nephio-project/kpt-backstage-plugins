@@ -18,19 +18,14 @@ import { pick } from 'lodash';
 import React, { useCallback, useState } from 'react';
 import { useSetStateAndCall } from '../../../../hooks/useSetStateAndCall';
 import { useEditorStyles } from '../FirstClassEditors/styles';
-import {
-  PxeConfiguration,
-  PxeConfigurationEntryType,
-} from './types/PxeConfiguration.types';
+import { PxeConfiguration } from './types/PxeConfiguration.types';
 import {
   PxeExpandedSectionState,
   PxeResourceChangeRequestHandler,
 } from './types/PxeParametricEditor.types';
-import { chunkByTrait } from './utils/general/chunkByTrait';
-import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
-import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
+import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
 
 export type PxeParametricEditorProps = {
   readonly configuration: PxeConfiguration;
@@ -68,22 +63,14 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
     );
 
   const classes = useEditorStyles();
-
-  const groupedEntries = chunkByTrait(entries, entry =>
-    entry.type === PxeConfigurationEntryType.Section ? 'section' : null,
-  );
-
   return (
     <div className={classes.root}>
-      {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
-        <PxeParametricEditorNode
-          key={`${groupIndex}-${itemIndex}`}
-          configurationEntry={entry}
-          resourceChunk={resource}
-          parentExpandedSectionState={[expandedSection, setExpandedSection]}
-          onResourceChangeRequest={handleResourceChangeRequest}
-        />
-      ))}
+      <PxeParametricEditorNodeList
+        entries={entries}
+        resourceChunk={resource}
+        onResourceChangeRequest={handleResourceChangeRequest}
+        parentExpandedSectionState={[expandedSection, setExpandedSection]}
+      />
     </div>
   );
 };

@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
+import { noop } from 'lodash';
 import { nanoid } from 'nanoid';
 import React, { useRef, useState } from 'react';
 import { EditorAccordion } from '../../FirstClassEditors/Controls';
 import { PxeExpandedSectionState } from '../types/PxeParametricEditor.types';
-import {
-  PxeConfigurationEntryType,
-  PxeSectionEntry,
-} from '../types/PxeConfiguration.types';
-import { chunkByTrait } from '../utils/general/chunkByTrait';
+import { PxeSectionEntry } from '../types/PxeConfiguration.types';
 import { generateDefaultSectionDescription } from '../utils/generateLabelsForWidgets';
-import { renderGroupedArray } from '../utils/rendering/renderGroupedArray';
-import {
-  PxeParametricEditorNode,
-  PxeParametricEditorNodeProps,
-} from '../PxeParametricEditorNode';
-import { noop } from 'lodash';
+import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
+import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
 
 export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry: configurationEntryUncasted,
-  onResourceChangeRequest,
   resourceChunk,
+  onResourceChangeRequest,
   parentExpandedSectionState,
 }) => {
   const configurationEntry = configurationEntryUncasted as PxeSectionEntry;
@@ -49,12 +42,6 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
     resourceChunk,
   );
 
-  // TODO Refactor this grouping and rendering into a separate component.
-  // It is used also in PxeParametricEditor main component.
-  const groupedChildEntries = chunkByTrait(childEntries, entry =>
-    entry.type === PxeConfigurationEntryType.Section ? 'section' : null,
-  );
-
   return (
     <EditorAccordion
       id={sectionIdRef.current}
@@ -62,18 +49,12 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
       state={parentExpandedSectionState ?? [undefined, noop]}
       description={description}
     >
-      {renderGroupedArray(
-        groupedChildEntries,
-        (childEntry, groupIndex, itemIndex) => (
-          <PxeParametricEditorNode
-            key={`${groupIndex}-${itemIndex}`}
-            configurationEntry={childEntry}
-            resourceChunk={resourceChunk}
-            parentExpandedSectionState={[expandedSection, setExpandedSection]}
-            onResourceChangeRequest={onResourceChangeRequest}
-          />
-        ),
-      )}
+      <PxeParametricEditorNodeList
+        entries={childEntries}
+        resourceChunk={resourceChunk}
+        onResourceChangeRequest={onResourceChangeRequest}
+        parentExpandedSectionState={[expandedSection, setExpandedSection]}
+      />
     </EditorAccordion>
   );
 };

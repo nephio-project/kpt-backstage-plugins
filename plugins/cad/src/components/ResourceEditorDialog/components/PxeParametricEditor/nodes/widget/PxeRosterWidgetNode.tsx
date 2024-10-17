@@ -21,10 +21,7 @@ import { get } from 'lodash';
 import React, { Fragment } from 'react';
 import { IconButton } from '../../../../../Controls';
 import { useEditorStyles } from '../../../FirstClassEditors/styles';
-import {
-  PxeParametricEditorNode,
-  PxeParametricEditorNodeProps,
-} from '../../PxeParametricEditorNode';
+import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import {
   PxeRosterWidgetEntry,
   PxeValueType,
@@ -39,6 +36,7 @@ import {
   arrayWithItemRemoved,
   arrayWithItemReplaced,
 } from '../../utils/general/immutableArrays';
+import { PxeParametricEditorNodeList } from '../../PxeParametricEditorNodeList';
 
 type RosterItemResourceChunk = {
   readonly key: string;
@@ -111,16 +109,13 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
       {itemChunks.map((itemChunk, itemIndex) => (
         <div className={rosterClasses.item} key={itemIndex}>
           <div className={rosterClasses.itemContent}>
-            {itemEntries.map((itemEntry, entryIndex) => (
-              <PxeParametricEditorNode
-                key={`${itemIndex}-${entryIndex}`}
-                configurationEntry={itemEntry}
-                resourceChunk={itemChunk}
-                onResourceChangeRequest={changeRequest =>
-                  handleResourceChangeRequestForItem(itemIndex, changeRequest)
-                }
-              />
-            ))}
+            <PxeParametricEditorNodeList
+              entries={itemEntries}
+              resourceChunk={itemChunk}
+              onResourceChangeRequest={changeRequest =>
+                handleResourceChangeRequestForItem(itemIndex, changeRequest)
+              }
+            />
           </div>
           <div className={rosterClasses.itemActions}>
             <IconButton
