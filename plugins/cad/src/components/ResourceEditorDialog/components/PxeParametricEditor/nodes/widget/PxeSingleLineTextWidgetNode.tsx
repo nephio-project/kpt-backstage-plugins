@@ -24,8 +24,10 @@ import { generateDefaultValueLabel } from '../../utils/generateLabelsForWidgets'
 export const PxeSingleLineTextWidgetNode: React.FC<
   PxeParametricEditorNodeProps
 > = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
-  const widgetEntry = configurationEntry as PxeSingleLineTextWidgetEntry;
-  const valueDescriptor = widgetEntry.values[0];
+  const {
+    textFilter,
+    values: [valueDescriptor],
+  } = configurationEntry as PxeSingleLineTextWidgetEntry;
 
   return (
     <TextField
@@ -33,7 +35,10 @@ export const PxeSingleLineTextWidgetNode: React.FC<
       variant="outlined"
       value={get(resourceChunk, valueDescriptor.path) ?? ''}
       onChange={e => {
-        onResourceChangeRequest({ valueDescriptor, newValue: e.target.value });
+        onResourceChangeRequest({
+          valueDescriptor,
+          newValue: textFilter(e.target.value),
+        });
       }}
       fullWidth
     />

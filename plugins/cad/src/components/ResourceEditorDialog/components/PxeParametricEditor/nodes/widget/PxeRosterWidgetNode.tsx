@@ -113,7 +113,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
           <div className={rosterClasses.itemContent}>
             {itemEntries.map((itemEntry, entryIndex) => (
               <PxeParametricEditorNode
-                key={`${itemIndex}-${entryIndex}`} // FIXME Keys.
+                key={`${itemIndex}-${entryIndex}`}
                 configurationEntry={itemEntry}
                 resourceChunk={itemChunk}
                 parentExpandedSectionState={[undefined, noop]} // FIXME Probably should be extracted.

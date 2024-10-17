@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-// FIXME Fill in JsDoc.
+/**
+ * Returns an array with a new item replacing an item at the given index.
+ * Original array is not modified.
+ *
+ * @param array The original array.
+ * @param replaceAt Index at which array item is to be replaced.
+ * @param newItem Item to replace on original item.
+ * @returns A new array with item replaced.
+ */
 export const arrayWithItemReplaced = <T>(
   array: readonly T[],
   replaceAt: number,
@@ -25,7 +33,15 @@ export const arrayWithItemReplaced = <T>(
   ...array.slice(replaceAt + 1),
 ];
 
-// FIXME Fill in JsDoc.
+/**
+ * Returns an array with a new item inserted at the given index.
+ * Original array is not modified.
+ *
+ * @param array The original array.
+ * @param insertAt Index at which array item is to be inserted.
+ * @param newItem Item to insert.
+ * @returns A new array with item inserted.
+ */
 export const arrayWithItemInserted = <T>(
   array: readonly T[],
   insertAt: number,
@@ -36,7 +52,13 @@ export const arrayWithItemInserted = <T>(
   ...array.slice(insertAt),
 ];
 
-// FIXME Fill in JsDoc.
+/**
+ * Returns an array with a new item removed at the given index.
+ * Original array is not modified.
+ * @param array The original array.
+ * @param removeAt Index at which array item is to be removed.
+ * @returns A new array with item removed.
+ */
 export const arrayWithItemRemoved = <T>(
   array: readonly T[],
   removeAt: number,

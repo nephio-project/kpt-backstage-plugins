@@ -18,7 +18,7 @@ import { createEditorFromConfiguration } from '../PxeParametricEditor/createEdit
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
 import { metadataEditorSection } from './partial/metadataEditorSection';
 
-const { section, singleLineText } = PxeConfigurationFactory;
+const { section, singleLineText, naturalNumberText } = PxeConfigurationFactory;
 
 export const NephioCapacityParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
@@ -26,12 +26,11 @@ export const NephioCapacityParametricEditor = createEditorFromConfiguration({
     metadataEditorSection({ isNamespacedResource: true }),
     section(
       { name: 'Capacity' },
-      singleLineText({ path: 'spec.maxUplinkThroughput', isRequired: false }),
-      singleLineText({ path: 'spec.maxDownlinkThroughput', isRequired: false }),
-      // FIXME Enforce numbers.
-      singleLineText({ path: 'spec.maxNFConnections', isRequired: false }),
-      singleLineText({ path: 'spec.maxSessions', isRequired: false }),
-      singleLineText({ path: 'spec.maxSubscribers', isRequired: false }),
+      singleLineText({ path: 'spec.maxUplinkThroughput' }),
+      singleLineText({ path: 'spec.maxDownlinkThroughput' }),
+      naturalNumberText({ path: 'spec.maxNFConnections' }),
+      naturalNumberText({ path: 'spec.maxSessions' }),
+      naturalNumberText({ path: 'spec.maxSubscribers' }),
     ),
   ],
 });

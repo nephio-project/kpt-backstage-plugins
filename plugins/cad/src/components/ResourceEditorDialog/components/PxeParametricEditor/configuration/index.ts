@@ -20,7 +20,10 @@ import {
   arrayTypeRosterConfigurationEntry,
   objectTypeRosterConfigurationEntry,
 } from './rosterConfigurationEntry';
-import { singleLineTextWidgetConfigurationEntry } from './singleLineTextWidgetConfigurationEntry';
+import {
+  naturalNumberTextWidgetConfigurationEntry,
+  singleLineTextWidgetConfigurationEntry,
+} from './singleLineTextWidgetConfigurationEntry';
 import { selectValueWidgetConfigurationEntry } from './selectValueWidgetConfigurationEntry';
 
 export const PxeConfigurationFactory = {
@@ -31,5 +34,6 @@ export const PxeConfigurationFactory = {
   arrayTypeRoster: arrayTypeRosterConfigurationEntry,
   objectTypeRoster: objectTypeRosterConfigurationEntry,
   singleLineText: singleLineTextWidgetConfigurationEntry,
+  naturalNumberText: naturalNumberTextWidgetConfigurationEntry,
   selectValue: selectValueWidgetConfigurationEntry,
 };

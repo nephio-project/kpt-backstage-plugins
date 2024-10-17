@@ -19,16 +19,40 @@ import {
   PxeSingleLineTextWidgetEntry,
   PxeValueType,
 } from '../types/PxeConfiguration.types';
+import {
+  identityTextFilter,
+  naturalNumberTextFilter,
+  TextFilter,
+} from '../validation/textFilters';
 
 export const singleLineTextWidgetConfigurationEntry = ({
   path,
   type = PxeValueType.String,
   isRequired = false,
+  textFilter = identityTextFilter,
 }: {
   path: string;
   type?: PxeValueType.String | PxeValueType.Number;
   isRequired?: boolean;
+  textFilter?: TextFilter;
 }): PxeSingleLineTextWidgetEntry => ({
   type: PxeConfigurationEntryType.SingleLineText,
   values: [{ path, type, isRequired }],
+  textFilter,
 });
+
+export const naturalNumberTextWidgetConfigurationEntry = ({
+  path,
+  isRequired,
+}: {
+  path: string;
+  type?: PxeValueType.String | PxeValueType.Number;
+  isRequired?: boolean;
+  textFilter?: TextFilter;
+}): PxeSingleLineTextWidgetEntry =>
+  singleLineTextWidgetConfigurationEntry({
+    path,
+    type: PxeValueType.Number,
+    isRequired,
+    textFilter: naturalNumberTextFilter,
+  });

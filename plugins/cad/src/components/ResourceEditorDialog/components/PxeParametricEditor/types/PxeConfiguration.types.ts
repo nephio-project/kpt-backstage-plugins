@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { PxeValue } from './PxeParametricEditor.types';
+import { TextFilter } from '../validation/textFilters';
 
 export type PxeConfiguration = {
   readonly topLevelProperties: readonly string[];
@@ -89,6 +90,7 @@ export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
 
 export interface PxeSingleLineTextWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.SingleLineText;
+  readonly textFilter: TextFilter;
 }
 
 export interface PxeSelectValueWidgetEntry extends PxeWidgetEntryBase {
