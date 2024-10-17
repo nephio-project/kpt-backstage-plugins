@@ -21,6 +21,12 @@ import { metadataEditorSection } from './partial/metadataEditorSection';
 
 const { section, selectValue } = PxeConfigurationFactory;
 
+const DELETION_POLICY_OPTIONS = [
+  { value: undefined, label: 'Default' },
+  { value: 'delete', label: 'Delete' },
+  { value: 'orphan', label: 'Orphan' },
+];
+
 export const NephioTokenParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
   entries: [
@@ -31,11 +37,7 @@ export const NephioTokenParametricEditor = createEditorFromConfiguration({
         path: 'spec.lifecycle.deletionPolicy',
         type: PxeValueType.String,
         isRequired: false,
-        options: [
-          { value: undefined, label: 'Default' },
-          { value: 'delete', label: 'Delete' },
-          { value: 'orphan', label: 'Orphan' },
-        ],
+        options: DELETION_POLICY_OPTIONS,
       }),
     ),
   ],
