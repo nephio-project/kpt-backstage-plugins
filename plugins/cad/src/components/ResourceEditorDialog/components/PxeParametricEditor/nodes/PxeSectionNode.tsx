@@ -20,7 +20,7 @@ import React, { useRef, useState } from 'react';
 import { EditorAccordion } from '../../FirstClassEditors/Controls';
 import { PxeExpandedSectionState } from '../types/PxeParametricEditor.types';
 import { PxeSectionEntry } from '../types/PxeConfiguration.types';
-import { generateDefaultSectionDescription } from '../utils/generateLabelsForWidgets';
+import { generateSectionDescription } from '../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
 import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
 
@@ -37,7 +37,7 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
   const [expandedSection, setExpandedSection] =
     useState<PxeExpandedSectionState>(undefined);
 
-  const description = generateDefaultSectionDescription(
+  const description = generateSectionDescription(
     configurationEntry,
     resourceChunk,
   );

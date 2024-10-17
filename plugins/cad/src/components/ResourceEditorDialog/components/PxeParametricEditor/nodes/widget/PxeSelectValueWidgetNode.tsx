@@ -18,7 +18,7 @@ import { get } from 'lodash';
 import React from 'react';
 import { Select } from '../../../../../Controls';
 import { PxeSelectValueWidgetEntry } from '../../types/PxeConfiguration.types';
-import { generateDefaultValueLabel } from '../../utils/generateLabelsForWidgets';
+import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
@@ -36,7 +36,7 @@ export const PxeSelectValueWidgetNode: React.FC<
 
   return (
     <Select
-      label={generateDefaultValueLabel(valueDescriptor)}
+      label={generateValueLabel(valueDescriptor)}
       items={selectItems}
       selected={get(resourceChunk, valueDescriptor.path) ?? DEFAULT_VALUE}
       onChange={value => {

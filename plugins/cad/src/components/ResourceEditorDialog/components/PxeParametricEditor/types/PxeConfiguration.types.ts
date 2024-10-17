@@ -52,6 +52,9 @@ export type PxeValueDescriptor = {
   readonly path: string;
   readonly type: PxeValueType;
   readonly isRequired: boolean;
+  readonly display?: {
+    readonly name?: string;
+  };
 };
 
 // Section

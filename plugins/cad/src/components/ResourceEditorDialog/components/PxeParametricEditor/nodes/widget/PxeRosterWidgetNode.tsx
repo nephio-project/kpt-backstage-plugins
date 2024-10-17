@@ -31,7 +31,7 @@ import {
   PxeValue,
 } from '../../types/PxeParametricEditor.types';
 import { createResourceChunkAfterChangeRequest } from '../../utils/createResourceChunkAfterChangeRequest';
-import { generateDefaultValueLabel } from '../../utils/generateLabelsForWidgets';
+import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import {
   arrayWithItemRemoved,
   arrayWithItemReplaced,
@@ -45,6 +45,7 @@ type RosterItemResourceChunk = {
 
 type RosterValueType = PxeValueType.Object | PxeValueType.Array;
 
+// TODO Consider refactoring this component after Prettier settings update.
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry,
   resourceChunk,
@@ -133,7 +134,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
         startIcon={<AddIcon />}
         onClick={handleItemAddition}
       >
-        Add {generateDefaultValueLabel(valueDescriptor)}
+        Add {generateValueLabel(valueDescriptor)}
       </Button>
     </Fragment>
   );

@@ -15,28 +15,21 @@
  */
 
 import * as changeCase from 'change-case';
-import { get } from 'lodash';
+import { get, size } from 'lodash';
 import {
   PxeConfigurationEntryType,
   PxeSectionEntry,
   PxeValueDescriptor,
+  PxeValueType,
   PxeWidgetEntry,
 } from '../types/PxeConfiguration.types';
 import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
 import { isEmptyPxeValue } from './isEmptyPxeValue';
+import { upperCaseFirstLetter } from './general/stringCasing';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateDefaultValueLabel = (
-  valueDescriptor: PxeValueDescriptor,
-): string => {
-  const pathSegments = valueDescriptor.path.split('.');
-  return pathSegments.length > 0
-    ? changeCase.sentenceCase(pathSegments[pathSegments.length - 1])
-    : FALLBACK_DEFAULT_VALUE_NAME;
-};
-
-export const generateDefaultSectionDescription = (
+export const generateSectionDescription = (
   sectionEntry: PxeSectionEntry,
   resourceChunk: PxeResourceChunk,
 ): string =>
@@ -50,16 +43,20 @@ export const generateDefaultSectionDescription = (
     )
     .join(', ');
 
-const generateValueDescription = (
+export const generateValueLabel = (
   valueDescriptor: PxeValueDescriptor,
-  resourceChunk: PxeResourceChunk,
-): string | null => {
-  const { isRequired, path } = valueDescriptor;
-  const valueName = generateDefaultValueLabel(valueDescriptor);
-  const value = get(resourceChunk, path);
-
-  const hasDescription = !isEmptyPxeValue(value) || isRequired;
-  return hasDescription ? `${valueName}: ${value ?? ''}` : null;
+  uppercase: boolean = true,
+): string => {
+  if (valueDescriptor.display?.name) {
+    return uppercase
+      ? upperCaseFirstLetter(valueDescriptor.display.name)
+      : valueDescriptor.display.name;
+  } else {
+    const pathSegments = valueDescriptor.path.split('.');
+    return (uppercase ? changeCase.sentenceCase : changeCase.noCase)(
+      pathSegments[pathSegments.length - 1] ?? FALLBACK_DEFAULT_VALUE_NAME,
+    );
+  }
 };
 
 const generateValueDescriptionsForWidget = (
@@ -71,3 +68,20 @@ const generateValueDescriptionsForWidget = (
       generateValueDescription(valueDescriptor, resourceChunk),
     )
     .filter(segment => segment !== null) as string[];
+
+const generateValueDescription = (
+  valueDescriptor: PxeValueDescriptor,
+  resourceChunk: PxeResourceChunk,
+): string | null => {
+  const { path, type, isRequired } = valueDescriptor;
+  const value = get(resourceChunk, path);
+
+  if (type === PxeValueType.Array || type === PxeValueType.Object) {
+    return `${size(value)} ${generateValueLabel(valueDescriptor, false)}`;
+  } else {
+    const hasDescription = !isEmptyPxeValue(value) || isRequired;
+    return hasDescription
+      ? `${generateValueLabel(valueDescriptor)}: ${value ?? ''}`
+      : null;
+  }
+};

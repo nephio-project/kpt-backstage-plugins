@@ -29,30 +29,35 @@ export const singleLineTextWidgetConfigurationEntry = ({
   path,
   type = PxeValueType.String,
   isRequired = false,
+  name,
   textFilter = identityTextFilter,
 }: {
   path: string;
   type?: PxeValueType.String | PxeValueType.Number;
   isRequired?: boolean;
+  name?: string;
   textFilter?: TextFilter;
 }): PxeSingleLineTextWidgetEntry => ({
   type: PxeConfigurationEntryType.SingleLineText,
-  values: [{ path, type, isRequired }],
+  values: [{ path, type, isRequired, display: { name } }],
   textFilter,
 });
 
 export const naturalNumberTextWidgetConfigurationEntry = ({
   path,
   isRequired,
+  name,
 }: {
   path: string;
   type?: PxeValueType.String | PxeValueType.Number;
   isRequired?: boolean;
+  name?: string;
   textFilter?: TextFilter;
 }): PxeSingleLineTextWidgetEntry =>
   singleLineTextWidgetConfigurationEntry({
     path,
     type: PxeValueType.Number,
     isRequired,
+    name,
     textFilter: naturalNumberTextFilter,
   });

@@ -32,7 +32,7 @@ export const NephioWorkloadClusterParametricEditor =
         section(
           { name: 'CNIs' },
           arrayTypeRoster(
-            { path: 'spec.cnis', isRequired: false },
+            { path: 'spec.cnis', isRequired: false, name: 'CNIs' },
             singleLineText({ path: 'value' }),
           ),
         ),

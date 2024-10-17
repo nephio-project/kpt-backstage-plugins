@@ -25,14 +25,16 @@ export const objectTypeRosterConfigurationEntry = (
   {
     path,
     isRequired = false,
+    name,
   }: {
     path: string;
     isRequired?: boolean;
+    name?: string;
   },
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeRosterWidgetEntry => ({
   type: PxeConfigurationEntryType.Roster,
-  values: [{ path, type: PxeValueType.Object, isRequired }],
+  values: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
   itemEntries,
 });
 
@@ -40,13 +42,15 @@ export const arrayTypeRosterConfigurationEntry = (
   {
     path,
     isRequired = false,
+    name,
   }: {
     path: string;
     isRequired?: boolean;
+    name?: string;
   },
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeRosterWidgetEntry => ({
   type: PxeConfigurationEntryType.Roster,
-  values: [{ path, type: PxeValueType.Array, isRequired }],
+  values: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
   itemEntries,
 });

@@ -17,15 +17,19 @@
 type TraitToken = string | number | boolean | null;
 
 /**
- * TODO Fill in JSDoc.
- * @param inputArray
- * @param getTrait
+ * Splits an array into multiple arrays based on the trait value of individual items.
+ * Result arrays consist of adjacent items with the same trait value.
+ * Order of items in the original array is preserved in the result arrays.
+ * Items with trait value `null` do not pair with other items and always end up in a separate result array.
+ *
+ * @param array The original array.
+ * @param getTrait The function called for determining the trait value of an item.
  */
 export const chunkByTrait = <T>(
-  inputArray: readonly T[],
+  array: readonly T[],
   getTrait: (item: T) => TraitToken,
 ): T[][] =>
-  inputArray.reduce(
+  array.reduce(
     ({ chunks, currentTrait }, item) => {
       const lastChunk = chunks[chunks.length - 1] ?? null;
       const itemTrait = getTrait(item);

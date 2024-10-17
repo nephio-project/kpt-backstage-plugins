@@ -28,7 +28,10 @@ export const NephioCapacityParametricEditor = createEditorFromConfiguration({
       { name: 'Capacity' },
       singleLineText({ path: 'spec.maxUplinkThroughput' }),
       singleLineText({ path: 'spec.maxDownlinkThroughput' }),
-      naturalNumberText({ path: 'spec.maxNFConnections' }),
+      naturalNumberText({
+        path: 'spec.maxNFConnections',
+        name: 'max NF connections',
+      }),
       naturalNumberText({ path: 'spec.maxSessions' }),
       naturalNumberText({ path: 'spec.maxSubscribers' }),
     ),
