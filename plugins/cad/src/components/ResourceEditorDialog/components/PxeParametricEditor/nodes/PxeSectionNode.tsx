@@ -29,12 +29,13 @@ import {
   PxeParametricEditorNode,
   PxeParametricEditorNodeProps,
 } from '../PxeParametricEditorNode';
+import { noop } from 'lodash';
 
 export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry: configurationEntryUncasted,
   onResourceChangeRequest,
-  parentExpandedSectionState,
   resourceChunk,
+  parentExpandedSectionState,
 }) => {
   const configurationEntry = configurationEntryUncasted as PxeSectionEntry;
   const { name, entries: childEntries } = configurationEntry;
@@ -58,7 +59,7 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
     <EditorAccordion
       id={sectionIdRef.current}
       title={name}
-      state={parentExpandedSectionState}
+      state={parentExpandedSectionState ?? [undefined, noop]}
       description={description}
     >
       {renderGroupedArray(

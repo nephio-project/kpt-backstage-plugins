@@ -33,8 +33,8 @@ import { PxeSelectValueWidgetNode } from './nodes/widget/PxeSelectValueWidgetNod
 export type PxeParametricEditorNodeProps = {
   readonly configurationEntry: PxeConfigurationEntry;
   readonly resourceChunk: PxeResourceChunk;
-  readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
+  readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };
 
 const NODE_BY_ENTRY_TYPE_RECORD: Record<

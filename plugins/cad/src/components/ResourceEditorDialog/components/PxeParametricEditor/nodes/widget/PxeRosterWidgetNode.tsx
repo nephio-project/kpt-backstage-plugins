@@ -17,7 +17,7 @@
 import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { get, noop } from 'lodash';
+import { get } from 'lodash';
 import React, { Fragment } from 'react';
 import { IconButton } from '../../../../../Controls';
 import { useEditorStyles } from '../../../FirstClassEditors/styles';
@@ -116,7 +116,6 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
                 key={`${itemIndex}-${entryIndex}`}
                 configurationEntry={itemEntry}
                 resourceChunk={itemChunk}
-                parentExpandedSectionState={[undefined, noop]} // FIXME Probably should be extracted.
                 onResourceChangeRequest={changeRequest =>
                   handleResourceChangeRequestForItem(itemIndex, changeRequest)
                 }
