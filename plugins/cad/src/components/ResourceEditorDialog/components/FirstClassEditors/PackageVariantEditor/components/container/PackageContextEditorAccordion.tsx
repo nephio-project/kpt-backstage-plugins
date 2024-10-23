@@ -20,10 +20,7 @@ import React, { Fragment, useRef, useState } from 'react';
 import { KubernetesKeyValueObject } from '../../../../../../../types/KubernetesResource';
 import { PackageVariantPackageContext } from '../../../../../../../types/PackageVariant';
 import { KeyValueEditorAccordion } from '../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type DeploymentState = {
@@ -67,9 +64,7 @@ export const PackageContextEditorAccordion = ({
             onChange={e => {
               const value = e.target.value;
 
-              viewModel.removeKeys = value
-                ? value.split(',').map(v => v.trim())
-                : undefined;
+              viewModel.removeKeys = value ? value.split(',').map(v => v.trim()) : undefined;
               valueUpdated();
             }}
             fullWidth

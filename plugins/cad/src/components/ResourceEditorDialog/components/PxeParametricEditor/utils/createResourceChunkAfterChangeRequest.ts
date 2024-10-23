@@ -15,10 +15,7 @@
  */
 
 import { cloneDeep, set, unset } from 'lodash';
-import {
-  PxeResourceChangeRequest,
-  PxeResourceChunk,
-} from '../types/PxeParametricEditor.types';
+import { PxeResourceChangeRequest, PxeResourceChunk } from '../types/PxeParametricEditor.types';
 import { isEmptyPxeValue } from './isEmptyPxeValue';
 
 export const createResourceChunkAfterChangeRequest = (

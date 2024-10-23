@@ -17,9 +17,7 @@
 import { KubeConfig } from '@kubernetes/client-node';
 import { ClusterLocatorMethodType } from './config';
 
-export const getKubernetesConfig = (
-  clusterLocatorMethodType: ClusterLocatorMethodType,
-): KubeConfig => {
+export const getKubernetesConfig = (clusterLocatorMethodType: ClusterLocatorMethodType): KubeConfig => {
   const kubeConfig = new KubeConfig();
 
   switch (clusterLocatorMethodType) {
@@ -36,9 +34,7 @@ export const getKubernetesConfig = (
       );
       break;
     default:
-      throw new Error(
-        `Unknown cluster locator method type, ${clusterLocatorMethodType}`,
-      );
+      throw new Error(`Unknown cluster locator method type, ${clusterLocatorMethodType}`);
   }
 
   return kubeConfig;

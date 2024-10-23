@@ -18,10 +18,7 @@ import React, { Fragment } from 'react';
 import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { chunkByTrait } from './utils/general/chunkByTrait';
-import {
-  PxeConfigurationEntry,
-  PxeConfigurationEntryType,
-} from './types/PxeConfiguration.types';
+import { PxeConfigurationEntry, PxeConfigurationEntryType } from './types/PxeConfiguration.types';
 import {
   PxeExpandedSectionStateTuple,
   PxeResourceChangeRequestHandler,
@@ -35,18 +32,13 @@ type PxeParametricEditorNodeListProps = {
   readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };
 
-export const PxeParametricEditorNodeList: React.FC<
-  PxeParametricEditorNodeListProps
-> = ({
+export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = ({
   entries,
   resourceChunk,
   onResourceChangeRequest,
   parentExpandedSectionState,
 }) => {
-  const groupedEntries = chunkByTrait(
-    entries,
-    entry => entry.type === PxeConfigurationEntryType.Section || null,
-  );
+  const groupedEntries = chunkByTrait(entries, entry => entry.type === PxeConfigurationEntryType.Section || null);
 
   return (
     <Fragment>

@@ -22,10 +22,7 @@ import { Volume } from '../../../../../../types/Pod';
 import { LabelSelector } from '../../../../../../types/Selectors';
 import { getNumber } from '../../../../../../utils/string';
 import { KeyValueEditorAccordion } from '../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
 import { StrategyEditorAccordion } from './deployment/StrategyEditorAccordion';
 
@@ -72,12 +69,7 @@ export const DeploymentDetailsEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Deployment Details"
-      description={getDescription(deploymentState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Deployment Details" description={getDescription(deploymentState)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <TextField
@@ -117,8 +109,7 @@ export const DeploymentDetailsEditorAccordion = ({
             onUpdate={strategy => {
               viewModel.strategy = strategy.strategy;
               viewModel.minReadySeconds = strategy.minReadySeconds;
-              viewModel.progressDeadlineSeconds =
-                strategy.progressDeadlineSeconds;
+              viewModel.progressDeadlineSeconds = strategy.progressDeadlineSeconds;
               viewModel.revisionHistoryLimit = strategy.revisionHistoryLimit;
               valueUpdated();
             }}

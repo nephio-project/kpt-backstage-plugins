@@ -52,9 +52,7 @@ export const getRootSync = (
   const gitRepository = repository.spec.git;
 
   if (!revision) {
-    throw new Error(
-      'RootSyncs can only be generated for packages with a revision',
-    );
+    throw new Error('RootSyncs can only be generated for packages with a revision');
   }
 
   if (!gitRepository) {
@@ -89,10 +87,7 @@ export const getRootSync = (
   return rootSync;
 };
 
-export const getRootSyncSecret = (
-  name: string,
-  repositorySecret: Secret,
-): Secret => {
+export const getRootSyncSecret = (name: string, repositorySecret: Secret): Secret => {
   const data = {
     username: repositorySecret.data.username,
     token: repositorySecret.data.password,
@@ -123,17 +118,12 @@ export const findRootSyncForPackage = (
   const hashSyncGitSpec = (git: RootSyncGit): string =>
     `${git.repo}|${exactRevision ? git.revision : ''}|${git.dir}|${git.branch}`;
 
-  return syncs.find(
-    sync =>
-      hashSyncGitSpec(expectedSyncGitSpec) === hashSyncGitSpec(sync.spec.git),
-  );
+  return syncs.find(sync => hashSyncGitSpec(expectedSyncGitSpec) === hashSyncGitSpec(sync.spec.git));
 };
 
 export const getSyncStatus = (syncStatus: RootSyncStatus): SyncStatus => {
   const stalledCondition = syncStatus.conditions.find(
-    c =>
-      c.type === SyncConditionType.STALLED &&
-      c.status === SyncConditionStatus.TRUE,
+    c => c.type === SyncConditionType.STALLED && c.status === SyncConditionStatus.TRUE,
   );
   if (stalledCondition) {
     return {
@@ -143,9 +133,7 @@ export const getSyncStatus = (syncStatus: RootSyncStatus): SyncStatus => {
   }
 
   const reconcilingCondition = syncStatus.conditions.find(
-    c =>
-      c.type === SyncConditionType.RECONCILING &&
-      c.status === SyncConditionStatus.TRUE,
+    c => c.type === SyncConditionType.RECONCILING && c.status === SyncConditionStatus.TRUE,
   );
   if (reconcilingCondition) {
     return {
@@ -153,9 +141,7 @@ export const getSyncStatus = (syncStatus: RootSyncStatus): SyncStatus => {
     };
   }
 
-  const syncingCondition = syncStatus.conditions.find(
-    c => c.type === SyncConditionType.SYNCING,
-  );
+  const syncingCondition = syncStatus.conditions.find(c => c.type === SyncConditionType.SYNCING);
   if (!syncingCondition) {
     return {
       state: SyncStatusState.PENDING,

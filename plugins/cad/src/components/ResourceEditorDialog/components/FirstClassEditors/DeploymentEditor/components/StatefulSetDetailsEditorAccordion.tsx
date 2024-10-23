@@ -20,17 +20,11 @@ import React, { Fragment, useMemo, useRef, useState } from 'react';
 import { Volume } from '../../../../../../types/Pod';
 import { LabelSelector } from '../../../../../../types/Selectors';
 import { StatefulSetUpdateStrategy } from '../../../../../../types/StatefulSet';
-import {
-  getDeployableResources,
-  PackageResource,
-} from '../../../../../../utils/packageRevisionResources';
+import { getDeployableResources, PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { getNumber } from '../../../../../../utils/string';
 import { Autocomplete } from '../../../../../Controls';
 import { KeyValueEditorAccordion } from '../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
 import { UpdateStrategyEditorAccordion } from './statefulSet/UpdateStrategyEditorAccordion';
 
@@ -58,10 +52,7 @@ export type VolumeView = Volume & {
   key: number;
 };
 
-const getResourceNames = (
-  packageResources: PackageResource[],
-  kind: string,
-): string[] => {
+const getResourceNames = (packageResources: PackageResource[], kind: string): string[] => {
   const resources = getDeployableResources(packageResources, kind);
 
   return resources.map(resource => resource.name);
@@ -94,18 +85,10 @@ export const StatefulSetDetailsEditorAccordion = ({
     onUpdate(viewModel);
   };
 
-  const serviceNames = useMemo(
-    () => getResourceNames(packageResources, 'Service'),
-    [packageResources],
-  );
+  const serviceNames = useMemo(() => getResourceNames(packageResources, 'Service'), [packageResources]);
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Stateful Set Details"
-      description={getDescription(statefulSetState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Stateful Set Details" description={getDescription(statefulSetState)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <TextField

@@ -25,10 +25,7 @@ import {
 } from '../types/PackageRevision';
 import { toLowerCase } from './string';
 
-const getRevisionNumber = (
-  revision: string,
-  defaultNumber: number = NaN,
-): number => {
+const getRevisionNumber = (revision: string, defaultNumber: number = NaN): number => {
   if (revision && revision.startsWith('v')) {
     const revisionNumber = parseInt(revision.substring(1), 10);
 
@@ -74,21 +71,15 @@ export const getUpstreamPackageRevisionDetails = (
   return undefined;
 };
 
-export const isLatestPublishedRevision = (
-  packageRevision: PackageRevision,
-): boolean => {
+export const isLatestPublishedRevision = (packageRevision: PackageRevision): boolean => {
   return (
     packageRevision.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED &&
     !!packageRevision.metadata.labels?.['kpt.dev/latest-revision']
   );
 };
 
-export const findLatestPublishedRevision = (
-  packageRevisions: PackageRevision[],
-): PackageRevision | undefined => {
-  const latestPublishedRevision = packageRevisions.find(
-    isLatestPublishedRevision,
-  );
+export const findLatestPublishedRevision = (packageRevisions: PackageRevision[]): PackageRevision | undefined => {
+  const latestPublishedRevision = packageRevisions.find(isLatestPublishedRevision);
 
   return latestPublishedRevision;
 };
@@ -107,22 +98,15 @@ export const findPackageRevision = (
   );
 };
 
-export const getPackageRevisionRevision = (
-  packageRevision: PackageRevision,
-): string => {
+export const getPackageRevisionRevision = (packageRevision: PackageRevision): string => {
   return packageRevision.spec.revision || '';
 };
 
-export const isPublishedRevision = (
-  packageRevision: PackageRevision,
-): boolean => {
+export const isPublishedRevision = (packageRevision: PackageRevision): boolean => {
   return packageRevision.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED;
 };
 
-export const getPackageRevisionTitle = (
-  packageRevision: PackageRevision,
-  packageNameOnly: boolean = false,
-): string => {
+export const getPackageRevisionTitle = (packageRevision: PackageRevision, packageNameOnly: boolean = false): string => {
   const { packageName, lifecycle, revision } = packageRevision.spec;
 
   if (packageNameOnly) {
@@ -146,19 +130,13 @@ export const filterPackageRevisions = (
       packageRevision.spec.packageName === packageName &&
       packageRevision.spec.repository === repositoryName &&
       (!isPublishedRevision(packageRevision) ||
-        Number.isFinite(
-          getRevisionNumber(packageRevision.spec.revision || ''),
-        )),
+        Number.isFinite(getRevisionNumber(packageRevision.spec.revision || ''))),
   );
 };
 
-export const getPackageRevision = (
-  packageRevisions: PackageRevision[],
-  fullPackageName: string,
-): PackageRevision => {
+export const getPackageRevision = (packageRevisions: PackageRevision[], fullPackageName: string): PackageRevision => {
   const packageRevision = packageRevisions.find(
-    thisPackageRevision =>
-      thisPackageRevision.metadata.name === fullPackageName,
+    thisPackageRevision => thisPackageRevision.metadata.name === fullPackageName,
   );
 
   if (!packageRevision) {
@@ -172,24 +150,16 @@ export const canCloneRevision = (packageRevision: PackageRevision): boolean => {
   return isLatestPublishedRevision(packageRevision);
 };
 
-export const isNotAPublishedRevision = (
-  packageRevision: PackageRevision,
-): boolean => {
+export const isNotAPublishedRevision = (packageRevision: PackageRevision): boolean => {
   return !isPublishedRevision(packageRevision);
 };
 
-export const getInitTask = (
-  description: string,
-  keywords: string,
-  site: string,
-): PackageRevisionTask => {
+export const getInitTask = (description: string, keywords: string, site: string): PackageRevisionTask => {
   const initTask: PackageRevisionTask = {
     type: 'init',
     init: {
       description: description ?? '',
-      keywords: keywords
-        ? keywords.split(',').map(keyword => keyword.trim())
-        : undefined,
+      keywords: keywords ? keywords.split(',').map(keyword => keyword.trim()) : undefined,
       site: site || undefined,
     },
   };
@@ -212,9 +182,7 @@ export const getCloneTask = (fullPackageName: string): PackageRevisionTask => {
   return cloneTask;
 };
 
-export const getUpdateTask = (
-  fullUpstreamPackageName: string,
-): PackageRevisionTask => {
+export const getUpdateTask = (fullUpstreamPackageName: string): PackageRevisionTask => {
   const updateTask: PackageRevisionTask = {
     type: 'update',
     update: {
@@ -254,13 +222,9 @@ export const getPackageRevisionResource = (
   return resource;
 };
 
-export const getNextPackageRevisionResource = (
-  currentRevision: PackageRevision,
-): PackageRevision => {
+export const getNextPackageRevisionResource = (currentRevision: PackageRevision): PackageRevision => {
   const { repository, packageName, tasks } = currentRevision.spec;
-  const nextRevision = getNextRevision(
-    getPackageRevisionRevision(currentRevision),
-  );
+  const nextRevision = getNextRevision(getPackageRevisionRevision(currentRevision));
 
   const resource = getPackageRevisionResource(
     repository,
@@ -278,14 +242,9 @@ export const getUpgradePackageRevisionResource = (
   upgradePackageRevisionName: string,
 ): PackageRevision => {
   const { repository, packageName, tasks } = currentRevision.spec;
-  const nextRevision = getNextRevision(
-    getPackageRevisionRevision(currentRevision),
-  );
+  const nextRevision = getNextRevision(getPackageRevisionRevision(currentRevision));
 
-  const upgradePackageTasks = [
-    ...cloneDeep(tasks),
-    getUpdateTask(upgradePackageRevisionName),
-  ];
+  const upgradePackageTasks = [...cloneDeep(tasks), getUpdateTask(upgradePackageRevisionName)];
 
   const resource = getPackageRevisionResource(
     repository,
@@ -310,18 +269,13 @@ export const sortByPackageNameAndRevisionComparison = (
   };
 
   if (packageSpec1.packageName === packageSpec2.packageName) {
-    return (
-      getRevisionNumberForCompare(packageSpec2) -
-      getRevisionNumberForCompare(packageSpec1)
-    );
+    return getRevisionNumberForCompare(packageSpec2) - getRevisionNumberForCompare(packageSpec1);
   }
 
   return packageSpec1.packageName > packageSpec2.packageName ? 1 : -1;
 };
 
-export const getPackageConditions = (
-  packageRevision: PackageRevision,
-): Condition[] => {
+export const getPackageConditions = (packageRevision: PackageRevision): Condition[] => {
   if (!packageRevision.status) {
     throw new Error('Package revision status is undefined');
   }
@@ -334,16 +288,13 @@ export const getPackageConditions = (
   const readinessConditions = readinessGates.map(gate => gate.conditionType);
   const existingConditions = conditions.map(condition => condition.type);
 
-  const missingReadinessConditions = readinessConditions.filter(
-    type => !existingConditions.includes(type),
-  );
+  const missingReadinessConditions = readinessConditions.filter(type => !existingConditions.includes(type));
   missingReadinessConditions.forEach(type =>
     allConditions.push({
       type: type,
       status: ConditionStatus.UNKNOWN,
       reason: 'missing',
-      message:
-        'condition exists as readiness gate however does not exist as status condition',
+      message: 'condition exists as readiness gate however does not exist as status condition',
     }),
   );
 

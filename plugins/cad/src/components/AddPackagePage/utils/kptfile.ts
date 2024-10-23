@@ -26,31 +26,18 @@ export const findKptfileFunctionConfig = (
   return resources.find(resource => resource.filename === fn.configPath);
 };
 
-export const isFunctionConfigDeletable = (
-  resource: PackageResource,
-): boolean => {
-  return (
-    resource.isLocalConfigResource &&
-    resource.filename !== 'package-context.yaml'
-  );
+export const isFunctionConfigDeletable = (resource: PackageResource): boolean => {
+  return resource.isLocalConfigResource && resource.filename !== 'package-context.yaml';
 };
 
-export const removeKptfileFunction = (
-  kptfile: Kptfile,
-  pipeline: Pipeline,
-  fn: KptfileFunction,
-): void => {
+export const removeKptfileFunction = (kptfile: Kptfile, pipeline: Pipeline, fn: KptfileFunction): void => {
   const kptPipeline = kptfile.pipeline;
 
   if (pipeline === 'mutator' && kptPipeline.mutators) {
-    kptPipeline.mutators = kptPipeline.mutators.filter(
-      mutatorFn => mutatorFn !== fn,
-    );
+    kptPipeline.mutators = kptPipeline.mutators.filter(mutatorFn => mutatorFn !== fn);
   }
 
   if (pipeline === 'validator' && kptPipeline.validators) {
-    kptPipeline.validators = kptPipeline.validators.filter(
-      validatorFn => validatorFn !== fn,
-    );
+    kptPipeline.validators = kptPipeline.validators.filter(validatorFn => validatorFn !== fn);
   }
 };

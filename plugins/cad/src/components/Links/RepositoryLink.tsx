@@ -28,11 +28,7 @@ type RepositoryLinkProps = {
   stopPropagation?: boolean;
 };
 
-export const RepositoryLink = ({
-  repository,
-  breadcrumb,
-  stopPropagation,
-}: RepositoryLinkProps) => {
+export const RepositoryLink = ({ repository, breadcrumb, stopPropagation }: RepositoryLinkProps) => {
   const repositoryRef = useRouteRef(repositoryRouteRef);
 
   const classes = useLinkStyles();

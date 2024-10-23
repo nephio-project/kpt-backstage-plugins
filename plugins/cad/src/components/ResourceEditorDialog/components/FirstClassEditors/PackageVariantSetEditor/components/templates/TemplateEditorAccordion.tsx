@@ -15,17 +15,11 @@
  */
 
 import React, { useState, useRef } from 'react';
-import {
-  PackageVariantSetInjectors,
-  PackageVariantSetTempleate,
-} from '../../../../../../../types/PackageVariantSet';
+import { PackageVariantSetInjectors, PackageVariantSetTempleate } from '../../../../../../../types/PackageVariantSet';
 import { PackageResource } from '../../../../../../../utils/packageRevisionResources';
 import { Select } from '../../../../../../Controls';
 import { KeyValueEditorAccordion } from '../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { InjectorEditorAccordion } from '../../../PackageVariantEditor/components/container/InjectorEditorAccordion';
 import { DownstreamPackageEditorAccordion } from './DownstreamPackageEditorAccordion';
 import { ExprEditorAccordion } from './ExprEditorAccordion';
@@ -59,9 +53,7 @@ export const TemplateEditorAccordion = ({
   onUpdate,
   packageResources,
 }: PackageVariantSpecEditorProps) => {
-  const createInjectorsState = (
-    injectors: any,
-  ): PackageVariantSetInjectors => ({
+  const createInjectorsState = (injectors: any): PackageVariantSetInjectors => ({
     group: injectors && injectors.group ? injectors.group : '',
     version: injectors && injectors.version ? injectors.version : '',
     kind: injectors && injectors.kind ? injectors.kind : '',
@@ -72,10 +64,9 @@ export const TemplateEditorAccordion = ({
   const refViewModel = useRef<PackageVariantSetTempleate>(value);
   const viewModel = refViewModel.current;
   const [specExpanded, setSpecExpanded] = useState<string>();
-  const [injectorEditor, setInjectorEditor] =
-    useState<PackageVariantSetInjectors>(
-      createInjectorsState(viewModel.injectors),
-    );
+  const [injectorEditor, setInjectorEditor] = useState<PackageVariantSetInjectors>(
+    createInjectorsState(viewModel.injectors),
+  );
   const valueUpdated = (): void => {
     onUpdate(viewModel);
   };

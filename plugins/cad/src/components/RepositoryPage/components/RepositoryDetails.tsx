@@ -18,10 +18,7 @@ import { InfoCard, StructuredMetadataTable } from '@backstage/core-components';
 import React from 'react';
 import { Repository } from '../../../types/Repository';
 import { RepositorySummary } from '../../../types/RepositorySummary';
-import {
-  getPackageDescriptor,
-  isReadOnlyRepository,
-} from '../../../utils/repository';
+import { getPackageDescriptor, isReadOnlyRepository } from '../../../utils/repository';
 
 type RepositoryDetailsProps = {
   repositorySummary: RepositorySummary;
@@ -96,12 +93,8 @@ const getRepositoryMetadata = (repository: Repository): Metadata => {
   return metadata;
 };
 
-export const RepositoryDetails = ({
-  repositorySummary,
-}: RepositoryDetailsProps) => {
-  const repositoryMetadata = getRepositoryMetadata(
-    repositorySummary.repository,
-  );
+export const RepositoryDetails = ({ repositorySummary }: RepositoryDetailsProps) => {
+  const repositoryMetadata = getRepositoryMetadata(repositorySummary.repository);
 
   return (
     <InfoCard title="Repository Details">

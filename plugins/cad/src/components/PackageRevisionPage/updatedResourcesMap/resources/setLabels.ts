@@ -17,10 +17,7 @@
 import { ConfigAsDataApi } from '../../../../apis';
 import { Kptfile, KptfileFunction } from '../../../../types/Kptfile';
 import { PackageRevisionResourcesMap } from '../../../../types/PackageRevisionResource';
-import {
-  getFunctionNameFromImage,
-  groupFunctionsByName,
-} from '../../../../utils/function';
+import { getFunctionNameFromImage, groupFunctionsByName } from '../../../../utils/function';
 import {
   diffPackageResources,
   getPackageResourcesFromResourcesMap,
@@ -34,22 +31,15 @@ export const processSetLabelsUpdates = async (
   originalResourcesMap: PackageRevisionResourcesMap,
   currentResourcesMap: PackageRevisionResourcesMap,
 ): Promise<PackageRevisionResourcesMap> => {
-  const originalResources =
-    getPackageResourcesFromResourcesMap(originalResourcesMap);
-  const currentResources =
-    getPackageResourcesFromResourcesMap(currentResourcesMap);
+  const originalResources = getPackageResourcesFromResourcesMap(originalResourcesMap);
+  const currentResources = getPackageResourcesFromResourcesMap(currentResourcesMap);
 
-  const changedResources = diffPackageResources(
-    originalResources,
-    currentResources,
-  );
+  const changedResources = diffPackageResources(originalResources, currentResources);
 
   const setLabelsResourceDiffs = changedResources.filter(
     resource =>
-      (resource.originalResource ?? resource.currentResource).kind ===
-        'SetLabels' &&
-      (resource.diffStatus === ResourceDiffStatus.ADDED ||
-        resource.diffStatus === ResourceDiffStatus.REMOVED),
+      (resource.originalResource ?? resource.currentResource).kind === 'SetLabels' &&
+      (resource.diffStatus === ResourceDiffStatus.ADDED || resource.diffStatus === ResourceDiffStatus.REMOVED),
   );
 
   if (setLabelsResourceDiffs.length > 0) {
@@ -61,13 +51,9 @@ export const processSetLabelsUpdates = async (
       let mutatorsUpdated = false;
       let mutators = kptfileYaml.pipeline?.mutators ?? [];
 
-      const findSetLabelsMutator = (
-        configPath: string,
-      ): KptfileFunction | undefined =>
+      const findSetLabelsMutator = (configPath: string): KptfileFunction | undefined =>
         mutators.find(
-          mutator =>
-            getFunctionNameFromImage(mutator.image) === 'set-labels' &&
-            mutator.configPath === configPath,
+          mutator => getFunctionNameFromImage(mutator.image) === 'set-labels' && mutator.configPath === configPath,
         );
 
       for (const setLabelsResourceDiff of setLabelsResourceDiffs) {
@@ -99,14 +85,11 @@ export const processSetLabelsUpdates = async (
 
           if (setLabelsMutator) {
             const anotherSetLabelsResource = currentResources.find(
-              resource =>
-                resource.filename === path && resource.kind === 'SetLabels',
+              resource => resource.filename === path && resource.kind === 'SetLabels',
             );
 
             if (!anotherSetLabelsResource) {
-              mutators = mutators.filter(
-                mutator => mutator !== setLabelsMutator,
-              );
+              mutators = mutators.filter(mutator => mutator !== setLabelsMutator);
 
               mutatorsUpdated = true;
             }

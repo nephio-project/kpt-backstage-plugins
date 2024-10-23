@@ -20,10 +20,7 @@ import React, { Fragment, useRef } from 'react';
 import { SecurityContext } from '../../../../../../../types/Pod';
 import { getNumber } from '../../../../../../../utils/string';
 import { Checkbox } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type SecurityState = {
@@ -39,9 +36,7 @@ type SecurityEditorAccordionProps = {
   onUpdate: OnUpdate;
 };
 
-const normalizeSecurityState = (
-  securityState: SecurityState,
-): SecurityState => {
+const normalizeSecurityState = (securityState: SecurityState): SecurityState => {
   const securityContext = securityState.securityContext;
 
   if (securityContext?.capabilities) {
@@ -84,28 +79,19 @@ export const SecurityEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Security"
-      description={getDescription(viewModel)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Security" description={getDescription(viewModel)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <TextField
             label="Add Linux Capabilities"
             variant="outlined"
-            value={
-              viewModel.securityContext?.capabilities?.add?.join(', ') || ''
-            }
+            value={viewModel.securityContext?.capabilities?.add?.join(', ') || ''}
             onChange={e => {
               const value = e.target.value;
 
               const securityContext = getSecurityContext(viewModel);
               securityContext.capabilities = securityContext.capabilities || {};
-              securityContext.capabilities.add = value
-                ? value.split(',').map(v => v.trim())
-                : undefined;
+              securityContext.capabilities.add = value ? value.split(',').map(v => v.trim()) : undefined;
 
               valueUpdated();
             }}
@@ -114,17 +100,13 @@ export const SecurityEditorAccordion = ({
           <TextField
             label="Drop Linux Capabilities"
             variant="outlined"
-            value={
-              viewModel.securityContext?.capabilities?.drop?.join(', ') || ''
-            }
+            value={viewModel.securityContext?.capabilities?.drop?.join(', ') || ''}
             onChange={e => {
               const value = e.target.value;
 
               const securityContext = getSecurityContext(viewModel);
               securityContext.capabilities = securityContext.capabilities || {};
-              securityContext.capabilities.drop = value
-                ? value.split(',').map(v => v.trim())
-                : undefined;
+              securityContext.capabilities.drop = value ? value.split(',').map(v => v.trim()) : undefined;
 
               valueUpdated();
             }}

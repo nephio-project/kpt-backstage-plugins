@@ -26,11 +26,7 @@ const getValue = (fieldValue: any): string => {
   return fieldValue;
 };
 
-const setContextdata = (
-  contextdata: Metadata,
-  resourceField: any,
-  fieldName: string,
-): void => {
+const setContextdata = (contextdata: Metadata, resourceField: any, fieldName: string): void => {
   if (Array.isArray(resourceField)) {
     const isArrayFieldObject = typeof resourceField[0] === 'object';
 
@@ -56,17 +52,11 @@ const setContextdata = (
   }
 };
 
-export const getPackageVariantStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getPackageVariantStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const packageVariant = resource as PackageVariant;
 
   const contextdata: Metadata = {};
-  setContextdata(
-    contextdata,
-    packageVariant.spec.packageContext,
-    'packageContext',
-  );
+  setContextdata(contextdata, packageVariant.spec.packageContext, 'packageContext');
 
   const customMetadata: Metadata = {
     variantLabels: getValue(packageVariant.spec.labels),
@@ -80,12 +70,8 @@ export const getPackageVariantStructuredMetadata = (
     packageContext: '',
     adoptionPolicy: packageVariant.spec.adoptionPolicy,
     deletionPolicy: packageVariant.spec.deletionPolicy,
-    mutators: packageVariant.spec.pipeline?.mutators?.map(
-      getKptFunctionDescription,
-    ),
-    validators: packageVariant.spec.pipeline?.validators?.map(
-      getKptFunctionDescription,
-    ),
+    mutators: packageVariant.spec.pipeline?.mutators?.map(getKptFunctionDescription),
+    validators: packageVariant.spec.pipeline?.validators?.map(getKptFunctionDescription),
     injectors: packageVariant.spec.injectors
       ? `${packageVariant.spec.injectors.group}/${packageVariant.spec.injectors.version}/${packageVariant.spec.injectors.kind}@${packageVariant.spec.injectors?.name}`
       : '',
@@ -93,18 +79,14 @@ export const getPackageVariantStructuredMetadata = (
 
   for (const thisKey of Object.keys(contextdata)) {
     const isPrefix = thisKey.includes('/');
-    const thisKeyName = isPrefix
-      ? thisKey.slice(0, thisKey.indexOf('/'))
-      : thisKey;
+    const thisKeyName = isPrefix ? thisKey.slice(0, thisKey.indexOf('/')) : thisKey;
 
     if (!customMetadata[thisKeyName]) {
       customMetadata[thisKeyName] = [];
     }
 
     const fieldKey = thisKey.slice(thisKeyName.length + 1);
-    customMetadata[thisKeyName].push(
-      isPrefix ? `${fieldKey}: ${contextdata[thisKey]}` : contextdata[thisKey],
-    );
+    customMetadata[thisKeyName].push(isPrefix ? `${fieldKey}: ${contextdata[thisKey]}` : contextdata[thisKey]);
   }
   return customMetadata;
 };

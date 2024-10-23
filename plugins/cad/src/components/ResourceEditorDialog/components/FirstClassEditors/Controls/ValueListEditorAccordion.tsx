@@ -32,23 +32,13 @@ type ValueListEditorProps = {
   onUpdatedValueList: (valueList: KubernetesValueList) => void;
 };
 
-export const ValueListEditorAccordion = ({
-  id,
-  title,
-  state,
-  valueList,
-  onUpdatedValueList,
-}: ValueListEditorProps) => {
-  const refViewModel = useRef<{ value: string }[]>(
-    valueList.map(value => ({ value })),
-  );
+export const ValueListEditorAccordion = ({ id, title, state, valueList, onUpdatedValueList }: ValueListEditorProps) => {
+  const refViewModel = useRef<{ value: string }[]>(valueList.map(value => ({ value })));
 
   const classes = useEditorStyles();
 
   const valueUpdated = (): void => {
-    onUpdatedValueList(
-      refViewModel.current.map(valueHolder => valueHolder.value),
-    );
+    onUpdatedValueList(refViewModel.current.map(valueHolder => valueHolder.value));
   };
 
   const addRow = () => {
@@ -59,12 +49,7 @@ export const ValueListEditorAccordion = ({
   const description = `${refViewModel.current.length} ${toLowerCase(title)}`;
 
   return (
-    <EditorAccordion
-      id={id}
-      state={state}
-      title={title}
-      description={description}
-    >
+    <EditorAccordion id={id} state={state} title={title} description={description}>
       <Fragment>
         {refViewModel.current.map((valueHolder, index) => (
           <div className={classes.multiControlRow} key={index}>
@@ -82,9 +67,7 @@ export const ValueListEditorAccordion = ({
               title="Delete"
               className={classes.iconButton}
               onClick={() => {
-                refViewModel.current = refViewModel.current.filter(
-                  thisValueHolder => thisValueHolder !== valueHolder,
-                );
+                refViewModel.current = refViewModel.current.filter(thisValueHolder => thisValueHolder !== valueHolder);
                 valueUpdated();
               }}
             >

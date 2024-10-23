@@ -15,10 +15,7 @@
  */
 
 import { groupBy } from 'lodash';
-import {
-  PackageRevision,
-  PackageRevisionLifecycle,
-} from '../types/PackageRevision';
+import { PackageRevision, PackageRevisionLifecycle } from '../types/PackageRevision';
 import { Repository } from '../types/Repository';
 import { RepositorySummary } from '../types/RepositorySummary';
 import { RootSync } from '../types/RootSync';
@@ -56,83 +53,67 @@ export const getPackageSummariesForRepository = (
   allRepositories: Repository[],
 ): PackageSummary[] => {
   const latestPackageRevisions = packageRevisions.filter(
-    packageRevision =>
-      isNotAPublishedRevision(packageRevision) ||
-      isLatestPublishedRevision(packageRevision),
+    packageRevision => isNotAPublishedRevision(packageRevision) || isLatestPublishedRevision(packageRevision),
   );
 
   latestPackageRevisions.sort(sortByPackageNameAndRevisionComparison);
 
-  const groupByPackage = groupBy(
-    latestPackageRevisions,
-    revision => revision.spec.packageName,
-  );
+  const groupByPackage = groupBy(latestPackageRevisions, revision => revision.spec.packageName);
 
-  const packageSummaries: PackageSummary[] = Object.keys(groupByPackage).map(
-    packageName => {
-      const allRevisions = groupByPackage[packageName];
+  const packageSummaries: PackageSummary[] = Object.keys(groupByPackage).map(packageName => {
+    const allRevisions = groupByPackage[packageName];
 
-      const latestRevision = allRevisions[0];
-      const latestPublishedRevision = findLatestPublishedRevision(allRevisions);
+    const latestRevision = allRevisions[0];
+    const latestPublishedRevision = findLatestPublishedRevision(allRevisions);
 
-      const isLatestRevisionNotPublished =
-        isNotAPublishedRevision(latestRevision);
+    const isLatestRevisionNotPublished = isNotAPublishedRevision(latestRevision);
 
-      const unpublishedRevision = isLatestRevisionNotPublished
-        ? latestRevision
-        : undefined;
+    const unpublishedRevision = isLatestRevisionNotPublished ? latestRevision : undefined;
 
-      const packageDescriptor = getPackageDescriptor(repository);
+    const packageDescriptor = getPackageDescriptor(repository);
 
-      const thisPackageSummary: PackageSummary = {
-        repository,
-        latestRevision,
-        latestPublishedRevision,
-        unpublishedRevision,
-        packageDescriptor,
-      };
+    const thisPackageSummary: PackageSummary = {
+      repository,
+      latestRevision,
+      latestPublishedRevision,
+      unpublishedRevision,
+      packageDescriptor,
+    };
 
-      const useRevision = latestPublishedRevision ?? latestRevision;
-      const upstream = getUpstreamPackageRevisionDetails(useRevision);
+    const useRevision = latestPublishedRevision ?? latestRevision;
+    const upstream = getUpstreamPackageRevisionDetails(useRevision);
 
-      if (upstream) {
-        thisPackageSummary.upstreamPackageName = upstream.packageName;
-        thisPackageSummary.upstreamPackageRevision = upstream.revision;
+    if (upstream) {
+      thisPackageSummary.upstreamPackageName = upstream.packageName;
+      thisPackageSummary.upstreamPackageRevision = upstream.revision;
 
-        const upstreamRepository = findRepository(allRepositories, {
-          repositoryUrl: upstream.repositoryUrl,
-        });
+      const upstreamRepository = findRepository(allRepositories, {
+        repositoryUrl: upstream.repositoryUrl,
+      });
 
-        if (upstreamRepository) {
-          const upstreamRepositoryName = upstreamRepository.metadata.name;
-          thisPackageSummary.upstreamRepositoryName = upstreamRepositoryName;
+      if (upstreamRepository) {
+        const upstreamRepositoryName = upstreamRepository.metadata.name;
+        thisPackageSummary.upstreamRepositoryName = upstreamRepositoryName;
 
-          thisPackageSummary.upstreamRevision = findPackageRevision(
-            allPackageRevisions,
-            upstream.packageName,
-            upstream.revision,
-            upstreamRepositoryName,
-          );
+        thisPackageSummary.upstreamRevision = findPackageRevision(
+          allPackageRevisions,
+          upstream.packageName,
+          upstream.revision,
+          upstreamRepositoryName,
+        );
 
-          thisPackageSummary.upstreamLatestPublishedRevision =
-            findLatestPublishedRevision(
-              filterPackageRevisions(
-                allPackageRevisions,
-                upstream.packageName,
-                upstreamRepositoryName,
-              ),
-            );
+        thisPackageSummary.upstreamLatestPublishedRevision = findLatestPublishedRevision(
+          filterPackageRevisions(allPackageRevisions, upstream.packageName, upstreamRepositoryName),
+        );
 
-          thisPackageSummary.isUpgradeAvailable =
-            thisPackageSummary.upstreamLatestPublishedRevision &&
-            thisPackageSummary.upstreamLatestPublishedRevision.spec.revision !==
-              upstream.revision;
-        }
+        thisPackageSummary.isUpgradeAvailable =
+          thisPackageSummary.upstreamLatestPublishedRevision &&
+          thisPackageSummary.upstreamLatestPublishedRevision.spec.revision !== upstream.revision;
       }
+    }
 
-      return thisPackageSummary;
-    },
-  );
+    return thisPackageSummary;
+  });
 
   return packageSummaries;
 };
@@ -146,8 +127,7 @@ export const getPackageSummaries = (
 
   for (const repositorySummary of repositorySummaries) {
     const repositoryPackageRevisions = packageRevisions.filter(
-      revision =>
-        revision.spec.repository === repositorySummary.repository.metadata.name,
+      revision => revision.spec.repository === repositorySummary.repository.metadata.name,
     );
 
     const repositoryPackageSummaries = getPackageSummariesForRepository(
@@ -197,16 +177,12 @@ export const filterPackageSummaries = (
     isUpgradeAvailable?: boolean;
   },
 ): PackageSummary[] => {
-  const repositoryFilter = (summary: PackageSummary): boolean =>
-    !repository || summary.repository === repository;
-  const publishedFilter = (summary: PackageSummary): boolean =>
-    !isPublished || !!summary.latestPublishedRevision;
+  const repositoryFilter = (summary: PackageSummary): boolean => !repository || summary.repository === repository;
+  const publishedFilter = (summary: PackageSummary): boolean => !isPublished || !!summary.latestPublishedRevision;
   const proposedFilter = (summary: PackageSummary): boolean =>
-    !isProposed ||
-    summary.latestRevision.spec.lifecycle === PackageRevisionLifecycle.PROPOSED;
+    !isProposed || summary.latestRevision.spec.lifecycle === PackageRevisionLifecycle.PROPOSED;
   const draftFilter = (summary: PackageSummary): boolean =>
-    !isDraft ||
-    summary.latestRevision.spec.lifecycle === PackageRevisionLifecycle.DRAFT;
+    !isDraft || summary.latestRevision.spec.lifecycle === PackageRevisionLifecycle.DRAFT;
   const upgradeAvailableFilter = (summary: PackageSummary): boolean =>
     !isUpgradeAvailable || !!summary.isUpgradeAvailable;
 

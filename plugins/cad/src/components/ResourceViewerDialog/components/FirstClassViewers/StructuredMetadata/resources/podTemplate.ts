@@ -101,10 +101,9 @@ const getVolumeMountDescription = (
   volumeMount: VolumeMount,
   volumeSources: { [volumeName: string]: string },
 ): string => {
-  return `mount: ${volumeMount.mountPath} → ${volumeMount.name} (${ifSet(
-    volumeMount.readOnly,
-    'readonly ',
-  )}${volumeSources[volumeMount.name]})`;
+  return `mount: ${volumeMount.mountPath} → ${volumeMount.name} (${ifSet(volumeMount.readOnly, 'readonly ')}${
+    volumeSources[volumeMount.name]
+  })`;
 };
 
 const getProbeDescription = (probe: Probe): string => {
@@ -120,11 +119,9 @@ const getProbeDescription = (probe: Probe): string => {
   }
   const desc = statements.join(', ');
 
-  if (probe.httpGet)
-    return `http get ${probe.httpGet.path}:${probe.httpGet.port} ${desc}`;
+  if (probe.httpGet) return `http get ${probe.httpGet.path}:${probe.httpGet.port} ${desc}`;
 
-  if (probe.exec)
-    return `exec ${probe.exec.command?.join(' ') || '(none)'} ${desc}`;
+  if (probe.exec) return `exec ${probe.exec.command?.join(' ') || '(none)'} ${desc}`;
 
   if (probe.tcpSocket) return `tcp ${probe.tcpSocket.port} ${desc}`;
 
@@ -134,10 +131,7 @@ const getProbeDescription = (probe: Probe): string => {
 const getContainerImage = (container: Container): string[] => {
   const image = container.image || '';
 
-  const statements: string[] = [
-    `image: ${image.split(':')[0]}`,
-    `image tag: ${image.split(':')[1] ?? ''}`,
-  ];
+  const statements: string[] = [`image: ${image.split(':')[0]}`, `image tag: ${image.split(':')[1] ?? ''}`];
 
   if (container.imagePullPolicy) {
     statements.push(`pull policy: ${container.imagePullPolicy}`);
@@ -176,10 +170,7 @@ const getContainerPorts = (container: Container): string[] => {
   return (container.ports ?? []).map(getPortDescription);
 };
 
-const getContainerVolumeMounts = (
-  container: Container,
-  volumes: Volume[],
-): string[] => {
+const getContainerVolumeMounts = (container: Container, volumes: Volume[]): string[] => {
   const volumeSources: { [volumeName: string]: string } = {};
   (volumes ?? []).forEach(volume => {
     volumeSources[volume.name] = getVolumeSource(volume);
@@ -203,14 +194,11 @@ const getContainerResources = (container: Container): string[] => {
         }`,
       );
     }
-    if (
-      container.resources.requests?.memory ||
-      container.resources.limits?.memory
-    ) {
+    if (container.resources.requests?.memory || container.resources.limits?.memory) {
       statements.push(
-        `resources: memory ${
-          container.resources.requests?.memory || 'not set'
-        }/${container.resources.limits?.memory || 'not set'}`,
+        `resources: memory ${container.resources.requests?.memory || 'not set'}/${
+          container.resources.limits?.memory || 'not set'
+        }`,
       );
     }
   }
@@ -222,19 +210,13 @@ const getContainerProbes = (container: Container): string[] => {
   const statements: string[] = [];
 
   if (container.startupProbe) {
-    statements.push(
-      `startup probe: ${getProbeDescription(container.startupProbe)}`,
-    );
+    statements.push(`startup probe: ${getProbeDescription(container.startupProbe)}`);
   }
   if (container.readinessProbe) {
-    statements.push(
-      `readiness probe: ${getProbeDescription(container.readinessProbe)}`,
-    );
+    statements.push(`readiness probe: ${getProbeDescription(container.readinessProbe)}`);
   }
   if (container.livenessProbe) {
-    statements.push(
-      `liveness probe: ${getProbeDescription(container.livenessProbe)}`,
-    );
+    statements.push(`liveness probe: ${getProbeDescription(container.livenessProbe)}`);
   }
 
   return statements;
@@ -265,14 +247,10 @@ const getContainerSecurity = (container: Container): string[] => {
       statements.push(`security: run as group ${security.runAsGroup}`);
     }
     if (security.capabilities?.add) {
-      statements.push(
-        `security capabilities: add ${security.capabilities.add.join(', ')}`,
-      );
+      statements.push(`security capabilities: add ${security.capabilities.add.join(', ')}`);
     }
     if (security.capabilities?.drop) {
-      statements.push(
-        `security capabilities: drop ${security.capabilities.drop.join(', ')}`,
-      );
+      statements.push(`security capabilities: drop ${security.capabilities.drop.join(', ')}`);
     }
   }
 
@@ -303,20 +281,16 @@ const getPodSecurity = (pod: PodSpec): string[] => {
 };
 
 const getPodDetails = (pod: PodSpec): string[] => {
-  const podServiceAccount = pod.serviceAccountName
-    ? [`service account: ${pod.serviceAccountName}`]
-    : [];
+  const podServiceAccount = pod.serviceAccountName ? [`service account: ${pod.serviceAccountName}`] : [];
   const podTerminationGracePeriod = pod.terminationGracePeriodSeconds
     ? [`termination grace period: ${pod.terminationGracePeriodSeconds}s`]
     : [];
 
   const podSecurity = getPodSecurity(pod);
 
-  const populatedDetails = [
-    podServiceAccount,
-    podTerminationGracePeriod,
-    podSecurity,
-  ].filter(details => details.length > 0);
+  const populatedDetails = [podServiceAccount, podTerminationGracePeriod, podSecurity].filter(
+    details => details.length > 0,
+  );
 
   const podDetails: string[] = [];
 
@@ -331,10 +305,7 @@ const getPodDetails = (pod: PodSpec): string[] => {
   return podDetails;
 };
 
-const getContainerDetails = (
-  container: Container,
-  podVolumes: Volume[],
-): string[] => {
+const getContainerDetails = (container: Container, podVolumes: Volume[]): string[] => {
   const containerName = `container: ${container.name}`;
   const containerImage = getContainerImage(container);
   const containerConfig = getContainerConfig(container);
@@ -365,9 +336,7 @@ const getContainerDetails = (
   return containerDetails;
 };
 
-export const getPodTemplatedStructuredMetadata = (
-  podTemplate: PodTemplateSpec,
-): Metadata => {
+export const getPodTemplatedStructuredMetadata = (podTemplate: PodTemplateSpec): Metadata => {
   const podDetails = getPodDetails(podTemplate.spec);
 
   const customMetadata: Metadata = {
@@ -380,8 +349,7 @@ export const getPodTemplatedStructuredMetadata = (
   const podVolumes = podTemplate.spec.volumes ?? [];
 
   for (const [index, container] of podContainers.entries()) {
-    const name =
-      podContainers.length > 1 ? `container${index + 1}` : 'container';
+    const name = podContainers.length > 1 ? `container${index + 1}` : 'container';
 
     const containerDetails = getContainerDetails(container, podVolumes);
 

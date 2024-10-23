@@ -22,9 +22,7 @@ export type GroupFunctionsByName = {
   [key: string]: Function[];
 };
 
-export const getFunctionNameAndTagFromImage = (
-  fullImageName: string,
-): string => {
+export const getFunctionNameAndTagFromImage = (fullImageName: string): string => {
   const imageNameParts = fullImageName.split('/');
   const functionNameAndTag = imageNameParts[imageNameParts.length - 1];
 
@@ -49,9 +47,7 @@ export const getFunctionName = (fn: Function): string => {
   return getFunctionNameFromImage(fn.spec.image);
 };
 
-export const groupFunctionsByName = (
-  functions: Function[],
-): GroupFunctionsByName => {
+export const groupFunctionsByName = (functions: Function[]): GroupFunctionsByName => {
   const functionsGroupedByName = groupBy(functions, getFunctionName);
   const sortFunctionsByVersionDesc = (fn1: Function, fn2: Function): number =>
     fn1.spec.image > fn2.spec.image ? -1 : 1;
@@ -63,10 +59,7 @@ export const groupFunctionsByName = (
   return functionsGroupedByName;
 };
 
-export const getLatestFunction = (
-  functions: GroupFunctionsByName,
-  fnName: string,
-): Function => {
+export const getLatestFunction = (functions: GroupFunctionsByName, fnName: string): Function => {
   const fnGroup = functions[fnName];
 
   if (!fnGroup) {
@@ -84,9 +77,6 @@ export const isValidatorFunction = (kptFunction: Function): boolean => {
   return kptFunction.spec.functionTypes.includes('validator');
 };
 
-export const findKptfileFunction = (
-  functions: KptfileFunction[],
-  fnName: string,
-): KptfileFunction | undefined => {
+export const findKptfileFunction = (functions: KptfileFunction[], fnName: string): KptfileFunction | undefined => {
   return functions.find(fn => getFunctionNameFromImage(fn.image) === fnName);
 };

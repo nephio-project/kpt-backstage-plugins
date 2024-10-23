@@ -18,10 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { KubernetesKeyValueObject } from '../../../../../types/KubernetesResource';
 import { SetLabels, SetLabelsMetadata } from '../../../../../types/SetLabels';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
-import {
-  KeyValueEditorAccordion,
-  ResourceMetadataAccordion,
-} from '../Controls';
+import { KeyValueEditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
@@ -36,10 +33,7 @@ type State = {
   setLabels: KubernetesKeyValueObject;
 };
 
-export const SetLabelsEditor = ({
-  yaml,
-  onUpdatedYaml,
-}: ResourceEditorProps) => {
+export const SetLabelsEditor = ({ yaml, onUpdatedYaml }: ResourceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as SetLabels;
 
   const createResourceState = (): State => ({
@@ -74,9 +68,7 @@ export const SetLabelsEditor = ({
         title="Set Labels"
         state={[expanded, setExpanded]}
         keyValueObject={state.setLabels}
-        onUpdatedKeyValueObject={data =>
-          setState(s => ({ ...s, setLabels: data }))
-        }
+        onUpdatedKeyValueObject={data => setState(s => ({ ...s, setLabels: data }))}
       />
     </div>
   );

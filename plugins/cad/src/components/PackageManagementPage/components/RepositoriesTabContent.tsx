@@ -22,11 +22,7 @@ import React from 'react';
 import { registerRepositoryRouteRef } from '../../../routes';
 import { RepositorySummary } from '../../../types/RepositorySummary';
 import { showRegisteredFunctionRepositories } from '../../../utils/featureFlags';
-import {
-  ContentSummary,
-  getPackageDescriptor,
-  PackageContentSummaryOrder,
-} from '../../../utils/repository';
+import { ContentSummary, getPackageDescriptor, PackageContentSummaryOrder } from '../../../utils/repository';
 import { RepositoriesTable } from './RepositoriesTable';
 
 type RepositoriesTabContentProps = {
@@ -41,12 +37,9 @@ export const useStyles = makeStyles({
   },
 });
 
-const getDescriptor = (summary: RepositorySummary): string =>
-  getPackageDescriptor(summary.repository);
+const getDescriptor = (summary: RepositorySummary): string => getPackageDescriptor(summary.repository);
 
-export const RepositoriesTabContent = ({
-  summaries,
-}: RepositoriesTabContentProps) => {
+export const RepositoriesTabContent = ({ summaries }: RepositoriesTabContentProps) => {
   const classes = useStyles();
   const registerRepositoryRef = useRouteRef(registerRepositoryRouteRef);
 
@@ -55,11 +48,7 @@ export const RepositoriesTabContent = ({
   return (
     <div className={classes.repositoriesTablesList}>
       <div style={{ textAlign: 'right' }}>
-        <LinkButton
-          to={registerRepositoryRef()}
-          color="primary"
-          variant="contained"
-        >
+        <LinkButton to={registerRepositoryRef()} color="primary" variant="contained">
           Register Repository
         </LinkButton>
       </div>
@@ -77,9 +66,7 @@ export const RepositoriesTabContent = ({
         <RepositoriesTable
           title="Function Repositories"
           contentType={ContentSummary.FUNCTION}
-          repositories={
-            repositoriesByContentType[ContentSummary.FUNCTION] ?? []
-          }
+          repositories={repositoriesByContentType[ContentSummary.FUNCTION] ?? []}
         />
       )}
     </div>

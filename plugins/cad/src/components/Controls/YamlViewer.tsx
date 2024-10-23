@@ -28,13 +28,7 @@ type YamlViewerProps = {
   onUpdatedValue?: (newValue: string) => void;
 };
 
-export const YamlViewer = ({
-  original,
-  value,
-  showDiff,
-  allowEdit,
-  onUpdatedValue,
-}: YamlViewerProps) => {
+export const YamlViewer = ({ original, value, showDiff, allowEdit, onUpdatedValue }: YamlViewerProps) => {
   loader.config({ monaco });
 
   const handleUpdatedValue = (yaml?: string): void => {
@@ -43,12 +37,11 @@ export const YamlViewer = ({
     }
   };
 
-  const sharedEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions =
-    {
-      minimap: { enabled: false },
-      readOnly: !allowEdit,
-      scrollBeyondLastLine: false,
-    };
+  const sharedEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+    minimap: { enabled: false },
+    readOnly: !allowEdit,
+    scrollBeyondLastLine: false,
+  };
 
   if (showDiff) {
     return (
@@ -64,12 +57,5 @@ export const YamlViewer = ({
     );
   }
 
-  return (
-    <Editor
-      language="yaml"
-      value={value}
-      onChange={handleUpdatedValue}
-      options={sharedEditorOptions}
-    />
-  );
+  return <Editor language="yaml" value={value} onChange={handleUpdatedValue} options={sharedEditorOptions} />;
 };

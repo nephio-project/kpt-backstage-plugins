@@ -22,10 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { cloneDeep, startCase } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
-import {
-  KubernetesKeyValueObject,
-  KubernetesResource,
-} from '../../../types/KubernetesResource';
+import { KubernetesKeyValueObject, KubernetesResource } from '../../../types/KubernetesResource';
 import { PackageResource } from '../../../utils/packageRevisionResources';
 import { dumpYaml } from '../../../utils/yaml';
 import { IconButton } from '../../Controls';
@@ -51,10 +48,7 @@ type PackageRevisionResourcesTableProps = {
   component: string;
   mode: ResourcesTableMode;
   showDiff: boolean;
-  onUpdatedResource: (
-    originalResource?: PackageResource,
-    resource?: PackageResource,
-  ) => void;
+  onUpdatedResource: (originalResource?: PackageResource, resource?: PackageResource) => void;
 };
 
 type KubernetesGKV = {
@@ -83,13 +77,10 @@ export const PackageRevisionResourcesTable = ({
   const selectedDialogResource = useRef<DialogResource>();
   const selectedDialogOriginalResource = useRef<DialogResource>();
 
-  const [addResourceAnchorEl, setAddResourceAnchorEl] =
-    React.useState<null | HTMLElement>(null);
+  const [addResourceAnchorEl, setAddResourceAnchorEl] = React.useState<null | HTMLElement>(null);
   const addResourceMenuOpen = Boolean(addResourceAnchorEl);
 
-  const resources = allResources.filter(
-    resource => resource.component === component,
-  );
+  const resources = allResources.filter(resource => resource.component === component);
 
   const addResourcesGVKs: KubernetesGKV[] = [
     {
@@ -167,11 +158,7 @@ export const PackageRevisionResourcesTable = ({
   const errorApi = useApi(errorApiRef);
   const isEditMode = mode === ResourcesTableMode.EDIT;
 
-  const openResourceDialog = (
-    dialog: Dialog,
-    resource?: DialogResource,
-    originalResource?: DialogResource,
-  ): void => {
+  const openResourceDialog = (dialog: Dialog, resource?: DialogResource, originalResource?: DialogResource): void => {
     selectedDialogResource.current = resource;
     selectedDialogOriginalResource.current = originalResource;
 
@@ -188,9 +175,7 @@ export const PackageRevisionResourcesTable = ({
     }
   };
 
-  const renderLocalConfigColumn = (
-    resourceRow: ResourceRow,
-  ): JSX.Element | null => {
+  const renderLocalConfigColumn = (resourceRow: ResourceRow): JSX.Element | null => {
     if (resourceRow.isLocalConfigResource) {
       return (
         <Fragment>
@@ -210,13 +195,7 @@ export const PackageRevisionResourcesTable = ({
     if (isEditMode && !resourceRow.isDeleted) {
       if (resourceRow.filename !== 'Kptfile') {
         options.push(
-          <IconButton
-            key="delete"
-            title="Delete"
-            inTable
-            stopPropagation
-            onClick={() => deleteResource(resourceRow)}
-          >
+          <IconButton key="delete" title="Delete" inTable stopPropagation onClick={() => deleteResource(resourceRow)}>
             <DeleteIcon />
           </IconButton>,
         );
@@ -237,11 +216,7 @@ export const PackageRevisionResourcesTable = ({
           }}
           onClick={e => {
             e.stopPropagation();
-            openResourceDialog(
-              Dialog.DIFF_VIEWER,
-              row.currentResource,
-              row.originalResource,
-            );
+            openResourceDialog(Dialog.DIFF_VIEWER, row.currentResource, row.originalResource);
           }}
         >
           {row.diffSummary}
@@ -276,12 +251,10 @@ export const PackageRevisionResourcesTable = ({
       throw new Error('selectedDialogResource is not defined');
     }
 
-    const isExistingResource: boolean =
-      !!selectedDialogResource.current.filename;
+    const isExistingResource: boolean = !!selectedDialogResource.current.filename;
 
     if (isExistingResource) {
-      const originalResource =
-        selectedDialogResource.current as any as PackageResource;
+      const originalResource = selectedDialogResource.current as any as PackageResource;
       const updatedResource = cloneDeep(originalResource);
       updatedResource.yaml = yaml;
 
@@ -292,15 +265,11 @@ export const PackageRevisionResourcesTable = ({
     }
   };
 
-  const generateNewResource = (
-    resourceGVK: KubernetesGKV,
-  ): KubernetesResource => {
-    const { apiVersion, kind, namespaceScoped, k8LocalConfig, defaultName } =
-      resourceGVK;
+  const generateNewResource = (resourceGVK: KubernetesGKV): KubernetesResource => {
+    const { apiVersion, kind, namespaceScoped, k8LocalConfig, defaultName } = resourceGVK;
 
     const getNamespace = (): string | undefined =>
-      resources.find(r => r.kind === 'Namespace')?.name ||
-      resources.find(r => r.namespace)?.namespace;
+      resources.find(r => r.kind === 'Namespace')?.name || resources.find(r => r.namespace)?.namespace;
 
     const name = defaultName || 'default';
     const namespace = namespaceScoped ? getNamespace() : undefined;
@@ -324,9 +293,7 @@ export const PackageRevisionResourcesTable = ({
     return newResource;
   };
 
-  const onAddResourceMenuOpenClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ): void => {
+  const onAddResourceMenuOpenClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAddResourceAnchorEl(event.currentTarget);
   };
 
@@ -355,12 +322,7 @@ export const PackageRevisionResourcesTable = ({
     if (isEditMode) {
       return (
         <div style={{ marginTop: '16px' }}>
-          <Button
-            id="basic-button"
-            onClick={onAddResourceMenuOpenClick}
-            startIcon={<AddIcon />}
-            variant="outlined"
-          >
+          <Button id="basic-button" onClick={onAddResourceMenuOpenClick} startIcon={<AddIcon />} variant="outlined">
             Add Resource
           </Button>
           <Menu
@@ -370,17 +332,12 @@ export const PackageRevisionResourcesTable = ({
             onClose={onAddResourceMenuClose}
           >
             {addResourcesGVKs.map(gvk => (
-              <MenuItem
-                key={gvk.kind}
-                onClick={() => onAddResourceMenuItemClick(gvk)}
-              >
+              <MenuItem key={gvk.kind} onClick={() => onAddResourceMenuItemClick(gvk)}>
                 Add {startCase(gvk.kind)}
               </MenuItem>
             ))}
             <Divider />
-            <MenuItem onClick={() => onAddResourceMenuItemClick(undefined)}>
-              Add Blank Resource
-            </MenuItem>
+            <MenuItem onClick={() => onAddResourceMenuItemClick(undefined)}>Add Blank Resource</MenuItem>
           </Menu>
         </div>
       );
@@ -430,11 +387,7 @@ export const PackageRevisionResourcesTable = ({
             }
 
             const dialog = isEditMode ? Dialog.EDITOR : Dialog.VIEWER;
-            openResourceDialog(
-              dialog,
-              row.currentResource,
-              row.originalResource,
-            );
+            openResourceDialog(dialog, row.currentResource, row.originalResource);
           }
         }}
       />

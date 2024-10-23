@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Breadcrumbs,
-  ContentHeader,
-  Progress,
-} from '@backstage/core-components';
+import { Breadcrumbs, ContentHeader, Progress } from '@backstage/core-components';
 import { errorApiRef, useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { makeStyles, Typography } from '@material-ui/core';
 import Alert, { Color } from '@material-ui/lab/Alert';
@@ -28,15 +24,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useAsync from 'react-use/lib/useAsync';
 import { configAsDataApiRef } from '../../apis';
 import { packageRouteRef } from '../../routes';
-import {
-  ConditionStatus,
-  PackageRevision,
-  PackageRevisionLifecycle,
-} from '../../types/PackageRevision';
-import {
-  PackageRevisionResourcesMap,
-  Result,
-} from '../../types/PackageRevisionResource';
+import { ConditionStatus, PackageRevision, PackageRevisionLifecycle } from '../../types/PackageRevision';
+import { PackageRevisionResourcesMap, Result } from '../../types/PackageRevisionResource';
 import { Repository } from '../../types/Repository';
 import { RepositorySummary } from '../../types/RepositorySummary';
 import { RootSync } from '../../types/RootSync';
@@ -63,45 +52,27 @@ import {
   isLatestPublishedRevision,
   sortByPackageNameAndRevisionComparison,
 } from '../../utils/packageRevision';
-import {
-  getPackageRevisionResources,
-  getPackageRevisionResourcesResource,
-} from '../../utils/packageRevisionResources';
-import {
-  getPackageSummaries,
-  PackageSummary,
-} from '../../utils/packageSummary';
+import { getPackageRevisionResources, getPackageRevisionResourcesResource } from '../../utils/packageRevisionResources';
+import { getPackageSummaries, PackageSummary } from '../../utils/packageSummary';
 import {
   findRepository,
   getPackageDescriptor,
   isDeploymentRepository,
   isReadOnlyRepository,
 } from '../../utils/repository';
-import {
-  getRepositorySummaries,
-  getRepositorySummary,
-} from '../../utils/repositorySummary';
-import {
-  getRevisionSummary,
-  RevisionSummary,
-} from '../../utils/revisionSummary';
+import { getRepositorySummaries, getRepositorySummary } from '../../utils/repositorySummary';
+import { getRevisionSummary, RevisionSummary } from '../../utils/revisionSummary';
 import { toLowerCase } from '../../utils/string';
 import { Badge, ConfirmationDialog } from '../Controls';
 import { Tabs } from '../Controls';
 import { LandingPageLink, PackageLink, RepositoryLink } from '../Links';
 import { AdvancedPackageRevisionOptions } from './components/AdvancedPackageRevisionOptions';
 import { ConditionsTable } from './components/ConditionsTable';
-import {
-  PackageRevisionOptions,
-  RevisionOption,
-} from './components/PackageRevisionOptions';
+import { PackageRevisionOptions, RevisionOption } from './components/PackageRevisionOptions';
 import { PackageRevisionsTable } from './components/PackageRevisionsTable';
 import { RelatedPackagesContent } from './components/RelatedPackagesContent';
 import { RelatedTabContent } from './components/RelatedTabContent';
-import {
-  AlertMessage,
-  ResourcesTabContent,
-} from './components/ResourcesTabContent';
+import { AlertMessage, ResourcesTabContent } from './components/ResourcesTabContent';
 import { processUpdatedResourcesMap } from './updatedResourcesMap/processUpdatedResourcesMap';
 
 export enum PackageRevisionPageMode {
@@ -142,40 +113,25 @@ const getDownstreamUpgradesAvailableMessage = (
   packageDescriptor: string,
 ): AlertMessage => {
   const packagesCount = downstreamPackagesPendingUpgrade.length;
-  const descriptors = uniq(
-    downstreamPackagesPendingUpgrade.map(
-      downstream => downstream.packageDescriptor,
-    ),
-  );
+  const descriptors = uniq(downstreamPackagesPendingUpgrade.map(downstream => downstream.packageDescriptor));
   const downstreamDescriptor =
-    (descriptors.length === 1 ? toLowerCase(descriptors[0]) : 'package') +
-    (packagesCount > 1 ? 's' : '');
+    (descriptors.length === 1 ? toLowerCase(descriptors[0]) : 'package') + (packagesCount > 1 ? 's' : '');
   const need = packagesCount > 1 ? 'need' : 'needs';
 
-  const packagesList = downstreamPackagesPendingUpgrade.map(
-    (downstreamPackage, index) => (
-      <Fragment key={downstreamPackage.latestRevision.metadata.name}>
-        <PackageLink
-          packageRevision={
-            downstreamPackage.latestPublishedRevision ??
-            downstreamPackage.latestRevision
-          }
-        />
-        {index !== packagesCount - 1 && packagesCount > 2 && (
-          <Fragment>, </Fragment>
-        )}
-        {index === packagesCount - 2 && <Fragment> and </Fragment>}
-      </Fragment>
-    ),
-  );
+  const packagesList = downstreamPackagesPendingUpgrade.map((downstreamPackage, index) => (
+    <Fragment key={downstreamPackage.latestRevision.metadata.name}>
+      <PackageLink packageRevision={downstreamPackage.latestPublishedRevision ?? downstreamPackage.latestRevision} />
+      {index !== packagesCount - 1 && packagesCount > 2 && <Fragment>, </Fragment>}
+      {index === packagesCount - 2 && <Fragment> and </Fragment>}
+    </Fragment>
+  ));
 
   const alertMessage: AlertMessage = {
     key: 'downstream-upgrades-available',
     message: (
       <Fragment>
-        The {packagesList} {downstreamDescriptor} {need} to be upgraded to bring
-        the {downstreamDescriptor} up to date with the latest changes in this{' '}
-        {toLowerCase(packageDescriptor)}.
+        The {packagesList} {downstreamDescriptor} {need} to be upgraded to bring the {downstreamDescriptor} up to date
+        with the latest changes in this {toLowerCase(packageDescriptor)}.
       </Fragment>
     ),
   };
@@ -189,36 +145,32 @@ const getUpgradeAvailableMessage = (
   upstreamPackageSummary: PackageSummary,
 ): AlertMessage => {
   const upstreamRevision = upstreamPackageSummary.latestRevision;
-  const upstreamDescriptor = toLowerCase(
-    upstreamPackageSummary.packageDescriptor,
-  );
+  const upstreamDescriptor = toLowerCase(upstreamPackageSummary.packageDescriptor);
 
   const onLatestRevision = latestRevision === packageRevision;
   const isLatestRevisionUpgraded =
-    getUpstreamPackageRevisionDetails(latestRevision)?.revision ===
-    upstreamRevision.spec.revision;
+    getUpstreamPackageRevisionDetails(latestRevision)?.revision === upstreamRevision.spec.revision;
 
   const upgradeAvailableMessage = (
     <Fragment>
-      The <PackageLink packageRevision={upstreamRevision} packageNameOnly />{' '}
-      upstream {upstreamDescriptor} has been upgraded.{' '}
+      The <PackageLink packageRevision={upstreamRevision} packageNameOnly /> upstream {upstreamDescriptor} has been
+      upgraded.{' '}
       {onLatestRevision && (
         <Fragment>
-          Use the 'Upgrade to Latest Blueprint' button to create a revision that
-          pulls in changes from the upgraded {upstreamDescriptor}.
+          Use the 'Upgrade to Latest Blueprint' button to create a revision that pulls in changes from the upgraded{' '}
+          {upstreamDescriptor}.
         </Fragment>
       )}
       {!onLatestRevision && isLatestRevisionUpgraded && (
         <Fragment>
-          The latest <PackageLink packageRevision={latestRevision} /> already
-          includes changes from the upgraded {upstreamDescriptor}.
+          The latest <PackageLink packageRevision={latestRevision} /> already includes changes from the upgraded{' '}
+          {upstreamDescriptor}.
         </Fragment>
       )}
       {!onLatestRevision && !isLatestRevisionUpgraded && (
         <Fragment>
-          The latest <PackageLink packageRevision={latestRevision} /> does not
-          include changes from the upgraded {upstreamDescriptor}. The revision
-          must be either published or deleted before changes from the upgraded{' '}
+          The latest <PackageLink packageRevision={latestRevision} /> does not include changes from the upgraded{' '}
+          {upstreamDescriptor}. The revision must be either published or deleted before changes from the upgraded{' '}
           {upstreamDescriptor} can be pulled in.
         </Fragment>
       )}
@@ -243,39 +195,25 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
   const packageRef = useRouteRef(packageRouteRef);
 
   const allRepositories = useRef<Repository[]>([]);
-  const [repositorySummary, setRepositorySummary] =
-    useState<RepositorySummary>();
+  const [repositorySummary, setRepositorySummary] = useState<RepositorySummary>();
   const [packageRevision, setPackageRevision] = useState<PackageRevision>();
   const [upstreamRepository, setUpstreamRepository] = useState<Repository>();
-  const [upstreamRevisionSummary, setUpstreamRevisionSummary] =
-    useState<RevisionSummary>();
-  const [upstreamPackageSummary, setUpstreamPackageSummary] =
-    useState<PackageSummary>();
-  const [downstreamPackageSummaries, setDownstreamPackageSummaries] = useState<
-    PackageSummary[]
-  >([]);
-  const [siblingPackageSummaries, setSiblingPackageSummaries] = useState<
-    PackageSummary[]
-  >([]);
+  const [upstreamRevisionSummary, setUpstreamRevisionSummary] = useState<RevisionSummary>();
+  const [upstreamPackageSummary, setUpstreamPackageSummary] = useState<PackageSummary>();
+  const [downstreamPackageSummaries, setDownstreamPackageSummaries] = useState<PackageSummary[]>([]);
+  const [siblingPackageSummaries, setSiblingPackageSummaries] = useState<PackageSummary[]>([]);
 
-  const [revisionSummaries, setRevisionSummaries] = useState<RevisionSummary[]>(
-    [],
-  );
+  const [revisionSummaries, setRevisionSummaries] = useState<RevisionSummary[]>([]);
   const resourcesMapResourceVersion = useRef<string>('');
-  const [resourcesMap, setResourcesMap] = useState<PackageRevisionResourcesMap>(
-    {},
-  );
+  const [resourcesMap, setResourcesMap] = useState<PackageRevisionResourcesMap>({});
   const [rootSync, setRootSync] = useState<RootSync | null>();
   const [syncStatus, setSyncStatus] = useState<SyncStatus>();
-  const [userInitiatedApiRequest, setUserInitiatedApiRequest] =
-    useState<boolean>(false);
+  const [userInitiatedApiRequest, setUserInitiatedApiRequest] = useState<boolean>(false);
 
   const [openRestoreDialog, setOpenRestoreDialog] = useState<boolean>(false);
   const [isUpgradeAvailable, setIsUpgradeAvailable] = useState<boolean>(false);
 
-  const [renderErrorMessages, setRenderErrorMessages] = useState<
-    RenderErrorMessage[]
-  >([]);
+  const [renderErrorMessages, setRenderErrorMessages] = useState<RenderErrorMessage[]>([]);
 
   const latestPublishedUpstream = useRef<PackageRevision>();
 
@@ -289,10 +227,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
   const loadRepositorySummary = async (): Promise<void> => {
     const { items: thisAllRepositories } = await api.listRepositories();
     const repositorySummaries = getRepositorySummaries(thisAllRepositories);
-    const thisRepositorySummary = await getRepositorySummary(
-      repositorySummaries,
-      repositoryName,
-    );
+    const thisRepositorySummary = await getRepositorySummary(repositorySummaries, repositoryName);
 
     allRepositories.current = thisAllRepositories;
     setRepositorySummary(thisRepositorySummary);
@@ -302,18 +237,14 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
     const asyncPackageRevisions = api.listPackageRevisions();
     const asyncAllPackageResources = api.listPackageRevisionResources();
 
-    const [thisPackageRevisions, { items: thisAllPackagesResources }] =
-      await Promise.all([asyncPackageRevisions, asyncAllPackageResources]);
+    const [thisPackageRevisions, { items: thisAllPackagesResources }] = await Promise.all([
+      asyncPackageRevisions,
+      asyncAllPackageResources,
+    ]);
 
-    const thisResources = getPackageRevisionResources(
-      thisAllPackagesResources,
-      packageName,
-    );
+    const thisResources = getPackageRevisionResources(thisAllPackagesResources, packageName);
 
-    const thisPackageRevision = getPackageRevision(
-      thisPackageRevisions,
-      packageName,
-    );
+    const thisPackageRevision = getPackageRevision(thisPackageRevisions, packageName);
 
     const thisSortedRevisions = filterPackageRevisions(
       thisPackageRevisions,
@@ -321,27 +252,19 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       thisPackageRevision.spec.repository,
     ).sort(sortByPackageNameAndRevisionComparison);
 
-    const thisRevisionSummaries: RevisionSummary[] = thisSortedRevisions.map(
-      revision => {
-        const revisionResourcesMap = getPackageRevisionResources(
-          thisAllPackagesResources,
-          revision.metadata.name,
-        ).spec.resources;
+    const thisRevisionSummaries: RevisionSummary[] = thisSortedRevisions.map(revision => {
+      const revisionResourcesMap = getPackageRevisionResources(thisAllPackagesResources, revision.metadata.name).spec
+        .resources;
 
-        const revisionSummary = getRevisionSummary(
-          revision,
-          revisionResourcesMap,
-        );
+      const revisionSummary = getRevisionSummary(revision, revisionResourcesMap);
 
-        return revisionSummary;
-      },
-    );
+      return revisionSummary;
+    });
 
     setRevisionSummaries(thisRevisionSummaries);
     setPackageRevision(thisPackageRevision);
     setResourcesMap(thisResources.spec.resources);
-    resourcesMapResourceVersion.current =
-      thisResources.metadata.resourceVersion || '';
+    resourcesMapResourceVersion.current = thisResources.metadata.resourceVersion || '';
 
     let upgradeAvailable = false;
     let thisUpstreamRepository: Repository | undefined = undefined;
@@ -371,13 +294,9 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
               upstream.packageName,
               upstreamRepositoryName,
             );
-            latestPublishedUpstream.current =
-              findLatestPublishedRevision(allUpstreamRevisions);
+            latestPublishedUpstream.current = findLatestPublishedRevision(allUpstreamRevisions);
 
-            if (
-              upstream.revision !==
-              latestPublishedUpstream.current?.spec.revision
-            ) {
+            if (upstream.revision !== latestPublishedUpstream.current?.spec.revision) {
               upgradeAvailable = true;
             }
           }
@@ -387,10 +306,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
             upstreamPackageRevision.metadata.name,
           ).spec.resources;
 
-          thisUpstreamRevisionSummary = getRevisionSummary(
-            upstreamPackageRevision,
-            upstreamResourcesMap,
-          );
+          thisUpstreamRevisionSummary = getRevisionSummary(upstreamPackageRevision, upstreamResourcesMap);
         }
       }
     }
@@ -410,24 +326,18 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
     const upstreamPackage = allPackageSummaries.find(
       summary =>
         !!thisUpstreamRevisionSummary &&
-        summary.latestRevision.spec.packageName ===
-          thisUpstreamRevisionSummary.revision.spec.packageName &&
-        summary.latestRevision.spec.repository ===
-          thisUpstreamRevisionSummary.revision.spec.repository,
+        summary.latestRevision.spec.packageName === thisUpstreamRevisionSummary.revision.spec.packageName &&
+        summary.latestRevision.spec.repository === thisUpstreamRevisionSummary.revision.spec.repository,
     );
 
     const siblingPackages = allPackageSummaries.filter(
       summary =>
         !!thisUpstreamRevisionSummary &&
-        summary.upstreamPackageName ===
-          thisUpstreamRevisionSummary.revision.spec.packageName &&
-        summary.upstreamRepositoryName ===
-          thisUpstreamRevisionSummary.revision.spec.repository &&
+        summary.upstreamPackageName === thisUpstreamRevisionSummary.revision.spec.packageName &&
+        summary.upstreamRepositoryName === thisUpstreamRevisionSummary.revision.spec.repository &&
         !(
-          summary.latestRevision.spec.packageName ===
-            thisPackageRevision.spec.packageName &&
-          summary.latestRevision.spec.repository ===
-            thisPackageRevision.spec.repository
+          summary.latestRevision.spec.packageName === thisPackageRevision.spec.packageName &&
+          summary.latestRevision.spec.repository === thisPackageRevision.spec.repository
         ),
     );
 
@@ -445,25 +355,15 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
     [repositoryName, packageName, mode],
   );
 
-  const isLatestPublishedPackageRevision =
-    packageRevision && isLatestPublishedRevision(packageRevision);
-  const isDeploymentPackage =
-    repositorySummary && isDeploymentRepository(repositorySummary.repository);
+  const isLatestPublishedPackageRevision = packageRevision && isLatestPublishedRevision(packageRevision);
+  const isDeploymentPackage = repositorySummary && isDeploymentRepository(repositorySummary.repository);
 
   useAsync(async () => {
     if (!loading && packageRevision && repositorySummary) {
-      if (
-        isLatestPublishedPackageRevision &&
-        isDeploymentPackage &&
-        configSyncEnabled
-      ) {
+      if (isLatestPublishedPackageRevision && isDeploymentPackage && configSyncEnabled) {
         const { items: allRootSyncs } = await api.listRootSyncs();
 
-        const thisRootSync = findRootSyncForPackage(
-          allRootSyncs,
-          packageRevision,
-          repositorySummary.repository,
-        );
+        const thisRootSync = findRootSyncForPackage(allRootSyncs, packageRevision, repositorySummary.repository);
 
         setRootSync(thisRootSync ?? null);
       } else {
@@ -480,10 +380,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       };
 
       const refreshSeconds = rootSync.status ? 5 : 1;
-      const refreshTimeout = setTimeout(
-        () => refreshRootSync(),
-        refreshSeconds * 1000,
-      );
+      const refreshTimeout = setTimeout(() => refreshRootSync(), refreshSeconds * 1000);
 
       return () => {
         clearTimeout(refreshTimeout);
@@ -534,24 +431,13 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
     await loadPackageRevision();
   };
 
-  const updateRootSyncToLatestPackage = async (
-    thisPackageRevision: PackageRevision,
-  ): Promise<void> => {
+  const updateRootSyncToLatestPackage = async (thisPackageRevision: PackageRevision): Promise<void> => {
     const { items: allRootSyncs } = await api.listRootSyncs();
 
-    const previousRootSync = findRootSyncForPackage(
-      allRootSyncs,
-      packageRevision,
-      repositorySummary.repository,
-      false,
-    );
+    const previousRootSync = findRootSyncForPackage(allRootSyncs, packageRevision, repositorySummary.repository, false);
 
     if (previousRootSync) {
-      const newRootSync = getRootSync(
-        repository,
-        thisPackageRevision,
-        previousRootSync.spec.git?.secretRef?.name,
-      );
+      const newRootSync = getRootSync(repository, thisPackageRevision, previousRootSync.spec.git?.secretRef?.name);
 
       await api.deleteRootSync(previousRootSync.metadata.name);
       await api.createRootSync(newRootSync);
@@ -578,8 +464,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
   };
 
   const createSync = async (): Promise<void> => {
-    const repoSecretName =
-      repositorySummary.repository.spec.git?.secretRef?.name;
+    const repoSecretName = repositorySummary.repository.spec.git?.secretRef?.name;
 
     if (repoSecretName) {
       const baseName = packageRevision.spec.packageName;
@@ -607,29 +492,20 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       throw new Error('The latest published upstream package is not defined');
     }
 
-    const blueprintPackageRevisionName =
-      latestPublishedUpstream.current.metadata.name;
+    const blueprintPackageRevisionName = latestPublishedUpstream.current.metadata.name;
 
-    const requestPackageRevision = getUpgradePackageRevisionResource(
-      packageRevision,
-      blueprintPackageRevisionName,
-    );
+    const requestPackageRevision = getUpgradePackageRevisionResource(packageRevision, blueprintPackageRevisionName);
 
-    const newPackageRevision = await api.createPackageRevision(
-      requestPackageRevision,
-    );
+    const newPackageRevision = await api.createPackageRevision(requestPackageRevision);
     const newPackageName = newPackageRevision.metadata.name;
 
     navigate(packageRef({ repositoryName, packageName: newPackageName }));
   };
 
   const createNewRevision = async (): Promise<void> => {
-    const requestPackageRevision =
-      getNextPackageRevisionResource(packageRevision);
+    const requestPackageRevision = getNextPackageRevisionResource(packageRevision);
 
-    const newPackageRevision = await api.createPackageRevision(
-      requestPackageRevision,
-    );
+    const newPackageRevision = await api.createPackageRevision(requestPackageRevision);
     const newPackageName = newPackageRevision.metadata.name;
 
     navigate(packageRef({ repositoryName, packageName: newPackageName }));
@@ -639,9 +515,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
     setUserInitiatedApiRequest(true);
 
     try {
-      const latestPublishedRevision = findLatestPublishedRevision(
-        packageRevisions,
-      ) as PackageRevision;
+      const latestPublishedRevision = findLatestPublishedRevision(packageRevisions) as PackageRevision;
       const latestRevision = packageRevisions[0];
 
       if (latestPublishedRevision !== latestRevision) {
@@ -651,20 +525,14 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       }
 
       const createNextRevision = async (): Promise<string> => {
-        const requestPackageRevision = getNextPackageRevisionResource(
-          latestPublishedRevision,
-        );
+        const requestPackageRevision = getNextPackageRevisionResource(latestPublishedRevision);
 
-        const newPackageRevision = await api.createPackageRevision(
-          requestPackageRevision,
-        );
+        const newPackageRevision = await api.createPackageRevision(requestPackageRevision);
 
         return newPackageRevision.metadata.name;
       };
 
-      const replaceRevisionsResources = async (
-        thisPackageName: string,
-      ): Promise<void> => {
+      const replaceRevisionsResources = async (thisPackageName: string): Promise<void> => {
         const packageRevisionResources = getPackageRevisionResourcesResource(
           thisPackageName,
           resourcesMap,
@@ -716,11 +584,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       const statusSeverity = getAlertSeverity(syncStatus);
 
       return (
-        <Alert
-          key="sync-status"
-          severity={statusSeverity}
-          className={classes.syncStatusBanner}
-        >
+        <Alert key="sync-status" severity={statusSeverity} className={classes.syncStatusBanner}>
           {syncStatus.state}
         </Alert>
       );
@@ -728,11 +592,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
 
     if (rootSync) {
       return (
-        <Alert
-          key="sync-status"
-          severity="warning"
-          className={classes.syncStatusBanner}
-        >
+        <Alert key="sync-status" severity="warning" className={classes.syncStatusBanner}>
           No Status
         </Alert>
       );
@@ -748,22 +608,17 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       resourcesMapResourceVersion.current,
     );
 
-    const resourcesResponse = await api.replacePackageRevisionResources(
-      packageRevisionResources,
-    );
+    const resourcesResponse = await api.replacePackageRevisionResources(packageRevisionResources);
     const resourcesResponseStatus = resourcesResponse.status;
 
     const renderErrors: RenderErrorMessage[] = [];
 
     if (resourcesResponseStatus) {
-      const functionResults: Result[] =
-        resourcesResponseStatus.renderStatus?.result.items || [];
+      const functionResults: Result[] = resourcesResponseStatus.renderStatus?.result.items || [];
 
       for (const fn of functionResults) {
         if (fn.results) {
-          const fnResults = fn.results.filter(
-            result => result.severity === 'error',
-          );
+          const fnResults = fn.results.filter(result => result.severity === 'error');
           renderErrors.push(
             ...fnResults.map(r => ({
               title: `${getFunctionNameFromImage(fn.image)} function`,
@@ -792,30 +647,20 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
 
     if (anyRenderingErrors) {
       errorApi.post(
-        new Error(
-          `Porch is unable to render the package. Please correct any errors and resave the package.`,
-        ),
+        new Error(`Porch is unable to render the package. Please correct any errors and resave the package.`),
       );
     } else {
       navigate(packageRef({ repositoryName, packageName }));
     }
   };
 
-  const handleUpdatedResourcesMap = async (
-    latestResources: PackageRevisionResourcesMap,
-  ): Promise<void> => {
-    const updatedResources = await processUpdatedResourcesMap(
-      api,
-      resourcesMap,
-      latestResources,
-    );
+  const handleUpdatedResourcesMap = async (latestResources: PackageRevisionResourcesMap): Promise<void> => {
+    const updatedResources = await processUpdatedResourcesMap(api, resourcesMap, latestResources);
 
     setResourcesMap(updatedResources);
   };
 
-  const executeUserInitiatedApiRequest = async (
-    apiRequest: () => Promise<void>,
-  ): Promise<void> => {
+  const executeUserInitiatedApiRequest = async (apiRequest: () => Promise<void>): Promise<void> => {
     setUserInitiatedApiRequest(true);
 
     try {
@@ -825,9 +670,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
     }
   };
 
-  const onRevisionOptionClick = async (
-    option: RevisionOption,
-  ): Promise<void> => {
+  const onRevisionOptionClick = async (option: RevisionOption): Promise<void> => {
     switch (option) {
       case RevisionOption.CREATE_NEW_REVISION:
         await executeUserInitiatedApiRequest(createNewRevision);
@@ -875,8 +718,8 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       key: 'read-only',
       message: (
         <Fragment>
-          This {toLowerCase(packageDescriptor)} is read-only since this{' '}
-          {toLowerCase(packageDescriptor)} exists in a read-only repository.
+          This {toLowerCase(packageDescriptor)} is read-only since this {toLowerCase(packageDescriptor)} exists in a
+          read-only repository.
         </Fragment>
       ),
     });
@@ -887,37 +730,21 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
       throw new Error('The upstream package summary is not defined');
     }
 
-    alertMessages.push(
-      getUpgradeAvailableMessage(
-        packageRevision,
-        packageRevisions[0],
-        upstreamPackageSummary,
-      ),
-    );
+    alertMessages.push(getUpgradeAvailableMessage(packageRevision, packageRevisions[0], upstreamPackageSummary));
   }
 
   if (isLatestPublishedPackageRevision) {
-    const downstreamPackagesPendingUpgrade = downstreamPackageSummaries.filter(
-      summary => summary.isUpgradeAvailable,
-    );
+    const downstreamPackagesPendingUpgrade = downstreamPackageSummaries.filter(summary => summary.isUpgradeAvailable);
 
     if (downstreamPackagesPendingUpgrade.length > 0) {
-      alertMessages.push(
-        getDownstreamUpgradesAvailableMessage(
-          downstreamPackagesPendingUpgrade,
-          packageDescriptor,
-        ),
-      );
+      alertMessages.push(getDownstreamUpgradesAvailableMessage(downstreamPackagesPendingUpgrade, packageDescriptor));
     }
   }
 
-  const showDownstreamPackages =
-    !isDeploymentPackage || downstreamPackageSummaries.length > 0;
+  const showDownstreamPackages = !isDeploymentPackage || downstreamPackageSummaries.length > 0;
 
   const packageConditions = getPackageConditions(packageRevision);
-  const incompleteConditions = packageConditions.filter(
-    c => c.status !== ConditionStatus.TRUE,
-  ).length;
+  const incompleteConditions = packageConditions.filter(c => c.status !== ConditionStatus.TRUE).length;
 
   return (
     <div>
@@ -925,9 +752,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
         <LandingPageLink breadcrumb />
         <RepositoryLink repository={repository} breadcrumb />
         {isViewMode && <Typography>{packageRevisionTitle}</Typography>}
-        {!isViewMode && (
-          <PackageLink packageRevision={packageRevision} breadcrumb />
-        )}
+        {!isViewMode && <PackageLink packageRevision={packageRevision} breadcrumb />}
         {!isViewMode && <Typography>Edit</Typography>}
       </Breadcrumbs>
 
@@ -967,11 +792,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
 
       <Fragment>
         {renderErrorMessages.map((message: RenderErrorMessage) => (
-          <Alert
-            key={message.message}
-            severity="error"
-            className={classes.messageBanner}
-          >
+          <Alert key={message.message} severity="error" className={classes.messageBanner}>
             {message.title}: {message.message}
           </Alert>
         ))}
@@ -1030,11 +851,7 @@ export const PackageRevisionPage = ({ mode }: PackageRevisionPageProps) => {
           {
             label: 'Advanced',
             content: (
-              <AdvancedPackageRevisionOptions
-                repository={repository}
-                packageName={packageName}
-                rootSync={rootSync}
-              />
+              <AdvancedPackageRevisionOptions repository={repository} packageName={packageName} rootSync={rootSync} />
             ),
           },
         ]}

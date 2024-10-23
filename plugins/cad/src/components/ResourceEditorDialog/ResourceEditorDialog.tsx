@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles } from '@material-ui/core';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { KubernetesResource } from '../../types/KubernetesResource';
 import { getGroupVersionKind } from '../../utils/kubernetesResource';
@@ -50,13 +43,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const ResourceEditorDialog = ({
-  open,
-  onClose,
-  yaml,
-  onSaveYaml,
-  packageResources,
-}: ResourceEditorProps) => {
+export const ResourceEditorDialog = ({ open, onClose, yaml, onSaveYaml, packageResources }: ResourceEditorProps) => {
   const classes = useStyles();
 
   const [showYamlView, setShowYamlView] = useState<boolean>(false);
@@ -105,10 +92,7 @@ export const ResourceEditorDialog = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Fragment>
-          <div
-            className={classes.container}
-            style={{ height: `${latestYamlHeight}px` }}
-          >
+          <div className={classes.container} style={{ height: `${latestYamlHeight}px` }}>
             {!showYamlView && isNamedEditor ? (
               <FirstClassEditorSelector
                 groupVersionKind={groupVersionKind}
@@ -118,11 +102,7 @@ export const ResourceEditorDialog = ({
                 onUpdatedYaml={handleUpdatedYaml}
               />
             ) : (
-              <YamlViewer
-                value={latestYaml}
-                allowEdit
-                onUpdatedValue={handleUpdatedYaml}
-              />
+              <YamlViewer value={latestYaml} allowEdit onUpdatedValue={handleUpdatedYaml} />
             )}
           </div>
           {isNamedEditor && (

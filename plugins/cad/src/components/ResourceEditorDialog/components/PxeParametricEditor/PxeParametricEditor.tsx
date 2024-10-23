@@ -19,10 +19,7 @@ import React, { useCallback, useState } from 'react';
 import { useSetStateAndCall } from '../../../../hooks/useSetStateAndCall';
 import { useEditorStyles } from '../FirstClassEditors/styles';
 import { PxeConfiguration } from './types/PxeConfiguration.types';
-import {
-  PxeExpandedSectionState,
-  PxeResourceChangeRequestHandler,
-} from './types/PxeParametricEditor.types';
+import { PxeExpandedSectionState, PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
 import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
@@ -42,25 +39,18 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
   const initialResourceState = pick(initialYamlObject, topLevelProperties);
 
   const [resource, setResource] = useState(initialResourceState);
-  const [expandedSection, setExpandedSection] =
-    useState<PxeExpandedSectionState>(undefined);
+  const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
 
-  const setResourceAndNotifyOnChange = useSetStateAndCall(
-    [resource, setResource],
-    newState => {
-      const newYamlText = stringifyYaml({ ...initialYamlObject, ...newState });
-      onResourceChange(newYamlText);
-    },
+  const setResourceAndNotifyOnChange = useSetStateAndCall([resource, setResource], newState => {
+    const newYamlText = stringifyYaml({ ...initialYamlObject, ...newState });
+    onResourceChange(newYamlText);
+  });
+
+  const handleResourceChangeRequest: PxeResourceChangeRequestHandler = useCallback(
+    (changeRequest): void =>
+      setResourceAndNotifyOnChange(createResourceChunkAfterChangeRequest(resource, changeRequest)),
+    [resource, setResourceAndNotifyOnChange],
   );
-
-  const handleResourceChangeRequest: PxeResourceChangeRequestHandler =
-    useCallback(
-      (changeRequest): void =>
-        setResourceAndNotifyOnChange(
-          createResourceChunkAfterChangeRequest(resource, changeRequest),
-        ),
-      [resource, setResourceAndNotifyOnChange],
-    );
 
   const classes = useEditorStyles();
   return (

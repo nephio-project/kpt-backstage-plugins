@@ -20,10 +20,7 @@ import LibraryBooks from '@material-ui/icons/LibraryBooks';
 import LogoFull from './LogoFull';
 import LogoIcon from './LogoIcon';
 import { NavLink } from 'react-router-dom';
-import {
-  Settings as SidebarSettings,
-  UserSettingsSignInAvatar,
-} from '@backstage/plugin-user-settings';
+import { Settings as SidebarSettings, UserSettingsSignInAvatar } from '@backstage/plugin-user-settings';
 import {
   Sidebar,
   sidebarConfig,
@@ -59,12 +56,7 @@ const SidebarLogo = () => {
 
   return (
     <div className={classes.root}>
-      <Link
-        component={NavLink}
-        to="/"
-        underline="none"
-        className={classes.link}
-      >
+      <Link component={NavLink} to="/" underline="none" className={classes.link}>
         {isOpen ? <LogoFull /> : <LogoIcon />}
       </Link>
     </div>
@@ -74,9 +66,7 @@ const SidebarLogo = () => {
 export const Root = ({ children }: PropsWithChildren<{}>) => {
   const configApi = useApi(configApiRef);
 
-  const cadTitle =
-    configApi.getOptionalString('configAsData.branding.title') ||
-    'Config as Data';
+  const cadTitle = configApi.getOptionalString('configAsData.branding.title') || 'Config as Data';
 
   return (
     <SidebarPage>
@@ -85,20 +75,12 @@ export const Root = ({ children }: PropsWithChildren<{}>) => {
         <SidebarDivider />
         <SidebarGroup label="Menu" icon={<MenuIcon />}>
           <SidebarScrollWrapper>
-            <SidebarItem
-              icon={LibraryBooks}
-              to="config-as-data"
-              text={cadTitle}
-            />
+            <SidebarItem icon={LibraryBooks} to="config-as-data" text={cadTitle} />
           </SidebarScrollWrapper>
         </SidebarGroup>
         <SidebarSpace />
         <SidebarDivider />
-        <SidebarGroup
-          label="Settings"
-          icon={<UserSettingsSignInAvatar />}
-          to="/settings"
-        >
+        <SidebarGroup label="Settings" icon={<UserSettingsSignInAvatar />} to="/settings">
           <SidebarSettings />
         </SidebarGroup>
       </Sidebar>

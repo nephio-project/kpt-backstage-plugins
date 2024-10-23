@@ -29,28 +29,15 @@ import { upperCaseFirstLetter } from './general/stringCasing';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateSectionDescription = (
-  sectionEntry: PxeSectionEntry,
-  resourceChunk: PxeResourceChunk,
-): string =>
+export const generateSectionDescription = (sectionEntry: PxeSectionEntry, resourceChunk: PxeResourceChunk): string =>
   sectionEntry.entries
     .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
-    .flatMap(childEntry =>
-      generateValueDescriptionsForWidget(
-        childEntry as PxeWidgetEntry,
-        resourceChunk,
-      ),
-    )
+    .flatMap(childEntry => generateValueDescriptionsForWidget(childEntry as PxeWidgetEntry, resourceChunk))
     .join(', ');
 
-export const generateValueLabel = (
-  valueDescriptor: PxeValueDescriptor,
-  uppercase: boolean = true,
-): string => {
+export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercase: boolean = true): string => {
   if (valueDescriptor.display?.name) {
-    return uppercase
-      ? upperCaseFirstLetter(valueDescriptor.display.name)
-      : valueDescriptor.display.name;
+    return uppercase ? upperCaseFirstLetter(valueDescriptor.display.name) : valueDescriptor.display.name;
   } else {
     const pathSegments = valueDescriptor.path.split('.');
     return (uppercase ? changeCase.sentenceCase : changeCase.noCase)(
@@ -59,14 +46,9 @@ export const generateValueLabel = (
   }
 };
 
-const generateValueDescriptionsForWidget = (
-  widgetEntry: PxeWidgetEntry,
-  resourceChunk: PxeResourceChunk,
-): string[] =>
+const generateValueDescriptionsForWidget = (widgetEntry: PxeWidgetEntry, resourceChunk: PxeResourceChunk): string[] =>
   widgetEntry.values
-    .map(valueDescriptor =>
-      generateValueDescription(valueDescriptor, resourceChunk),
-    )
+    .map(valueDescriptor => generateValueDescription(valueDescriptor, resourceChunk))
     .filter(segment => segment !== null) as string[];
 
 const generateValueDescription = (
@@ -80,8 +62,6 @@ const generateValueDescription = (
     return `${size(value)} ${generateValueLabel(valueDescriptor, false)}`;
   } else {
     const hasDescription = !isEmptyPxeValue(value) || isRequired;
-    return hasDescription
-      ? `${generateValueLabel(valueDescriptor)}: ${value ?? ''}`
-      : null;
+    return hasDescription ? `${generateValueLabel(valueDescriptor)}: ${value ?? ''}` : null;
   }
 };

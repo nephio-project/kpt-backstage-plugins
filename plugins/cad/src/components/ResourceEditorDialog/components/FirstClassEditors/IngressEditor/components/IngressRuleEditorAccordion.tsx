@@ -21,17 +21,9 @@ import { clone } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
 import { HTTPIngressPath, IngressRule } from '../../../../../../types/Ingress';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../../util/deletable';
 import { HTTPPathRuleEditorAccordion } from './HTTPPathRuleEditorAccordion';
 
 type OnUpdate = (newValue?: IngressRule) => void;
@@ -58,9 +50,7 @@ export const IngressRuleEditorAccordion = ({
 
   const [expanded, setExpanded] = useState<string>();
 
-  const refPathsModel = useRef<Deletable<HTTPIngressPath>[]>(
-    clone(ingressRule.http?.paths || []),
-  );
+  const refPathsModel = useRef<Deletable<HTTPIngressPath>[]>(clone(ingressRule.http?.paths || []));
   const pathsModel = refPathsModel.current;
 
   const valueUpdated = (): void => {
@@ -72,17 +62,10 @@ export const IngressRuleEditorAccordion = ({
   };
 
   const descriptionPrefix = viewModel.host ? `${viewModel.host} ` : '';
-  const description = `${descriptionPrefix} ${viewModel.http?.paths
-    .map(p => p.path)
-    .join(' ')}`;
+  const description = `${descriptionPrefix} ${viewModel.http?.paths.map(p => p.path).join(' ')}`;
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Rule"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Rule" description={description} state={state}>
       <Fragment>
         <Fragment>
           <TextField
@@ -106,11 +89,7 @@ export const IngressRuleEditorAccordion = ({
                     state={[expanded, setExpanded]}
                     value={httpPath}
                     onUpdate={updatedPath => {
-                      refPathsModel.current = updateList(
-                        pathsModel,
-                        updatedPath,
-                        index,
-                      );
+                      refPathsModel.current = updateList(pathsModel, updatedPath, index);
                       valueUpdated();
                     }}
                     serviceResources={serviceResources}

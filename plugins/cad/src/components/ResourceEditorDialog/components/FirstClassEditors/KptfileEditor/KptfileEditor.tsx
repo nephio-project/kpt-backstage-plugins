@@ -21,27 +21,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
 import { configAsDataApiRef } from '../../../../../apis';
 import { Function } from '../../../../../types/Function';
-import {
-  Kptfile,
-  KptfileFunction,
-  KptfileInfo,
-  KptfileMetadata,
-} from '../../../../../types/Kptfile';
-import {
-  isMutatorFunction,
-  isValidatorFunction,
-} from '../../../../../utils/function';
+import { Kptfile, KptfileFunction, KptfileInfo, KptfileMetadata } from '../../../../../types/Kptfile';
+import { isMutatorFunction, isValidatorFunction } from '../../../../../utils/function';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../util/deletable';
 import { KptfileInfoEditorAccordion } from './components/KptfileInfoEditorAccordion';
 import { KptFunctionEditorAccordion } from './components/KptFunctionEditorAccordion';
 
@@ -60,11 +46,7 @@ type State = {
   validators: Deletable<KptfileFunction>[];
 };
 
-export const KptfileEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: KptfileEditorProps) => {
+export const KptfileEditor = ({ yaml, onUpdatedYaml, packageResources }: KptfileEditorProps) => {
   const resourceYaml = loadYaml(yaml) as Kptfile;
   const api = useApi(configAsDataApiRef);
 
@@ -78,14 +60,8 @@ export const KptfileEditor = ({
   const [state, setState] = useState<State>(createResourceState());
   const [allKptFunctions, setAllKptFunctions] = useState<Function[]>([]);
 
-  const allKptMutatorFunctions = useMemo(
-    () => allKptFunctions.filter(isMutatorFunction),
-    [allKptFunctions],
-  );
-  const allKptValidatorFunctions = useMemo(
-    () => allKptFunctions.filter(isValidatorFunction),
-    [allKptFunctions],
-  );
+  const allKptMutatorFunctions = useMemo(() => allKptFunctions.filter(isMutatorFunction), [allKptFunctions]);
+  const allKptValidatorFunctions = useMemo(() => allKptFunctions.filter(isValidatorFunction), [allKptFunctions]);
 
   const [expanded, setExpanded] = useState<string>();
 
@@ -101,12 +77,8 @@ export const KptfileEditor = ({
 
     resourceYaml.metadata = state.metadata;
     resourceYaml.info = state.info;
-    resourceYaml.pipeline.mutators = undefinedIfEmpty(
-      getActiveElements(state.mutators),
-    );
-    resourceYaml.pipeline.validators = undefinedIfEmpty(
-      getActiveElements(state.validators),
-    );
+    resourceYaml.pipeline.mutators = undefinedIfEmpty(getActiveElements(state.mutators));
+    resourceYaml.pipeline.validators = undefinedIfEmpty(getActiveElements(state.validators));
 
     onUpdatedYaml(dumpYaml(resourceYaml));
   }, [state, resourceYaml, onUpdatedYaml]);
@@ -142,11 +114,7 @@ export const KptfileEditor = ({
               onUpdate={updatedMutator =>
                 setState(s => ({
                   ...s,
-                  mutators: updateList(
-                    s.mutators.slice(),
-                    updatedMutator,
-                    index,
-                  ),
+                  mutators: updateList(s.mutators.slice(), updatedMutator, index),
                 }))
               }
             />
@@ -167,11 +135,7 @@ export const KptfileEditor = ({
               onUpdate={updatedValidator =>
                 setState(s => ({
                   ...s,
-                  validators: updateList(
-                    s.validators.slice(),
-                    updatedValidator,
-                    index,
-                  ),
+                  validators: updateList(s.validators.slice(), updatedValidator, index),
                 }))
               }
             />

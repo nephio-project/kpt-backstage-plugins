@@ -16,10 +16,7 @@
 
 import { TextField } from '@material-ui/core';
 import React, { Fragment, useEffect, useState } from 'react';
-import {
-  ResourceQuota,
-  ResourceQuotaMetadata,
-} from '../../../../../types/ResourceQuota';
+import { ResourceQuota, ResourceQuotaMetadata } from '../../../../../types/ResourceQuota';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { EditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
@@ -39,10 +36,7 @@ type State = {
   limitsMemory: string;
 };
 
-export const ResourceQuotaEditor = ({
-  yaml,
-  onUpdatedYaml,
-}: ResourceQuotaEditorProps) => {
+export const ResourceQuotaEditor = ({ yaml, onUpdatedYaml }: ResourceQuotaEditorProps) => {
   const resourceYaml = loadYaml(yaml) as ResourceQuota;
 
   const specHard = resourceYaml.spec?.hard;
@@ -69,30 +63,16 @@ export const ResourceQuotaEditor = ({
       ...resourceYaml.spec.hard,
       'limits.cpu': state.limitsCpu || undefined,
       'limits.memory': state.limitsMemory || undefined,
-      'requests.cpu': useCPURequestsPrefix
-        ? state.requestsCpu || undefined
-        : undefined,
-      'requests.memory': useMemoryRequestsPrefix
-        ? state.requestsMemory || undefined
-        : undefined,
+      'requests.cpu': useCPURequestsPrefix ? state.requestsCpu || undefined : undefined,
+      'requests.memory': useMemoryRequestsPrefix ? state.requestsMemory || undefined : undefined,
       cpu: !useCPURequestsPrefix ? state.requestsCpu || undefined : undefined,
-      memory: !useMemoryRequestsPrefix
-        ? state.requestsMemory || undefined
-        : undefined,
+      memory: !useMemoryRequestsPrefix ? state.requestsMemory || undefined : undefined,
     };
 
     onUpdatedYaml(dumpYaml(resourceYaml));
-  }, [
-    state,
-    onUpdatedYaml,
-    resourceYaml,
-    useCPURequestsPrefix,
-    useMemoryRequestsPrefix,
-  ]);
+  }, [state, onUpdatedYaml, resourceYaml, useCPURequestsPrefix, useMemoryRequestsPrefix]);
 
-  const computeResourcesDescription = `${
-    Object.keys(resourceYaml?.spec?.hard ?? {}).length
-  } set`;
+  const computeResourcesDescription = `${Object.keys(resourceYaml?.spec?.hard ?? {}).length} set`;
 
   return (
     <div className={classes.root}>
@@ -115,18 +95,14 @@ export const ResourceQuotaEditor = ({
               label="Max CPU Requests"
               variant="outlined"
               value={state.requestsCpu}
-              onChange={e =>
-                setState(s => ({ ...s, requestsCpu: e.target.value }))
-              }
+              onChange={e => setState(s => ({ ...s, requestsCpu: e.target.value }))}
               fullWidth
             />
             <TextField
               label="Max CPU Limits"
               variant="outlined"
               value={state.limitsCpu}
-              onChange={e =>
-                setState(s => ({ ...s, limitsCpu: e.target.value }))
-              }
+              onChange={e => setState(s => ({ ...s, limitsCpu: e.target.value }))}
               fullWidth
             />
           </div>
@@ -135,18 +111,14 @@ export const ResourceQuotaEditor = ({
               label="Max Memory Requests"
               variant="outlined"
               value={state.requestsMemory}
-              onChange={e =>
-                setState(s => ({ ...s, requestsMemory: e.target.value }))
-              }
+              onChange={e => setState(s => ({ ...s, requestsMemory: e.target.value }))}
               fullWidth
             />
             <TextField
               label="Max Memory Limits"
               variant="outlined"
               value={state.limitsMemory}
-              onChange={e =>
-                setState(s => ({ ...s, limitsMemory: e.target.value }))
-              }
+              onChange={e => setState(s => ({ ...s, limitsMemory: e.target.value }))}
               fullWidth
             />
           </div>

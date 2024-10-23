@@ -19,10 +19,7 @@ import React, { useState, useRef } from 'react';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 import { toLowerCase } from '../../../../../../../utils/string';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 import { ConfigMapExpr } from '../../../../../../../types/PackageVariantSet';
 
@@ -67,12 +64,7 @@ export const ExprEditorAccordion = ({
   const description = `${refViewModel.current.length} ${toLowerCase(title)}`;
 
   return (
-    <EditorAccordion
-      id={id}
-      state={state}
-      title={title}
-      description={description}
-    >
+    <EditorAccordion id={id} state={state} title={title} description={description}>
       {refViewModel.current.map((keyValuePair, index) => (
         <EditorAccordion
           id={`${index}`}

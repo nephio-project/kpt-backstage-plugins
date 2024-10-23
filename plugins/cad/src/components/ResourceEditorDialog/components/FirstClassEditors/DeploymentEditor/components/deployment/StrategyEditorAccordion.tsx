@@ -20,16 +20,9 @@ import { clone, startCase } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
 import { DeploymentStrategy } from '../../../../../../../types/Deployment';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
-import {
-  getNumber,
-  getNumberOrString,
-  toLowerCase,
-} from '../../../../../../../utils/string';
+import { getNumber, getNumberOrString, toLowerCase } from '../../../../../../../utils/string';
 import { Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type StrategyState = {
@@ -56,10 +49,7 @@ const getStrategyType = (deploymentStrategy?: DeploymentStrategy): string => {
   return deploymentStrategy?.type || 'RollingUpdate';
 };
 
-const normalizeStrategy = (
-  strategyState: StrategyState,
-  strategyType: string,
-): StrategyState => {
+const normalizeStrategy = (strategyState: StrategyState, strategyType: string): StrategyState => {
   const deploymentStrategy = strategyState.strategy || {};
 
   deploymentStrategy.type = strategyType;
@@ -77,10 +67,7 @@ const normalizeStrategy = (
   return strategyState;
 };
 
-const getDescription = (
-  strategyState: StrategyState,
-  strategyType: string,
-): string => {
+const getDescription = (strategyState: StrategyState, strategyType: string): string => {
   const statements: string[] = [];
 
   statements.push(startCase(strategyType));
@@ -88,23 +75,17 @@ const getDescription = (
   const deploymentStrategy = strategyState.strategy || {};
   if (strategyType === 'RollingUpdate') {
     if (deploymentStrategy.rollingUpdate?.maxUnavailable) {
-      statements.push(
-        `${deploymentStrategy.rollingUpdate?.maxUnavailable} max unavailable`,
-      );
+      statements.push(`${deploymentStrategy.rollingUpdate?.maxUnavailable} max unavailable`);
     }
     if (deploymentStrategy.rollingUpdate?.maxSurge) {
-      statements.push(
-        `${deploymentStrategy.rollingUpdate?.maxSurge} max surge`,
-      );
+      statements.push(`${deploymentStrategy.rollingUpdate?.maxSurge} max surge`);
     }
   }
 
   return toLowerCase(statements.join(', '));
 };
 
-const getDeploymentStrategy = (
-  strategyState: StrategyState,
-): DeploymentStrategy => {
+const getDeploymentStrategy = (strategyState: StrategyState): DeploymentStrategy => {
   strategyState.strategy = strategyState.strategy || {};
   return strategyState.strategy;
 };
@@ -117,9 +98,7 @@ export const StrategyEditorAccordion = ({
 }: StrategyEditorAccordionProps) => {
   const classes = useEditorStyles();
 
-  const [strategyType, setStrategyType] = useState<string>(
-    getStrategyType(strategyState.strategy),
-  );
+  const [strategyType, setStrategyType] = useState<string>(getStrategyType(strategyState.strategy));
 
   const refViewModel = useRef<StrategyState>(strategyState);
   const viewModel = refViewModel.current;
@@ -131,12 +110,7 @@ export const StrategyEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Updates"
-      description={getDescription(viewModel, strategyType)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Updates" description={getDescription(viewModel, strategyType)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <Select
@@ -158,9 +132,7 @@ export const StrategyEditorAccordion = ({
                 onChange={e => {
                   const strategy = getDeploymentStrategy(viewModel);
                   strategy.rollingUpdate = strategy.rollingUpdate || {};
-                  strategy.rollingUpdate.maxUnavailable = getNumberOrString(
-                    e.target.value,
-                  );
+                  strategy.rollingUpdate.maxUnavailable = getNumberOrString(e.target.value);
                   valueUpdated();
                 }}
                 fullWidth
@@ -173,9 +145,7 @@ export const StrategyEditorAccordion = ({
                 onChange={e => {
                   const strategy = getDeploymentStrategy(viewModel);
                   strategy.rollingUpdate = strategy.rollingUpdate || {};
-                  strategy.rollingUpdate.maxSurge = getNumberOrString(
-                    e.target.value,
-                  );
+                  strategy.rollingUpdate.maxSurge = getNumberOrString(e.target.value);
                   valueUpdated();
                 }}
                 fullWidth

@@ -60,18 +60,9 @@ export const Tabs = (props: TabsProps) => {
 
   return (
     <div>
-      <MUITabs
-        classes={{ root: classes.tabs, indicator: classes.tabsIndicator }}
-        value={value}
-        onChange={handleChange}
-      >
+      <MUITabs classes={{ root: classes.tabs, indicator: classes.tabsIndicator }} value={value} onChange={handleChange}>
         {props.tabs.map(({ label, icon }, index) => (
-          <MUITab
-            key={index}
-            classes={{ root: classes.tab }}
-            label={label ?? ''}
-            icon={icon}
-          />
+          <MUITab key={index} classes={{ root: classes.tab }} label={label ?? ''} icon={icon} />
         ))}
       </MUITabs>
       {props.tabs.map(({ content }, index) => (

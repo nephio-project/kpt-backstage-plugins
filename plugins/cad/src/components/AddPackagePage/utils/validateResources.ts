@@ -17,11 +17,7 @@
 import { ConfigMap } from '../../../types/ConfigMap';
 import { Kptfile } from '../../../types/Kptfile';
 import { PackageRevisionResourcesMap } from '../../../types/PackageRevisionResource';
-import {
-  findKptfileFunction,
-  getLatestFunction,
-  GroupFunctionsByName,
-} from '../../../utils/function';
+import { findKptfileFunction, getLatestFunction, GroupFunctionsByName } from '../../../utils/function';
 import {
   getPackageResourcesFromResourcesMap,
   getRootKptfile,
@@ -29,16 +25,8 @@ import {
   updateResourcesMap,
 } from '../../../utils/packageRevisionResources';
 import { loadYaml } from '../../../utils/yaml';
-import {
-  findKptfileFunctionConfig,
-  isFunctionConfigDeletable,
-  removeKptfileFunction,
-} from './kptfile';
-import {
-  addNewPackageResource,
-  addUpdatedPackageResource,
-  createResource,
-} from './resource';
+import { findKptfileFunctionConfig, isFunctionConfigDeletable, removeKptfileFunction } from './kptfile';
+import { addNewPackageResource, addUpdatedPackageResource, createResource } from './resource';
 
 const createKubevalConfigResource = (): ConfigMap => ({
   ...createResource('v1', 'ConfigMap', 'kubeval-config'),
@@ -55,13 +43,8 @@ export const getValidateResourcesDefaultState = (): ValidateResourcesState => ({
   setKubeval: true,
 });
 
-export const getValidateResourcesState = (
-  kptfile: Kptfile,
-): ValidateResourcesState => {
-  const kubevalValidatorFn = findKptfileFunction(
-    kptfile.pipeline?.validators || [],
-    'kubeval',
-  );
+export const getValidateResourcesState = (kptfile: Kptfile): ValidateResourcesState => {
+  const kubevalValidatorFn = findKptfileFunction(kptfile.pipeline?.validators || [], 'kubeval');
 
   const validateState: ValidateResourcesState = {
     setKubeval: !!kubevalValidatorFn,
@@ -106,27 +89,16 @@ export const applyValidateResourcesState = async (
         configPath: kubevalConfigPackageResource.filename,
       });
 
-      addUpdatedPackageResource(
-        updatedPackageResources,
-        kptfileResource,
-        kptfile,
-      );
+      addUpdatedPackageResource(updatedPackageResources, kptfileResource, kptfile);
     }
   } else {
     if (kubevalValidatorFn) {
       removeKptfileFunction(kptfile, 'validator', kubevalValidatorFn);
 
-      addUpdatedPackageResource(
-        updatedPackageResources,
-        kptfileResource,
-        kptfile,
-      );
+      addUpdatedPackageResource(updatedPackageResources, kptfileResource, kptfile);
 
       if (kubevalValidatorFn.configPath) {
-        const configResource = findKptfileFunctionConfig(
-          resources,
-          kubevalValidatorFn,
-        );
+        const configResource = findKptfileFunctionConfig(resources, kubevalValidatorFn);
 
         if (configResource && isFunctionConfigDeletable(configResource)) {
           deletedPackageResources.push(configResource);
@@ -135,10 +107,5 @@ export const applyValidateResourcesState = async (
     }
   }
 
-  return updateResourcesMap(
-    resourcesMap,
-    newPackageResources,
-    updatedPackageResources,
-    deletedPackageResources,
-  );
+  return updateResourcesMap(resourcesMap, newPackageResources, updatedPackageResources, deletedPackageResources);
 };

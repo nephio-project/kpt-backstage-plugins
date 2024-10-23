@@ -49,21 +49,14 @@ export const ResourceMetadataAccordion = ({
 
   const [expanded, setExpanded] = useState<string>();
 
-  const description = `${viewModel.namespace ? `${viewModel.namespace}/` : ''}${
-    viewModel.name
-  }`;
+  const description = `${viewModel.namespace ? `${viewModel.namespace}/` : ''}${viewModel.name}`;
 
   const valueUpdated = (): void => {
     onUpdate(viewModel);
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Resource Metadata"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Resource Metadata" description={description} state={state}>
       <Fragment>
         <TextField
           label="Name"
@@ -96,8 +89,7 @@ export const ResourceMetadataAccordion = ({
             title="Labels"
             keyValueObject={viewModel.labels || {}}
             onUpdatedKeyValueObject={labels => {
-              viewModel.labels =
-                Object.keys(labels).length > 0 ? labels : undefined;
+              viewModel.labels = Object.keys(labels).length > 0 ? labels : undefined;
               valueUpdated();
             }}
           />
@@ -108,8 +100,7 @@ export const ResourceMetadataAccordion = ({
             title="Annotations"
             keyValueObject={viewModel.annotations || {}}
             onUpdatedKeyValueObject={annotations => {
-              viewModel.annotations =
-                Object.keys(annotations).length > 0 ? annotations : undefined;
+              viewModel.annotations = Object.keys(annotations).length > 0 ? annotations : undefined;
               valueUpdated();
             }}
           />

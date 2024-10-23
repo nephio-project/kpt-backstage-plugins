@@ -20,10 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import React, { Fragment, useRef } from 'react';
 import { PolicyRule } from '../../../../../../types/Role';
 import { MultiSelect } from '../../../../../Controls/MultiSelect';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 
 type OnUpdate = (newValue?: PolicyRule) => void;
 
@@ -47,13 +44,7 @@ const verbsSelectItems: SelectItem[] = VERBS.map(verb => ({
   value: verb,
 }));
 
-export const RoleRuleEditorAccordion = ({
-  id,
-  title,
-  state,
-  value: rule,
-  onUpdate,
-}: RoleRuleEditorAccordionProps) => {
+export const RoleRuleEditorAccordion = ({ id, title, state, value: rule, onUpdate }: RoleRuleEditorAccordionProps) => {
   const viewModel = useRef<ViewModel>({
     apiGroups: rule?.apiGroups?.join(', ') || '',
     resources: rule?.resources?.join(', ') || '',
@@ -68,10 +59,7 @@ export const RoleRuleEditorAccordion = ({
       ...rule,
       apiGroups: toStringArray(viewModel.current.apiGroups),
       resources: toStringArray(viewModel.current.resources),
-      verbs:
-        viewModel.current.verbs.length > 0
-          ? viewModel.current.verbs
-          : undefined,
+      verbs: viewModel.current.verbs.length > 0 ? viewModel.current.verbs : undefined,
     };
 
     onUpdate(updatedRule);
@@ -115,11 +103,7 @@ export const RoleRuleEditorAccordion = ({
           }}
         />
 
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

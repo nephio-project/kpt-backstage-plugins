@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, makeStyles, Typography } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import React, {
-  ChangeEvent,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { ChangeEvent, Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useRef } from 'react';
 
-export type AccordionState = [
-  string | undefined,
-  Dispatch<SetStateAction<string | undefined>>,
-];
+export type AccordionState = [string | undefined, Dispatch<SetStateAction<string | undefined>>];
 
 type EditorAccordionProps = {
   id: string;
@@ -64,21 +47,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const EditorAccordion = ({
-  id,
-  title,
-  description,
-  state,
-  children,
-}: EditorAccordionProps) => {
+export const EditorAccordion = ({ id, title, description, state, children }: EditorAccordionProps) => {
   const classes = useStyles();
   const detailsRef = useRef<HTMLDivElement>(null);
 
   const [activeAccordion, setActiveAccordion] = state;
   const expanded = useMemo(() => activeAccordion === id, [activeAccordion, id]);
 
-  const onChange = (_: ChangeEvent<{}>, newExpanded: boolean) =>
-    setActiveAccordion(newExpanded ? id : undefined);
+  const onChange = (_: ChangeEvent<{}>, newExpanded: boolean) => setActiveAccordion(newExpanded ? id : undefined);
 
   useEffect(() => {
     if (expanded && detailsRef.current) {

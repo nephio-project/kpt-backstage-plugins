@@ -26,10 +26,4 @@ type ConfiguredEditorProps = {
 export const createEditorFromConfiguration =
   (configuration: PxeConfiguration): React.FC<ConfiguredEditorProps> =>
   ({ yamlText, onResourceChange }) =>
-    (
-      <PxeParametricEditor
-        configuration={configuration}
-        yamlText={yamlText}
-        onResourceChange={onResourceChange}
-      />
-    );
+    <PxeParametricEditor configuration={configuration} yamlText={yamlText} onResourceChange={onResourceChange} />;

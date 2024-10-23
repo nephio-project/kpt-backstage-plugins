@@ -21,26 +21,14 @@ import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
 import { Function } from '../../../../../../../types/Function';
 import { configAsDataApiRef } from '../../../../../../../apis';
-import {
-  KptfileFunction,
-  KptfilePipeline,
-} from '../../../../../../../types/Kptfile';
-import {
-  isMutatorFunction,
-  isValidatorFunction,
-} from '../../../../../../../utils/function';
+import { KptfileFunction, KptfilePipeline } from '../../../../../../../types/Kptfile';
+import { isMutatorFunction, isValidatorFunction } from '../../../../../../../utils/function';
 import { PackageResource } from '../../../../../../../utils/packageRevisionResources';
 import { EditorAccordion } from '../../../Controls';
 import { AccordionState } from '../../../Controls/EditorAccordion';
 import { KptFunctionEditorAccordion } from '../../../KptfileEditor/components/KptFunctionEditorAccordion';
 import { useEditorStyles } from '../../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../../../util/deletable';
 
 type KptfileEditorProps = {
   onUpdatedYaml: OnUpdatedYamlFn;
@@ -71,14 +59,8 @@ export const PipelineEditorAccordion = ({
   const [state, setState] = useState<State>(createResourceState());
   const [allKptFunctions, setAllKptFunctions] = useState<Function[]>([]);
 
-  const allKptMutatorFunctions = useMemo(
-    () => allKptFunctions.filter(isMutatorFunction),
-    [allKptFunctions],
-  );
-  const allKptValidatorFunctions = useMemo(
-    () => allKptFunctions.filter(isValidatorFunction),
-    [allKptFunctions],
-  );
+  const allKptMutatorFunctions = useMemo(() => allKptFunctions.filter(isMutatorFunction), [allKptFunctions]);
+  const allKptValidatorFunctions = useMemo(() => allKptFunctions.filter(isValidatorFunction), [allKptFunctions]);
 
   const [expanded, setExpanded] = useState<string>();
   const classes = useEditorStyles();
@@ -88,12 +70,8 @@ export const PipelineEditorAccordion = ({
   }, []);
 
   useEffect(() => {
-    keyValueObject.mutators = undefinedIfEmpty(
-      getActiveElements(state.mutators),
-    );
-    keyValueObject.validators = undefinedIfEmpty(
-      getActiveElements(state.validators),
-    );
+    keyValueObject.mutators = undefinedIfEmpty(getActiveElements(state.mutators));
+    keyValueObject.validators = undefinedIfEmpty(getActiveElements(state.validators));
   }, [state, keyValueObject]);
   const dataUpdate = (): void => {
     onUpdatedYaml(state);
@@ -121,11 +99,7 @@ export const PipelineEditorAccordion = ({
                   onUpdate={updatedMutator => {
                     setState(s => ({
                       ...s,
-                      mutators: updateList(
-                        s.mutators.slice(),
-                        updatedMutator,
-                        index,
-                      ),
+                      mutators: updateList(s.mutators.slice(), updatedMutator, index),
                     }));
                     dataUpdate();
                   }}
@@ -172,11 +146,7 @@ export const PipelineEditorAccordion = ({
                   onUpdate={updatedValidator => {
                     setState(s => ({
                       ...s,
-                      validators: updateList(
-                        s.validators.slice(),
-                        updatedValidator,
-                        index,
-                      ),
+                      validators: updateList(s.validators.slice(), updatedValidator, index),
                     }));
                     dataUpdate();
                   }}

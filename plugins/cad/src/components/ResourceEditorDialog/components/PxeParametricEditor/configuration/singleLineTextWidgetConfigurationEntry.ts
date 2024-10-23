@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-import {
-  PxeConfigurationEntryType,
-  PxeSingleLineTextWidgetEntry,
-  PxeValueType,
-} from '../types/PxeConfiguration.types';
-import {
-  identityTextFilter,
-  naturalNumberTextFilter,
-  TextFilter,
-} from '../validation/textFilters';
+import { PxeConfigurationEntryType, PxeSingleLineTextWidgetEntry, PxeValueType } from '../types/PxeConfiguration.types';
+import { identityTextFilter, naturalNumberTextFilter, TextFilter } from '../validation/textFilters';
 
 export const singleLineTextWidgetConfigurationEntry = ({
   path,

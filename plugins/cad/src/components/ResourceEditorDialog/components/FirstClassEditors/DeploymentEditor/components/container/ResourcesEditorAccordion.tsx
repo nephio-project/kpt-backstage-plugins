@@ -18,10 +18,7 @@ import { TextField } from '@material-ui/core';
 import { clone } from 'lodash';
 import React, { Fragment, useRef } from 'react';
 import { ResourceRequirements } from '../../../../../../../types/Pod';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (newValue: ResourceRequirements | undefined) => void;
@@ -33,9 +30,7 @@ type ResourcesEditorAccordionProps = {
   onUpdate: OnUpdate;
 };
 
-const normalizeResources = (
-  resources: ResourceRequirements,
-): ResourceRequirements | undefined => {
+const normalizeResources = (resources: ResourceRequirements): ResourceRequirements | undefined => {
   if (resources.requests) {
     if (!resources.requests.cpu) delete resources.requests.cpu;
     if (!resources.requests.memory) delete resources.requests.memory;
@@ -71,9 +66,7 @@ const getDescription = (resourceRequirements: ResourceRequirements): string => {
   }
 
   if (memoryRequest || memoryLimit) {
-    statements.push(
-      `memory ${memoryRequest || 'none'}/${memoryLimit || 'none'}`,
-    );
+    statements.push(`memory ${memoryRequest || 'none'}/${memoryLimit || 'none'}`);
   }
 
   if (statements.length === 0) {
@@ -83,12 +76,7 @@ const getDescription = (resourceRequirements: ResourceRequirements): string => {
   return statements.join(', ');
 };
 
-export const ResourcesEditorAccordion = ({
-  id,
-  state,
-  value: resources,
-  onUpdate,
-}: ResourcesEditorAccordionProps) => {
+export const ResourcesEditorAccordion = ({ id, state, value: resources, onUpdate }: ResourcesEditorAccordionProps) => {
   const classes = useEditorStyles();
 
   const refViewModel = useRef<ResourceRequirements>(resources);
@@ -101,12 +89,7 @@ export const ResourcesEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Resources"
-      description={getDescription(viewModel)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Resources" description={getDescription(viewModel)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <TextField

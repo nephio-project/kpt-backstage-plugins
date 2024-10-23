@@ -22,17 +22,11 @@ import React, { Fragment, useMemo, useRef, useState } from 'react';
 import { ConfigMap } from '../../../../../../../types/ConfigMap';
 import { Volume } from '../../../../../../../types/Pod';
 import { Secret } from '../../../../../../../types/Secret';
-import {
-  getDeployableResources,
-  PackageResource,
-} from '../../../../../../../utils/packageRevisionResources';
+import { getDeployableResources, PackageResource } from '../../../../../../../utils/packageRevisionResources';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
 import { loadYaml } from '../../../../../../../utils/yaml';
 import { Autocomplete, Checkbox, Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 import { VolumeItemsEditorAccordion } from './VolumeItemsEditorAccordion';
 
@@ -46,31 +40,19 @@ type VolumeEditorAccordionProps = {
   packageResources: PackageResource[];
 };
 
-const SOURCES = [
-  'empty dir',
-  'config map',
-  'secret',
-  'persistent volume claim',
-];
+const SOURCES = ['empty dir', 'config map', 'secret', 'persistent volume claim'];
 const volumeSourceSelectItems: SelectItem[] = buildSelectItemsFromList(SOURCES);
 
-const getResourceNames = (
-  packageResources: PackageResource[],
-  kind: string,
-): string[] => {
+const getResourceNames = (packageResources: PackageResource[], kind: string): string[] => {
   const resources = getDeployableResources(packageResources, kind);
 
   return resources.map(configMap => configMap.name);
 };
 
-const getConfigMapKeys = (
-  packageResources: PackageResource[],
-  name: string,
-): string[] => {
-  const configMapResource = getDeployableResources(
-    packageResources,
-    'ConfigMap',
-  ).find(resource => resource.name === name);
+const getConfigMapKeys = (packageResources: PackageResource[], name: string): string[] => {
+  const configMapResource = getDeployableResources(packageResources, 'ConfigMap').find(
+    resource => resource.name === name,
+  );
 
   if (configMapResource) {
     const configMap: ConfigMap = loadYaml(configMapResource.yaml);
@@ -81,14 +63,8 @@ const getConfigMapKeys = (
   return [];
 };
 
-const getSecretKeys = (
-  packageResources: PackageResource[],
-  name: string,
-): string[] => {
-  const secretResource = getDeployableResources(
-    packageResources,
-    'Secret',
-  ).find(resource => resource.name === name);
+const getSecretKeys = (packageResources: PackageResource[], name: string): string[] => {
+  const secretResource = getDeployableResources(packageResources, 'Secret').find(resource => resource.name === name);
 
   if (secretResource) {
     const secret: Secret = loadYaml(secretResource.yaml);
@@ -118,11 +94,7 @@ const getUseItems = (volume: Volume, source: string) => {
   return false;
 };
 
-const normalizeVolume = (
-  volume: Volume,
-  source: string,
-  useItems: boolean,
-): Volume => {
+const normalizeVolume = (volume: Volume, source: string, useItems: boolean): Volume => {
   if (source === 'config map' && !useItems && volume.configMap) {
     volume.configMap.items = undefined;
   }
@@ -170,20 +142,13 @@ export const VolumeEditorAccordion = ({
   const useItems = refUseItems.current;
 
   const valueUpdated = (): void => {
-    const updatedVolume = normalizeVolume(
-      clone(viewModel),
-      refSource.current,
-      refUseItems.current,
-    );
+    const updatedVolume = normalizeVolume(clone(viewModel), refSource.current, refUseItems.current);
     onUpdate(updatedVolume);
   };
 
   const configMapNames = getResourceNames(packageResources, 'ConfigMap');
   const secretNames = getResourceNames(packageResources, 'Secret');
-  const persistentVolumeClaimNames = getResourceNames(
-    packageResources,
-    'PersistentVolumeClaim',
-  );
+  const persistentVolumeClaimNames = getResourceNames(packageResources, 'PersistentVolumeClaim');
 
   const selectedConfigMap = viewModel.configMap?.name || '';
   const selectedSecret = viewModel.secret?.secretName || '';
@@ -193,18 +158,10 @@ export const VolumeEditorAccordion = ({
     [selectedConfigMap, packageResources],
   );
 
-  const secretKeys = useMemo(
-    () => getSecretKeys(packageResources, selectedSecret),
-    [selectedSecret, packageResources],
-  );
+  const secretKeys = useMemo(() => getSecretKeys(packageResources, selectedSecret), [selectedSecret, packageResources]);
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Volume"
-      description={getDescription(volume)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Volume" description={getDescription(volume)} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -337,8 +294,7 @@ export const VolumeEditorAccordion = ({
                 options={persistentVolumeClaimNames}
                 value={viewModel.persistentVolumeClaim?.claimName ?? ''}
                 onInputChange={name => {
-                  viewModel.persistentVolumeClaim =
-                    viewModel.persistentVolumeClaim || { claimName: '' };
+                  viewModel.persistentVolumeClaim = viewModel.persistentVolumeClaim || { claimName: '' };
                   viewModel.persistentVolumeClaim.claimName = name;
                   valueUpdated();
                 }}
@@ -348,21 +304,15 @@ export const VolumeEditorAccordion = ({
                 label="Readonly volume"
                 checked={!!viewModel.persistentVolumeClaim?.readOnly}
                 onChange={checked => {
-                  viewModel.persistentVolumeClaim =
-                    viewModel.persistentVolumeClaim || { claimName: '' };
-                  viewModel.persistentVolumeClaim.readOnly =
-                    checked || undefined;
+                  viewModel.persistentVolumeClaim = viewModel.persistentVolumeClaim || { claimName: '' };
+                  viewModel.persistentVolumeClaim.readOnly = checked || undefined;
                   valueUpdated();
                 }}
               />
             </Fragment>
           )}
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

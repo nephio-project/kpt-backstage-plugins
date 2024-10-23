@@ -18,17 +18,9 @@ import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { Fragment, useRef, useState } from 'react';
 import { KeyToPath } from '../../../../../../../types/Pod';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../../../util/deletable';
 import { VolumeItemEditorAccordion } from './VolumeItemEditorAccordion';
 
 type OnUpdate = (newValue: KeyToPath[]) => void;
@@ -65,12 +57,7 @@ export const VolumeItemsEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Keys"
-      description={getDescription(items)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Keys" description={getDescription(items)} state={state}>
       <Fragment>
         <div>
           {keyItems.map(

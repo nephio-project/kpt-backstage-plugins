@@ -23,9 +23,11 @@ import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
 
-export const PxeSelectValueWidgetNode: React.FC<
-  PxeParametricEditorNodeProps
-> = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
+export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
+  configurationEntry,
+  onResourceChangeRequest,
+  resourceChunk,
+}) => {
   const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
   const valueDescriptor = widgetEntry.values[0];
 

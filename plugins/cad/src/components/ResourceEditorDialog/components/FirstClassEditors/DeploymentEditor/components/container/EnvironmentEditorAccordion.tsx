@@ -19,18 +19,9 @@ import AddIcon from '@material-ui/icons/Add';
 import React, { Fragment, useRef, useState } from 'react';
 import { EnvFromSource, EnvVar } from '../../../../../../../types/Pod';
 import { PackageResource } from '../../../../../../../utils/packageRevisionResources';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../../../util/deletable';
 import { EnvFromSourceEditorAccordion } from './EnvFromSourceEditorAccordion';
 import { EnvVarEditorAccordion } from './EnvVarEditorAccordion';
 
@@ -53,12 +44,9 @@ const getDescription = (envState: EnvState): string => {
   const envVarsCount = envState.env?.length || 0;
   const sourcesCount = envState.envFrom?.length || 0;
 
-  const plural = (word: string, count: number) =>
-    count === 1 ? word : `${word}s`;
+  const plural = (word: string, count: number) => (count === 1 ? word : `${word}s`);
 
-  const statements = [
-    `${envVarsCount} environment ${plural('variable', envVarsCount)}`,
-  ];
+  const statements = [`${envVarsCount} environment ${plural('variable', envVarsCount)}`];
 
   if (sourcesCount > 0) {
     statements.push(`${sourcesCount} ${plural('source', sourcesCount)}`);
@@ -80,9 +68,7 @@ export const EnvironmentEditorAccordion = ({
   const refEnvVars = useRef<Deletable<EnvVar>[]>(envState.env ?? []);
   const envVars = refEnvVars.current;
 
-  const refEnvFromList = useRef<Deletable<EnvFromSource>[]>(
-    envState.envFrom ?? [],
-  );
+  const refEnvFromList = useRef<Deletable<EnvFromSource>[]>(envState.envFrom ?? []);
   const envFromList = refEnvFromList.current;
 
   const envUpdated = (): void => {
@@ -95,12 +81,7 @@ export const EnvironmentEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Environment"
-      description={getDescription(envState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Environment" description={getDescription(envState)} state={state}>
       <Fragment>
         <div>
           {envVars.map(

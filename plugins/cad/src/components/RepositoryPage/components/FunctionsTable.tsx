@@ -34,9 +34,7 @@ type FunctionRow = {
   created: string;
 };
 
-const getTableColumns = (
-  showLatestVersionOnly: boolean,
-): TableColumn<FunctionRow>[] => {
+const getTableColumns = (showLatestVersionOnly: boolean): TableColumn<FunctionRow>[] => {
   const columns: TableColumn<FunctionRow>[] = [
     { title: 'Name', field: 'functionName' },
     {
@@ -49,10 +47,7 @@ const getTableColumns = (
   return columns;
 };
 
-const getFunctionsList = (
-  functions: Function[],
-  showLatestVersionOnly: boolean,
-): Function[] => {
+const getFunctionsList = (functions: Function[], showLatestVersionOnly: boolean): Function[] => {
   if (!showLatestVersionOnly) return functions;
 
   const functionsByName = groupFunctionsByName(functions);
@@ -62,8 +57,7 @@ const getFunctionsList = (
 };
 
 const mapToFunctionRow = (oneFunction: Function): FunctionRow => {
-  const [_repositoryName, functionName, version] =
-    oneFunction.metadata.name.split(':');
+  const [_repositoryName, functionName, version] = oneFunction.metadata.name.split(':');
 
   return {
     id: oneFunction.metadata.name,
@@ -74,10 +68,7 @@ const mapToFunctionRow = (oneFunction: Function): FunctionRow => {
   };
 };
 
-const compareFunctionRows = (
-  functionRow1: FunctionRow,
-  functionRow2: FunctionRow,
-): number => {
+const compareFunctionRows = (functionRow1: FunctionRow, functionRow2: FunctionRow): number => {
   if (functionRow1.functionName === functionRow2.functionName) {
     return functionRow1.version > functionRow2.version ? -1 : 1;
   }
@@ -85,23 +76,12 @@ const compareFunctionRows = (
   return functionRow1.functionName > functionRow2.functionName ? 1 : -1;
 };
 
-export const FunctionsTable = ({
-  title,
-  functions,
-  showLatestVersionOnly,
-}: FunctionsTableProps) => {
+export const FunctionsTable = ({ title, functions, showLatestVersionOnly }: FunctionsTableProps) => {
   const columns = getTableColumns(showLatestVersionOnly);
 
   const functionsList = getFunctionsList(functions, showLatestVersionOnly);
 
   const data = functionsList.map(mapToFunctionRow).sort(compareFunctionRows);
 
-  return (
-    <Table
-      title={title}
-      options={{ search: false, paging: false }}
-      columns={columns}
-      data={data}
-    />
-  );
+  return <Table title={title} options={{ search: false, paging: false }} columns={columns} data={data} />;
 };

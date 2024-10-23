@@ -20,10 +20,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import React, { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { packageRouteRef } from '../../routes';
-import {
-  PackageRevision,
-  PackageRevisionLifecycle,
-} from '../../types/PackageRevision';
+import { PackageRevision, PackageRevisionLifecycle } from '../../types/PackageRevision';
 import { getSyncStatus, SyncStatus } from '../../utils/configSync';
 import { formatCreationTimestamp } from '../../utils/formatDate';
 import { getPackageRevisionRevision } from '../../utils/packageRevision';
@@ -95,20 +92,13 @@ const renderStatusColumn = (row: PackageRow): JSX.Element => {
 
 const renderBlueprintColumn = (row: PackageRow): JSX.Element => {
   if (row.upstreamPackageRevision) {
-    return (
-      <PackageLink
-        packageRevision={row.upstreamPackageRevision}
-        stopPropagation
-      />
-    );
+    return <PackageLink packageRevision={row.upstreamPackageRevision} stopPropagation />;
   }
 
   return <Fragment>{row.upstreamPackageDisplayName || ''}</Fragment>;
 };
 
-const renderSyncColumn = (row: PackageRow): JSX.Element => (
-  <SyncStatusVisual syncStatus={row.syncStatus} />
-);
+const renderSyncColumn = (row: PackageRow): JSX.Element => <SyncStatusVisual syncStatus={row.syncStatus} />;
 
 const getTableColumns = (
   includeRepositoryColumn: boolean,
@@ -136,16 +126,12 @@ const getTableColumns = (
     { title: 'Created', field: 'created' },
   ];
 
-  const columns = columnDefinitions.filter(
-    column => column.showColumn !== false,
-  );
+  const columns = columnDefinitions.filter(column => column.showColumn !== false);
 
   return columns;
 };
 
-const getRootSyncStatus = (
-  packageSummary: PackageSummary,
-): SyncStatus | null | undefined => {
+const getRootSyncStatus = (packageSummary: PackageSummary): SyncStatus | null | undefined => {
   if (packageSummary.latestPublishedRevision) {
     const rootSync = packageSummary.sync;
 
@@ -171,9 +157,7 @@ const mapToUnpublishedRevision = (
       packageName: unpublishedRevision.spec.packageName,
       revision: getPackageRevisionRevision(unpublishedRevision),
       lifecycle: unpublishedRevision.spec.lifecycle,
-      created: formatCreationTimestamp(
-        unpublishedRevision.metadata.creationTimestamp,
-      ),
+      created: formatCreationTimestamp(unpublishedRevision.metadata.creationTimestamp),
       navigate: () => navigateToPackageRevision(unpublishedRevision),
     };
   }
@@ -185,8 +169,7 @@ const mapToPackageSummaryRow = (
   packageSummary: PackageSummary,
   navigateToPackageRevision: NavigateToPackageRevision,
 ): PackageRow => {
-  const onePackage =
-    packageSummary.latestPublishedRevision ?? packageSummary.latestRevision;
+  const onePackage = packageSummary.latestPublishedRevision ?? packageSummary.latestRevision;
 
   return {
     id: onePackage.metadata.name,
@@ -202,10 +185,7 @@ const mapToPackageSummaryRow = (
     isUpgradeAvailable: packageSummary.isUpgradeAvailable,
     repositoryName: getRepositoryTitle(packageSummary.repository),
     upstreamPackageRevision: packageSummary.upstreamRevision,
-    unpublished: mapToUnpublishedRevision(
-      packageSummary,
-      navigateToPackageRevision,
-    ),
+    unpublished: mapToUnpublishedRevision(packageSummary, navigateToPackageRevision),
   };
 };
 
@@ -213,34 +193,22 @@ const mapPackageSummariesToRows = (
   packageSummaries: PackageSummary[],
   navigateToPackageRevision: NavigateToPackageRevision,
 ): PackageRow[] => {
-  return packageSummaries.map(summary =>
-    mapToPackageSummaryRow(summary, navigateToPackageRevision),
-  );
+  return packageSummaries.map(summary => mapToPackageSummaryRow(summary, navigateToPackageRevision));
 };
 
-export const PackagesTable = ({
-  title,
-  packages,
-  showRepositoryColumn,
-  showSyncStatusColumn,
-}: PackagesTableProps) => {
+export const PackagesTable = ({ title, packages, showRepositoryColumn, showSyncStatusColumn }: PackagesTableProps) => {
   const navigate = useNavigate();
 
   const packageRef = useRouteRef(packageRouteRef);
 
-  const navigateToPackageRevision: NavigateToPackageRevision = (
-    revision: PackageRevision,
-  ): void => {
+  const navigateToPackageRevision: NavigateToPackageRevision = (revision: PackageRevision): void => {
     const packageName = revision.metadata.name;
     const repositoryName = revision.spec.repository;
 
     navigate(packageRef({ repositoryName, packageName }));
   };
 
-  const columns = getTableColumns(
-    !!showRepositoryColumn,
-    !!showSyncStatusColumn,
-  );
+  const columns = getTableColumns(!!showRepositoryColumn, !!showSyncStatusColumn);
 
   const data = mapPackageSummariesToRows(packages, navigateToPackageRevision);
 

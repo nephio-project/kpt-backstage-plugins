@@ -28,17 +28,11 @@ import {
   SecretKeySelector,
 } from '../../../../../../../types/Pod';
 import { Secret } from '../../../../../../../types/Secret';
-import {
-  getDeployableResources,
-  PackageResource,
-} from '../../../../../../../utils/packageRevisionResources';
+import { getDeployableResources, PackageResource } from '../../../../../../../utils/packageRevisionResources';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
 import { loadYaml } from '../../../../../../../utils/yaml';
 import { Autocomplete, Checkbox, Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (current?: EnvVar) => void;
@@ -51,33 +45,20 @@ type ContainerPortEditorAccordionProps = {
   packageResources: PackageResource[];
 };
 
-const SOURCE = [
-  'config map',
-  'inline',
-  'pod field',
-  'resource field',
-  'secret',
-];
+const SOURCE = ['config map', 'inline', 'pod field', 'resource field', 'secret'];
 
 const sourceSelectItems: SelectItem[] = buildSelectItemsFromList(SOURCE);
 
-const getResourceNames = (
-  packageResources: PackageResource[],
-  kind: string,
-): string[] => {
+const getResourceNames = (packageResources: PackageResource[], kind: string): string[] => {
   const resources = getDeployableResources(packageResources, kind);
 
   return resources.map(configMap => configMap.name);
 };
 
-const getConfigMapKeys = (
-  packageResources: PackageResource[],
-  name: string,
-): string[] => {
-  const configMapResource = getDeployableResources(
-    packageResources,
-    'ConfigMap',
-  ).find(resource => resource.name === name);
+const getConfigMapKeys = (packageResources: PackageResource[], name: string): string[] => {
+  const configMapResource = getDeployableResources(packageResources, 'ConfigMap').find(
+    resource => resource.name === name,
+  );
 
   if (configMapResource) {
     const configMap: ConfigMap = loadYaml(configMapResource.yaml);
@@ -88,14 +69,8 @@ const getConfigMapKeys = (
   return [];
 };
 
-const getSecretKeys = (
-  packageResources: PackageResource[],
-  name: string,
-): string[] => {
-  const secretResource = getDeployableResources(
-    packageResources,
-    'Secret',
-  ).find(resource => resource.name === name);
+const getSecretKeys = (packageResources: PackageResource[], name: string): string[] => {
+  const secretResource = getDeployableResources(packageResources, 'Secret').find(resource => resource.name === name);
 
   if (secretResource) {
     const secret: Secret = loadYaml(secretResource.yaml);
@@ -140,9 +115,7 @@ const normalizeEnvVar = (envVar: EnvVar, source: string): EnvVar => {
 
 const getDescription = (envVar: EnvVar): string => {
   if (envVar.name) {
-    const isOptional =
-      !!envVar?.valueFrom?.configMapKeyRef?.optional ||
-      !!envVar?.valueFrom?.secretKeyRef?.optional;
+    const isOptional = !!envVar?.valueFrom?.configMapKeyRef?.optional || !!envVar?.valueFrom?.secretKeyRef?.optional;
 
     return `${isOptional ? 'optional ' : ''}${envVar.name}`;
   }
@@ -206,15 +179,9 @@ export const EnvVarEditorAccordion = ({
     onUpdate(updatedEnvVar);
   };
 
-  const configMapNames = useMemo(
-    () => getResourceNames(packageResources, 'ConfigMap'),
-    [packageResources],
-  );
+  const configMapNames = useMemo(() => getResourceNames(packageResources, 'ConfigMap'), [packageResources]);
 
-  const secretNames = useMemo(
-    () => getResourceNames(packageResources, 'Secret'),
-    [packageResources],
-  );
+  const secretNames = useMemo(() => getResourceNames(packageResources, 'Secret'), [packageResources]);
 
   const selectedConfigMap = viewModel.valueFrom?.configMapKeyRef?.name || '';
   const selectedSecret = viewModel.valueFrom?.secretKeyRef?.name || '';
@@ -224,18 +191,10 @@ export const EnvVarEditorAccordion = ({
     [selectedConfigMap, packageResources],
   );
 
-  const secretKeys = useMemo(
-    () => getSecretKeys(packageResources, selectedSecret),
-    [selectedSecret, packageResources],
-  );
+  const secretKeys = useMemo(() => getSecretKeys(packageResources, selectedSecret), [selectedSecret, packageResources]);
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Env Variable"
-      description={getDescription(envVar)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Env Variable" description={getDescription(envVar)} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -405,11 +364,7 @@ export const EnvVarEditorAccordion = ({
             </Fragment>
           )}
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

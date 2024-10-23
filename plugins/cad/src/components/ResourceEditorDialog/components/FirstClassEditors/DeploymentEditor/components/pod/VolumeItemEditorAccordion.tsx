@@ -20,10 +20,7 @@ import { clone } from 'lodash';
 import React, { Fragment, useRef } from 'react';
 import { KeyToPath } from '../../../../../../../types/Pod';
 import { Autocomplete } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (keyToPath?: KeyToPath) => void;
@@ -58,12 +55,7 @@ export const VolumeItemEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Key"
-      description={getDescription(keyToPath)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Key" description={getDescription(keyToPath)} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -91,11 +83,7 @@ export const VolumeItemEditorAccordion = ({
             />
           </div>
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

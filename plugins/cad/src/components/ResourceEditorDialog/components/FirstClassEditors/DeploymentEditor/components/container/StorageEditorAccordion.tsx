@@ -18,18 +18,9 @@ import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { Fragment, useRef, useState } from 'react';
 import { Volume, VolumeMount } from '../../../../../../../types/Pod';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../../../util/deletable';
 import { VolumeMountEditorAccordion } from './VolumeMountEditorAccordion';
 
 type StorageState = {
@@ -62,28 +53,19 @@ export const StorageEditorAccordion = ({
   const classes = useEditorStyles();
   const [sectionExpanded, setSectionExpanded] = useState<string>();
 
-  const refVolumeMounts = useRef<Deletable<VolumeMount>[]>(
-    storageState.volumeMounts ?? [],
-  );
+  const refVolumeMounts = useRef<Deletable<VolumeMount>[]>(storageState.volumeMounts ?? []);
   const volumeMounts = refVolumeMounts.current;
 
   const valueUpdated = (): void => {
     const updatedStorageState: StorageState = {
-      volumeMounts: undefinedIfEmpty(
-        getActiveElements(refVolumeMounts.current),
-      ),
+      volumeMounts: undefinedIfEmpty(getActiveElements(refVolumeMounts.current)),
     };
 
     onUpdate(updatedStorageState);
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Storage"
-      description={getDescription(storageState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Storage" description={getDescription(storageState)} state={state}>
       <Fragment>
         <div>
           {volumeMounts.map(

@@ -21,10 +21,7 @@ import React, { Fragment, useRef } from 'react';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
 import { getNumber, toLowerCase } from '../../../../../../../utils/string';
 import { Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (newValue: LifeCycleState) => void;
@@ -43,8 +40,7 @@ type LifecycleEditorAccordionProps = {
 
 const RESTART_POLICY = ['Always', 'OnFailure', 'Never'];
 
-const restartPolicySelectItems: SelectItem[] =
-  buildSelectItemsFromList(RESTART_POLICY);
+const restartPolicySelectItems: SelectItem[] = buildSelectItemsFromList(RESTART_POLICY);
 
 const getDescription = (state: LifeCycleState): string => {
   const statements: string[] = [];
@@ -54,9 +50,7 @@ const getDescription = (state: LifeCycleState): string => {
   }
 
   if (state.terminationGracePeriodSeconds) {
-    statements.push(
-      `${state.terminationGracePeriodSeconds}s termination grace period`,
-    );
+    statements.push(`${state.terminationGracePeriodSeconds}s termination grace period`);
   }
 
   if (statements.length === 0) {
@@ -84,12 +78,7 @@ export const LifecycleEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Lifecycle"
-      description={getDescription(viewModel)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Lifecycle" description={getDescription(viewModel)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <Select
@@ -107,9 +96,7 @@ export const LifecycleEditorAccordion = ({
             variant="outlined"
             value={viewModel.terminationGracePeriodSeconds || ''}
             onChange={e => {
-              viewModel.terminationGracePeriodSeconds = getNumber(
-                e.target.value,
-              );
+              viewModel.terminationGracePeriodSeconds = getNumber(e.target.value);
               valueUpdated();
             }}
             fullWidth

@@ -19,18 +19,9 @@ import AddIcon from '@material-ui/icons/Add';
 import React, { Fragment, useRef, useState } from 'react';
 import { Volume } from '../../../../../../../types/Pod';
 import { PackageResource } from '../../../../../../../utils/packageRevisionResources';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../../../util/deletable';
 import { VolumeEditorAccordion } from './VolumeEditorAccordion';
 
 type StorageState = {
@@ -75,12 +66,7 @@ export const StorageEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Storage"
-      description={getDescription(storageState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Storage" description={getDescription(storageState)} state={state}>
       <Fragment>
         <div>
           {volumes.map(

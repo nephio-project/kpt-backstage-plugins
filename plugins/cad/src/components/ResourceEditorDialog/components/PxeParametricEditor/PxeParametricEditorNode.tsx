@@ -20,10 +20,7 @@ import {
   PxeResourceChangeRequestHandler,
   PxeResourceChunk,
 } from './types/PxeParametricEditor.types';
-import {
-  PxeConfigurationEntry,
-  PxeConfigurationEntryType,
-} from './types/PxeConfiguration.types';
+import { PxeConfigurationEntry, PxeConfigurationEntryType } from './types/PxeConfiguration.types';
 import { PxeSectionNode } from './nodes/PxeSectionNode';
 import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
 import { PxeRosterWidgetNode } from './nodes/widget/PxeRosterWidgetNode';
@@ -37,10 +34,7 @@ export type PxeParametricEditorNodeProps = {
   readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };
 
-const NODE_BY_ENTRY_TYPE_RECORD: Record<
-  PxeConfigurationEntryType,
-  React.FC<PxeParametricEditorNodeProps>
-> = {
+const NODE_BY_ENTRY_TYPE_RECORD: Record<PxeConfigurationEntryType, React.FC<PxeParametricEditorNodeProps>> = {
   [PxeConfigurationEntryType.Section]: PxeSectionNode,
 
   [PxeConfigurationEntryType.RowLayout]: PxeRowLayoutNode,
@@ -50,9 +44,7 @@ const NODE_BY_ENTRY_TYPE_RECORD: Record<
   [PxeConfigurationEntryType.SelectValue]: PxeSelectValueWidgetNode,
 };
 
-export const PxeParametricEditorNode: React.FC<
-  PxeParametricEditorNodeProps
-> = props => {
+export const PxeParametricEditorNode: React.FC<PxeParametricEditorNodeProps> = props => {
   const { configurationEntry } = props;
   const ConcreteEditorNode = NODE_BY_ENTRY_TYPE_RECORD[configurationEntry.type];
 

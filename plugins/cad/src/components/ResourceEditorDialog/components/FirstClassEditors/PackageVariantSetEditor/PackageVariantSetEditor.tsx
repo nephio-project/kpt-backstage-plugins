@@ -20,10 +20,7 @@ import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { EditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  PackageVariantSet,
-  PackageVariantSetTargets,
-} from '../../../../../types/PackageVariantSet';
+import { PackageVariantSet, PackageVariantSetTargets } from '../../../../../types/PackageVariantSet';
 import { PackageVariantUpstream } from '../../../../../types/PackageVariant';
 import { UpstreamPackageEditorAccordion } from '../PackageVariantEditor/components/container/UpstreamPackageEditorAccordion';
 import { TargetEditorAccordion } from './components/TargetEditorAccordion';
@@ -53,19 +50,13 @@ const getResourceState = (packageVariantSet: PackageVariantSet): State => {
     targets: pvSetSpec.targets,
   };
 };
-export const PackageVariantSetEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: ResourceEditorProps) => {
+export const PackageVariantSetEditor = ({ yaml, onUpdatedYaml, packageResources }: ResourceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as PackageVariantSet;
 
   const classes = useEditorStyles();
 
   const [state, setState] = useState<PackageVariantSet>(resourceYaml);
-  const [specState, setSpecState] = useState<State>(
-    getResourceState(resourceYaml),
-  );
+  const [specState, setSpecState] = useState<State>(getResourceState(resourceYaml));
   const [expanded, setExpanded] = useState<string>();
   const [specExpanded, setSpecExpanded] = useState<string>();
 
@@ -92,9 +83,7 @@ export const PackageVariantSetEditor = ({
           state={[specExpanded, setSpecExpanded]}
           title="Upstream"
           keyValueObject={specState.upstream || {}}
-          onUpdatedKeyValueObject={upstream =>
-            setSpecState(s => ({ ...s, upstream }))
-          }
+          onUpdatedKeyValueObject={upstream => setSpecState(s => ({ ...s, upstream }))}
         />
         <TargetEditorAccordion
           id="Target"

@@ -9,9 +9,7 @@ export const useSetStateAndCall = <S extends object>(
 ): SetStateAndCallFn<S> =>
   useCallback(
     setStateAction => {
-      const newState = isFunction(setStateAction)
-        ? setStateAction(state)
-        : setStateAction;
+      const newState = isFunction(setStateAction) ? setStateAction(state) : setStateAction;
 
       setState(newState);
       callback(newState);

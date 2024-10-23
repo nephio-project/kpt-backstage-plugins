@@ -18,10 +18,7 @@ import { clone } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
 import { PodSecurityContext, Volume } from '../../../../../../types/Pod';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { LifecycleEditorAccordion } from './pod/LifecycleEditorAccordion';
 import { SecurityEditorAccordion } from './pod/SecurityEditorAccordion';
 import { StorageEditorAccordion } from './pod/StorageEditorAccordion';
@@ -75,12 +72,7 @@ export const PodDetailsEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Pod Details"
-      description={getDescription(podState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Pod Details" description={getDescription(podState)} state={state}>
       <Fragment>
         <div>
           <StorageEditorAccordion
@@ -112,13 +104,11 @@ export const PodDetailsEditorAccordion = ({
             state={[sectionExpanded, setSectionExpanded]}
             value={{
               restartPolicy: viewModel.restartPolicy,
-              terminationGracePeriodSeconds:
-                viewModel.terminationGracePeriodSeconds,
+              terminationGracePeriodSeconds: viewModel.terminationGracePeriodSeconds,
             }}
             onUpdate={updatedLifecycle => {
               viewModel.restartPolicy = updatedLifecycle.restartPolicy;
-              viewModel.terminationGracePeriodSeconds =
-                updatedLifecycle.terminationGracePeriodSeconds;
+              viewModel.terminationGracePeriodSeconds = updatedLifecycle.terminationGracePeriodSeconds;
               valueUpdated();
             }}
           />

@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-import {
-  PxeConfigurationEntry,
-  PxeConfigurationEntryType,
-  PxeRowLayoutEntry,
-} from '../types/PxeConfiguration.types';
+import { PxeConfigurationEntry, PxeConfigurationEntryType, PxeRowLayoutEntry } from '../types/PxeConfiguration.types';
 
-export const rowLayoutConfigurationEntry = (
-  ...childEntries: PxeConfigurationEntry[]
-): PxeRowLayoutEntry => ({
+export const rowLayoutConfigurationEntry = (...childEntries: PxeConfigurationEntry[]): PxeRowLayoutEntry => ({
   type: PxeConfigurationEntryType.RowLayout,
   entries: childEntries,
 });

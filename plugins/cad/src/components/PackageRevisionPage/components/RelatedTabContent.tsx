@@ -19,10 +19,7 @@ import { Alert } from '@material-ui/lab';
 import { groupBy } from 'lodash';
 import React, { Fragment } from 'react';
 import { PackageSummary } from '../../../utils/packageSummary';
-import {
-  ContentSummary,
-  PackageContentSummaryOrder,
-} from '../../../utils/repository';
+import { ContentSummary, PackageContentSummaryOrder } from '../../../utils/repository';
 import { toLowerCase } from '../../../utils/string';
 import { PackagesTable } from '../../PackagesTable';
 
@@ -54,29 +51,17 @@ export const RelatedTabContent = ({
   const classes = useStyles();
 
   if (!upstreamPackage && downstreamPackages.length === 0) {
-    return (
-      <Alert severity="info">
-        This {toLowerCase(packageDescriptor)} has no upstream or downstream
-        packages.
-      </Alert>
-    );
+    return <Alert severity="info">This {toLowerCase(packageDescriptor)} has no upstream or downstream packages.</Alert>;
   }
 
   const downstreamPackagesByDescriptor = groupBy(
     downstreamPackages,
     packageSummary => packageSummary.packageDescriptor,
   );
-  const downstreamPackageDescriptors = Object.keys(
-    downstreamPackagesByDescriptor,
-  ).sort(compareDescriptors);
+  const downstreamPackageDescriptors = Object.keys(downstreamPackagesByDescriptor).sort(compareDescriptors);
 
-  const siblingPackagesByDescriptor = groupBy(
-    siblingPackages,
-    packageSummary => packageSummary.packageDescriptor,
-  );
-  const siblingPackageDescriptors = Object.keys(
-    siblingPackagesByDescriptor,
-  ).sort(compareDescriptors);
+  const siblingPackagesByDescriptor = groupBy(siblingPackages, packageSummary => packageSummary.packageDescriptor);
+  const siblingPackageDescriptors = Object.keys(siblingPackagesByDescriptor).sort(compareDescriptors);
 
   return (
     <Fragment>

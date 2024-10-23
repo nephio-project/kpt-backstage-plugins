@@ -41,11 +41,9 @@ export enum OIDCTokenProvider {
   OKTA = 'okta',
 }
 
-export const getMaxRequestSize = (config: Config): string =>
-  config.getOptionalString('maxRequestSize') ?? '1mb';
+export const getMaxRequestSize = (config: Config): string => config.getOptionalString('maxRequestSize') ?? '1mb';
 
-export const getResourcesNamespace = (config: Config): string =>
-  config.getString('resourcesNamespace');
+export const getResourcesNamespace = (config: Config): string => config.getString('resourcesNamespace');
 
 export const getGitOpsDeliveryTool = (config: Config): GitOpsDeliveryTool => {
   const gitOpsTool = config.getString('gitOpsDeliveryTool');
@@ -57,9 +55,7 @@ export const getGitOpsDeliveryTool = (config: Config): GitOpsDeliveryTool => {
   return gitOpsTool as GitOpsDeliveryTool;
 };
 
-export const getClusterLocatorMethodType = (
-  config: Config,
-): ClusterLocatorMethodType => {
+export const getClusterLocatorMethodType = (config: Config): ClusterLocatorMethodType => {
   const methodType = config.getString('clusterLocatorMethod.type');
 
   if (!Object.values(ClusterLocatorAuthProvider)) {
@@ -69,34 +65,24 @@ export const getClusterLocatorMethodType = (
   return methodType as ClusterLocatorMethodType;
 };
 
-export const getClusterLocatorMethodAuthProvider = (
-  config: Config,
-): ClusterLocatorAuthProvider => {
+export const getClusterLocatorMethodAuthProvider = (config: Config): ClusterLocatorAuthProvider => {
   const authProvider = config.getString('clusterLocatorMethod.authProvider');
 
   if (!Object.values(ClusterLocatorAuthProvider)) {
-    throw new Error(
-      `Unknown clusterLocatorMethod.authProvider, ${authProvider}`,
-    );
+    throw new Error(`Unknown clusterLocatorMethod.authProvider, ${authProvider}`);
   }
 
   return authProvider as ClusterLocatorAuthProvider;
 };
 
-export const getClusterLocatorMethodOIDCTokenProvider = (
-  config: Config,
-): OIDCTokenProvider => {
+export const getClusterLocatorMethodOIDCTokenProvider = (config: Config): OIDCTokenProvider => {
   const authProvider = getClusterLocatorMethodAuthProvider(config);
 
   if (authProvider === ClusterLocatorAuthProvider.OIDC) {
-    const oidcTokenProvider = config.getString(
-      'clusterLocatorMethod.oidcTokenProvider',
-    );
+    const oidcTokenProvider = config.getString('clusterLocatorMethod.oidcTokenProvider');
 
     if (!Object.values(OIDCTokenProvider)) {
-      throw new Error(
-        `Unknown clusterLocatorMethod.oidcTokenProvider, ${oidcTokenProvider}`,
-      );
+      throw new Error(`Unknown clusterLocatorMethod.oidcTokenProvider, ${oidcTokenProvider}`);
     }
 
     return oidcTokenProvider as OIDCTokenProvider;
@@ -105,9 +91,7 @@ export const getClusterLocatorMethodOIDCTokenProvider = (
   return OIDCTokenProvider.NONE;
 };
 
-export const getClusterLocatorMethodServiceAccountToken = (
-  config: Config,
-): string => {
+export const getClusterLocatorMethodServiceAccountToken = (config: Config): string => {
   const authProvider = getClusterLocatorMethodAuthProvider(config);
 
   if (authProvider === ClusterLocatorAuthProvider.SERVICE_ACCOUNT) {

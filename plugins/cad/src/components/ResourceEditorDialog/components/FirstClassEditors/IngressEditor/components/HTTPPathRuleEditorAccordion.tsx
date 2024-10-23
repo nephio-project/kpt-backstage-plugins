@@ -19,17 +19,11 @@ import { Button, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { clone, startCase } from 'lodash';
 import React, { Fragment, useRef } from 'react';
-import {
-  HTTPIngressPath,
-  IngressBackend,
-} from '../../../../../../types/Ingress';
+import { HTTPIngressPath, IngressBackend } from '../../../../../../types/Ingress';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { sortByLabel } from '../../../../../../utils/selectItem';
 import { Select } from '../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
 import { IngressBackendPanel } from './IngressBackendPanel';
 
@@ -45,9 +39,7 @@ type HTTPPathRuleEditorAccordionProps = {
 
 const PATH_TYPE = ['Exact', 'Prefix', 'ImplementationSpecific'];
 
-const pathTypeSelectItems: SelectItem[] = sortByLabel(
-  PATH_TYPE.map(type => ({ label: startCase(type), value: type })),
-);
+const pathTypeSelectItems: SelectItem[] = sortByLabel(PATH_TYPE.map(type => ({ label: startCase(type), value: type })));
 
 export const HTTPPathRuleEditorAccordion = ({
   id,
@@ -76,12 +68,7 @@ export const HTTPPathRuleEditorAccordion = ({
     : 'new rule';
 
   return (
-    <EditorAccordion
-      id={id}
-      title="HTTP Path"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="HTTP Path" description={description} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>

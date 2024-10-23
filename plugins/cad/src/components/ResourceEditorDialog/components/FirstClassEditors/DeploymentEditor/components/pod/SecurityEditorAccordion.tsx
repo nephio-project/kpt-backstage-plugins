@@ -18,16 +18,10 @@ import { TextField } from '@material-ui/core';
 import { clone } from 'lodash';
 import React, { Fragment, useMemo, useRef } from 'react';
 import { PodSecurityContext } from '../../../../../../../types/Pod';
-import {
-  getDeployableResources,
-  PackageResource,
-} from '../../../../../../../utils/packageRevisionResources';
+import { getDeployableResources, PackageResource } from '../../../../../../../utils/packageRevisionResources';
 import { getNumber } from '../../../../../../../utils/string';
 import { Autocomplete, Checkbox } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type SecurityState = {
@@ -45,10 +39,7 @@ type SecurityEditorAccordionProps = {
   packageResources: PackageResource[];
 };
 
-const getResourceNames = (
-  packageResources: PackageResource[],
-  kind: string,
-): string[] => {
+const getResourceNames = (packageResources: PackageResource[], kind: string): string[] => {
   const resources = getDeployableResources(packageResources, kind);
 
   return resources.map(configMap => configMap.name);
@@ -57,9 +48,7 @@ const getResourceNames = (
 const getDescription = (securityState: SecurityState): string => {
   const statements: string[] = [];
 
-  statements.push(
-    `${securityState.serviceAccount ?? 'default'} service account`,
-  );
+  statements.push(`${securityState.serviceAccount ?? 'default'} service account`);
 
   return statements.join(', ');
 };
@@ -93,12 +82,7 @@ export const SecurityEditorAccordion = ({
   );
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Security"
-      description={getDescription(viewModel)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Security" description={getDescription(viewModel)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <Autocomplete

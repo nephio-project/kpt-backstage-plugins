@@ -18,20 +18,13 @@ type DeleteField = { _isDeleted?: boolean };
 
 export type Deletable<T> = T & DeleteField;
 
-export const isActiveElement = <T extends DeleteField>(element: T): boolean =>
-  !element._isDeleted;
+export const isActiveElement = <T extends DeleteField>(element: T): boolean => !element._isDeleted;
 
-export const getActiveElements = <T extends DeleteField>(list: T[]): T[] =>
-  list.filter(isActiveElement);
+export const getActiveElements = <T extends DeleteField>(list: T[]): T[] => list.filter(isActiveElement);
 
-export const undefinedIfEmpty = <T>(list: T[]): T[] | undefined =>
-  list.length > 0 ? list : undefined;
+export const undefinedIfEmpty = <T>(list: T[]): T[] | undefined => (list.length > 0 ? list : undefined);
 
-export const updateList = <T>(
-  list: T[],
-  newValue: T | undefined,
-  idx: number,
-): T[] => {
+export const updateList = <T>(list: T[], newValue: T | undefined, idx: number): T[] => {
   list[idx] = newValue || { ...list[idx], _isDeleted: true };
   return list;
 };

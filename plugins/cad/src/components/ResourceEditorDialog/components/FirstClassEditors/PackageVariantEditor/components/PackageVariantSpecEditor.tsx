@@ -15,16 +15,10 @@
  */
 
 import React, { useRef, useState } from 'react';
-import {
-  PackageVariantInjectors,
-  PackageVariantSpec,
-} from '../../../../../../types/PackageVariant';
+import { PackageVariantInjectors, PackageVariantSpec } from '../../../../../../types/PackageVariant';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { Select } from '../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { KeyValueEditorAccordion } from '../../Controls/KeyValueEditorAccordion';
 import { DownstreamPackageEditorAccordion } from './container/DownstreamPackageEditorAccordion';
 import { PackageContextEditorAccordion } from './container/PackageContextEditorAccordion';

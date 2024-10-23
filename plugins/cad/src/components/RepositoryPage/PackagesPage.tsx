@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Breadcrumbs,
-  LinkButton,
-  ContentHeader,
-  Progress,
-} from '@backstage/core-components';
+import { Breadcrumbs, LinkButton, ContentHeader, Progress } from '@backstage/core-components';
 import { useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -30,16 +25,8 @@ import { addPackageRouteRef } from '../../routes';
 import { Repository } from '../../types/Repository';
 import { RootSync } from '../../types/RootSync';
 import { isConfigSyncEnabled } from '../../utils/featureFlags';
-import {
-  getPackageSummaries,
-  PackageSummary,
-  updatePackageSummariesSyncStatus,
-} from '../../utils/packageSummary';
-import {
-  getContentDetailsByLink,
-  getPackageDescriptor,
-  isReadOnlyRepository,
-} from '../../utils/repository';
+import { getPackageSummaries, PackageSummary, updatePackageSummariesSyncStatus } from '../../utils/packageSummary';
+import { getContentDetailsByLink, getPackageDescriptor, isReadOnlyRepository } from '../../utils/repository';
 import { getRepositorySummaries } from '../../utils/repositorySummary';
 import { Tabs } from '../Controls';
 import { LandingPageLink } from '../Links';
@@ -52,77 +39,56 @@ export const PackagesPage = () => {
   const addPackageRef = useRouteRef(addPackageRouteRef);
 
   const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [packageSummaries, setPackageSummaries] = useState<PackageSummary[]>(
-    [],
-  );
+  const [packageSummaries, setPackageSummaries] = useState<PackageSummary[]>([]);
 
   const contentDetails = getContentDetailsByLink(packageContent);
   const packageDescriptor = contentDetails?.contentSummary || '';
   const useConfigSync = isConfigSyncEnabled() && !!contentDetails?.isDeployment;
-  const showAddPackage =
-    repositories.length > 0 && !repositories.every(isReadOnlyRepository);
+  const showAddPackage = repositories.length > 0 && !repositories.every(isReadOnlyRepository);
 
-  const { loading, error: packagesError } =
-    useAsync(async (): Promise<void> => {
-      if (!packageDescriptor) throw new Error('Package discriptor not set');
+  const { loading, error: packagesError } = useAsync(async (): Promise<void> => {
+    if (!packageDescriptor) throw new Error('Package discriptor not set');
 
-      const { items: thisAllRepositories } = await api.listRepositories();
-      const allRepositorySummaries =
-        getRepositorySummaries(thisAllRepositories);
+    const { items: thisAllRepositories } = await api.listRepositories();
+    const allRepositorySummaries = getRepositorySummaries(thisAllRepositories);
 
-      const contentRepositorySummaries = allRepositorySummaries.filter(
-        summary =>
-          getPackageDescriptor(summary.repository) === packageDescriptor,
-      );
+    const contentRepositorySummaries = allRepositorySummaries.filter(
+      summary => getPackageDescriptor(summary.repository) === packageDescriptor,
+    );
 
-      setRepositories(contentRepositorySummaries.map(r => r.repository));
+    setRepositories(contentRepositorySummaries.map(r => r.repository));
 
-      const allRepositories = thisAllRepositories;
+    const allRepositories = thisAllRepositories;
 
-      const getRootSyncs = async (): Promise<RootSync[]> => {
-        if (!useConfigSync) return [];
+    const getRootSyncs = async (): Promise<RootSync[]> => {
+      if (!useConfigSync) return [];
 
-        const { items: rootSyncs } = await api.listRootSyncs();
-        return rootSyncs;
-      };
+      const { items: rootSyncs } = await api.listRootSyncs();
+      return rootSyncs;
+    };
 
-      const [allPackageRevisions, syncs] = await Promise.all([
-        api.listPackageRevisions(),
-        getRootSyncs(),
-      ]);
+    const [allPackageRevisions, syncs] = await Promise.all([api.listPackageRevisions(), getRootSyncs()]);
 
-      const thisPackageSummaries = getPackageSummaries(
-        allPackageRevisions,
-        contentRepositorySummaries,
-        allRepositories,
-      );
+    const thisPackageSummaries = getPackageSummaries(allPackageRevisions, contentRepositorySummaries, allRepositories);
 
-      if (useConfigSync) {
-        const updatedPackageSummaries = updatePackageSummariesSyncStatus(
-          thisPackageSummaries,
-          syncs,
-        );
-        setPackageSummaries(updatedPackageSummaries);
-      } else {
-        setPackageSummaries(thisPackageSummaries);
-      }
-    }, []);
+    if (useConfigSync) {
+      const updatedPackageSummaries = updatePackageSummariesSyncStatus(thisPackageSummaries, syncs);
+      setPackageSummaries(updatedPackageSummaries);
+    } else {
+      setPackageSummaries(thisPackageSummaries);
+    }
+  }, []);
 
   useEffect(() => {
     if (useConfigSync && packageSummaries.length > 0) {
       const refreshRootSync = async (): Promise<void> => {
         const { items: syncs } = await api.listRootSyncs();
 
-        setPackageSummaries(thisPackageSummaries =>
-          updatePackageSummariesSyncStatus(thisPackageSummaries, syncs),
-        );
+        setPackageSummaries(thisPackageSummaries => updatePackageSummariesSyncStatus(thisPackageSummaries, syncs));
       };
 
       const refreshSeconds = 10;
-      const refreshTimeout = setTimeout(
-        () => refreshRootSync(),
-        refreshSeconds * 1000,
-      );
+      const refreshTimeout = setTimeout(() => refreshRootSync(), refreshSeconds * 1000);
 
       return () => {
         clearTimeout(refreshTimeout);
@@ -147,11 +113,7 @@ export const PackagesPage = () => {
 
       <ContentHeader title={pluralPackageDescriptor}>
         {showAddPackage && (
-          <LinkButton
-            to={addPackageRef({ packageContent })}
-            color="primary"
-            variant="contained"
-          >
+          <LinkButton to={addPackageRef({ packageContent })} color="primary" variant="contained">
             Add {packageDescriptor}
           </LinkButton>
         )}

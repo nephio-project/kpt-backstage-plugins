@@ -15,10 +15,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import {
-  ServiceAccount,
-  ServiceAccountMetadata,
-} from '../../../../../types/ServiceAccount';
+import { ServiceAccount, ServiceAccountMetadata } from '../../../../../types/ServiceAccount';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
@@ -34,10 +31,7 @@ type State = {
   metadata: ServiceAccountMetadata;
 };
 
-export const ServiceAccountEditor = ({
-  yaml,
-  onUpdatedYaml,
-}: ResourceEditorProps) => {
+export const ServiceAccountEditor = ({ yaml, onUpdatedYaml }: ResourceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as ServiceAccount;
 
   const createResourceState = (): State => ({

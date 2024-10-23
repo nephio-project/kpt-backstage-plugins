@@ -18,18 +18,9 @@ import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { Fragment, useRef, useState } from 'react';
 import { ContainerPort } from '../../../../../../../types/Pod';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../../../util/deletable';
 import { ContainerPortEditorAccordion } from './ContainerPortEditorAccordion';
 
 type NetworkingState = {
@@ -60,9 +51,7 @@ export const NetworkingEditorAccordion = ({
   const classes = useEditorStyles();
   const [sectionExpanded, setSectionExpanded] = useState<string>();
 
-  const refContainerPorts = useRef<Deletable<ContainerPort>[]>(
-    networkingState.ports ?? [],
-  );
+  const refContainerPorts = useRef<Deletable<ContainerPort>[]>(networkingState.ports ?? []);
   const containerPorts = refContainerPorts.current;
 
   const valueUpdated = (): void => {
@@ -74,12 +63,7 @@ export const NetworkingEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Networking"
-      description={getDescription(networkingState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Networking" description={getDescription(networkingState)} state={state}>
       <Fragment>
         <Fragment>
           <div>

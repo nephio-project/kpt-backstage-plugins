@@ -17,11 +17,7 @@
 import { KubernetesKeyValueObject } from '../types/KubernetesResource';
 import { Secret } from '../types/Secret';
 
-export const getBasicAuthSecret = (
-  name: string,
-  username: string,
-  password: string,
-): Secret => {
+export const getBasicAuthSecret = (name: string, username: string, password: string): Secret => {
   const basicAuthSecret = {
     apiVersion: 'v1',
     kind: 'Secret',
@@ -38,11 +34,7 @@ export const getBasicAuthSecret = (
   return basicAuthSecret;
 };
 
-export const getOpagueSecret = (
-  name: string,
-  namespace: string,
-  data: KubernetesKeyValueObject,
-): Secret => {
+export const getOpagueSecret = (name: string, namespace: string, data: KubernetesKeyValueObject): Secret => {
   const basicOpagueSecret = {
     apiVersion: 'v1',
     kind: 'Secret',

@@ -22,15 +22,9 @@ import useAsync from 'react-use/lib/useAsync';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { TextField, Button } from '@material-ui/core';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
-import {
-  PackageVariantSetRepositories,
-  PackageVariantSetTempleate,
-} from '../../../../../../types/PackageVariantSet';
+import { PackageVariantSetRepositories, PackageVariantSetTempleate } from '../../../../../../types/PackageVariantSet';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { TemplateEditorAccordion } from './templates/TemplateEditorAccordion';
 import { configAsDataApiRef } from '../../../../../../apis';
@@ -54,9 +48,7 @@ type repositoriesEditorProps = {
   onUpdate: OnUpdate;
 };
 
-const mapRepositoryToSelectItem = (
-  repository: Repository,
-): RepositorySelectItem => ({
+const mapRepositoryToSelectItem = (repository: Repository): RepositorySelectItem => ({
   label: repository.metadata.name,
   value: repository.metadata.name,
   repository: repository,
@@ -81,14 +73,10 @@ export const RepositoriesEditorAccordion = ({
 
   const [expanded, setExpanded] = useState<string>();
   const [state, setState] = useState<RepositoriesState>(viewModel);
-  const [repositorySelectItems, setRepositorySelectItems] = useState<
-    Repository[]
-  >([]);
+  const [repositorySelectItems, setRepositorySelectItems] = useState<Repository[]>([]);
 
   useAsync(async (): Promise<void> => {
-    const [{ items: thisAllRepositories }] = await Promise.all([
-      api.listRepositories(),
-    ]);
+    const [{ items: thisAllRepositories }] = await Promise.all([api.listRepositories()]);
     setRepositorySelectItems(thisAllRepositories);
   }, [api]);
 
@@ -98,71 +86,58 @@ export const RepositoriesEditorAccordion = ({
 
   const setRepositoryName = (name: string): string => {
     if (repositorySelectItems.length !== 0) {
-      const thisRepository = name
-        ? getRepositoryData(repositorySelectItems, name)
-        : undefined;
+      const thisRepository = name ? getRepositoryData(repositorySelectItems, name) : undefined;
       return thisRepository?.metadata?.name || '';
     }
     return 'thisRepository?.metadata?.name';
   };
 
   return (
-    <EditorAccordion
-      id={`Repositories-${id}`}
-      title={title}
-      description={`Repositories-${id}`}
-      state={accordionState}
-    >
+    <EditorAccordion id={`Repositories-${id}`} title={title} description={`Repositories-${id}`} state={accordionState}>
       {state.repositories &&
-        state.repositories.map(
-          (repository: PackageVariantSetRepositories, index: number) => (
-            <EditorAccordion
-              id={`Repositories-${index}`}
-              title={`Repositories-${index}`}
-              description={repository.name}
-              state={[expanded, setExpanded]}
-            >
-              <div className={classes.multiControlRow}>
-                <Select
-                  label="Name"
-                  onChange={selectedRepositoryName => {
-                    repository.name = selectedRepositoryName;
-                    valueUpdated();
-                  }}
-                  selected={setRepositoryName(repository?.name)}
-                  items={repositorySelectItems.map(mapRepositoryToSelectItem)}
-                />
-                <TextField
-                  label="Package Names"
-                  variant="outlined"
-                  value={(repository.packageNames ?? []).join(', ')}
-                  onChange={e => {
-                    const value = e.target.value;
-                    repository.packageNames = value
-                      ? value.split(',').map(v => v.trim())
-                      : undefined;
-                    valueUpdated();
-                  }}
-                  fullWidth
-                />
-              </div>
-              <div className={classes.multiControlRow}>
-                <Button
-                  variant="outlined"
-                  startIcon={<DeleteIcon />}
-                  onClick={() => {
-                    state.repositories = state!.repositories!.filter(
-                      repositories => repositories !== repository,
-                    );
-                    valueUpdated();
-                  }}
-                >
-                  Delete Repository
-                </Button>
-              </div>
-            </EditorAccordion>
-          ),
-        )}
+        state.repositories.map((repository: PackageVariantSetRepositories, index: number) => (
+          <EditorAccordion
+            id={`Repositories-${index}`}
+            title={`Repositories-${index}`}
+            description={repository.name}
+            state={[expanded, setExpanded]}
+          >
+            <div className={classes.multiControlRow}>
+              <Select
+                label="Name"
+                onChange={selectedRepositoryName => {
+                  repository.name = selectedRepositoryName;
+                  valueUpdated();
+                }}
+                selected={setRepositoryName(repository?.name)}
+                items={repositorySelectItems.map(mapRepositoryToSelectItem)}
+              />
+              <TextField
+                label="Package Names"
+                variant="outlined"
+                value={(repository.packageNames ?? []).join(', ')}
+                onChange={e => {
+                  const value = e.target.value;
+                  repository.packageNames = value ? value.split(',').map(v => v.trim()) : undefined;
+                  valueUpdated();
+                }}
+                fullWidth
+              />
+            </div>
+            <div className={classes.multiControlRow}>
+              <Button
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+                onClick={() => {
+                  state.repositories = state!.repositories!.filter(repositories => repositories !== repository);
+                  valueUpdated();
+                }}
+              >
+                Delete Repository
+              </Button>
+            </div>
+          </EditorAccordion>
+        ))}
       <TemplateEditorAccordion
         id="template"
         title="Template Data"
@@ -178,11 +153,7 @@ export const RepositoriesEditorAccordion = ({
         }}
       />
       <div className={classes.multiControlRow}>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete Repositories
         </Button>
         <Button

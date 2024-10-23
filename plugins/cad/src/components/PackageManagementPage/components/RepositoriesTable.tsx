@@ -36,9 +36,7 @@ type RepositoryRow = {
   summary: string;
 };
 
-const getTableColumns = (
-  packageDescriptor: string,
-): TableColumn<RepositoryRow>[] => {
+const getTableColumns = (packageDescriptor: string): TableColumn<RepositoryRow>[] => {
   const columns: TableColumn<RepositoryRow>[] = [
     { title: 'Name', field: 'name' },
     { title: 'Description', field: 'description' },
@@ -51,18 +49,12 @@ const getTableColumns = (
 const getSummary = (packageSummaries?: PackageSummary[]): string => {
   if (!packageSummaries) return '';
 
-  const publishedPackages = packageSummaries.filter(
-    summary => summary.latestPublishedRevision,
-  ).length;
+  const publishedPackages = packageSummaries.filter(summary => summary.latestPublishedRevision).length;
   const draftPackages = packageSummaries.filter(
-    summary =>
-      summary.unpublishedRevision?.spec.lifecycle ===
-      PackageRevisionLifecycle.DRAFT,
+    summary => summary.unpublishedRevision?.spec.lifecycle === PackageRevisionLifecycle.DRAFT,
   ).length;
   const proposedPackages = packageSummaries.filter(
-    summary =>
-      summary.unpublishedRevision?.spec.lifecycle ===
-      PackageRevisionLifecycle.PROPOSED,
+    summary => summary.unpublishedRevision?.spec.lifecycle === PackageRevisionLifecycle.PROPOSED,
   ).length;
 
   let summary = `${publishedPackages} Published`;
@@ -78,9 +70,7 @@ const getSummary = (packageSummaries?: PackageSummary[]): string => {
   return summary;
 };
 
-const mapToRepositoryRow = (
-  repositorySummary: RepositorySummary,
-): RepositoryRow => {
+const mapToRepositoryRow = (repositorySummary: RepositorySummary): RepositoryRow => {
   const repository = repositorySummary.repository;
 
   return {
@@ -91,11 +81,7 @@ const mapToRepositoryRow = (
   };
 };
 
-export const RepositoriesTable = ({
-  title,
-  repositories,
-  contentType,
-}: RepositoriesTableProps) => {
+export const RepositoriesTable = ({ title, repositories, contentType }: RepositoriesTableProps) => {
   const navigate = useNavigate();
 
   const repositoryRef = useRouteRef(repositoryRouteRef);

@@ -18,9 +18,7 @@ import { IngressClass } from '../../../../../../types/IngressClass';
 import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 
-export const getIngressClassStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getIngressClassStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const ingressClass = resource as IngressClass;
 
   return {
