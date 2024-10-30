@@ -33,6 +33,7 @@ import { PackageVariantSetEditor } from './FirstClassEditors/PackageVariantSetEd
 import { NephioCapacityParametricEditor } from './ParametricFirstClassEditors/NephioCapacityParametricEditor';
 import { NephioTokenParametricEditor } from './ParametricFirstClassEditors/NephioTokenParametricEditor';
 import { NephioWorkloadClusterParametricEditor } from './ParametricFirstClassEditors/NephioWorkloadClusterParametricEditor';
+import { NephioNetworkParametricEditor } from './ParametricFirstClassEditors/NephioNetworkParametricEditor';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
 type OnNoNamedEditorFn = () => void;
@@ -82,6 +83,9 @@ export const FirstClassEditorSelector = ({
 
     case 'infra.nephio.org/v1alpha1/Token':
       return <NephioTokenParametricEditor yamlText={yaml} onResourceChange={onUpdatedYaml} />;
+
+    case 'infra.nephio.org/v1alpha1/Network':
+      return <NephioNetworkParametricEditor yamlText={yaml} onResourceChange={onUpdatedYaml} />;
 
     case 'infra.nephio.org/v1alpha1/WorkloadCluster':
       return <NephioWorkloadClusterParametricEditor yamlText={yaml} onResourceChange={onUpdatedYaml} />;

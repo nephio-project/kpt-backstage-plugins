@@ -21,13 +21,12 @@ import { get } from 'lodash';
 import React, { Fragment } from 'react';
 import { IconButton } from '../../../../../Controls';
 import { useEditorStyles } from '../../../FirstClassEditors/styles';
-import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
-import { PxeRosterWidgetEntry, PxeValueType } from '../../types/PxeConfiguration.types';
+import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
+import { PxeConfigurationEntryType, PxeRosterWidgetEntry, PxeValueType } from '../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest, PxeValue } from '../../types/PxeParametricEditor.types';
 import { createResourceChunkAfterChangeRequest } from '../../utils/createResourceChunkAfterChangeRequest';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { arrayWithItemRemoved, arrayWithItemReplaced } from '../../utils/general/immutableArrays';
-import { PxeParametricEditorNodeList } from '../../PxeParametricEditorNodeList';
 
 type RosterItemResourceChunk = {
   readonly key: string;
@@ -41,6 +40,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry,
   resourceChunk,
   onResourceChangeRequest,
+  parentExpandedSectionState,
 }) => {
   const { values, itemEntries } = configurationEntry as PxeRosterWidgetEntry;
   const valueDescriptor = values[0];
@@ -54,10 +54,8 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
       changeRequest,
     ) as RosterItemResourceChunk;
 
-    onResourceChangeRequest({
-      valueDescriptor,
-      newValue: valueFromItemChunks(arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk), rosterValueType),
-    });
+    const newValue = valueFromItemChunks(arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk), rosterValueType);
+    onResourceChangeRequest({ valueDescriptor, newValue });
   };
 
   const handleItemAddition = () => {
@@ -66,48 +64,62 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
       value: undefined,
     };
 
-    onResourceChangeRequest({
-      valueDescriptor,
-      newValue: valueFromItemChunks([...itemChunks, newItemChunk], rosterValueType),
-    });
+    const newValue = valueFromItemChunks([...itemChunks, newItemChunk], rosterValueType);
+    onResourceChangeRequest({ valueDescriptor, newValue });
   };
 
   const handleItemDeletion = (itemIndex: number) => {
-    onResourceChangeRequest({
-      valueDescriptor,
-      newValue: valueFromItemChunks(arrayWithItemRemoved(itemChunks, itemIndex), rosterValueType),
-    });
+    const newValue = valueFromItemChunks(arrayWithItemRemoved(itemChunks, itemIndex), rosterValueType);
+    onResourceChangeRequest({ valueDescriptor, newValue });
   };
 
   const editorClasses = useEditorStyles();
   const rosterClasses = useStyles();
-  return (
-    <Fragment>
-      {itemChunks.map((itemChunk, itemIndex) => (
-        <div className={rosterClasses.item} key={itemIndex}>
-          <div className={rosterClasses.itemContent}>
-            <PxeParametricEditorNodeList
-              entries={itemEntries}
-              resourceChunk={itemChunk}
-              onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
-            />
+
+  if (itemEntries.length === 0) {
+    return <Fragment />;
+  } else if (itemEntries.length > 1) {
+    // TODO With proper styling this should be actually possible. Reconsider handling this.
+    throw new Error('Roster Widget does not support multiple configuration entries per item.');
+  } else {
+    // FIXME Refactor by extraction?
+    return (
+      <Fragment>
+        {itemChunks.map((itemChunk, itemIndex) => (
+          <div className={rosterClasses.item} key={itemIndex}>
+            <div className={rosterClasses.itemContent}>
+              <PxeParametricEditorNode
+                configurationEntry={itemEntries[0]}
+                resourceChunk={itemChunk}
+                onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
+                parentExpandedSectionState={parentExpandedSectionState}
+              >
+                {itemEntries[0].type === PxeConfigurationEntryType.Section && (
+                  <Button variant="outlined" startIcon={<AddIcon />} onClick={() => handleItemDeletion(itemIndex)}>
+                    Delete {generateValueLabel(valueDescriptor)}
+                  </Button>
+                )}
+              </PxeParametricEditorNode>
+            </div>
+            {itemEntries[0].type !== PxeConfigurationEntryType.Section && (
+              <div className={rosterClasses.itemActions}>
+                <IconButton
+                  title="Delete"
+                  className={editorClasses.iconButton}
+                  onClick={() => handleItemDeletion(itemIndex)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            )}
           </div>
-          <div className={rosterClasses.itemActions}>
-            <IconButton
-              title="Delete"
-              className={editorClasses.iconButton}
-              onClick={() => handleItemDeletion(itemIndex)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </div>
-      ))}
-      <Button variant="outlined" startIcon={<AddIcon />} onClick={handleItemAddition}>
-        Add {generateValueLabel(valueDescriptor)}
-      </Button>
-    </Fragment>
-  );
+        ))}
+        <Button variant="outlined" startIcon={<AddIcon />} onClick={handleItemAddition}>
+          Add {generateValueLabel(valueDescriptor)}
+        </Button>
+      </Fragment>
+    );
+  }
 };
 
 const itemChunksFromValue = (value: PxeValue): readonly RosterItemResourceChunk[] =>

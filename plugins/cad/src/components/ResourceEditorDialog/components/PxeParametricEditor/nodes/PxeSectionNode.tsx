@@ -29,6 +29,7 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
   resourceChunk,
   onResourceChangeRequest,
   parentExpandedSectionState,
+  children,
 }) => {
   const configurationEntry = configurationEntryUncasted as PxeSectionEntry;
   const { name, entries: childEntries } = configurationEntry;
@@ -51,6 +52,7 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
         onResourceChangeRequest={onResourceChangeRequest}
         parentExpandedSectionState={[expandedSection, setExpandedSection]}
       />
+      {children}
     </EditorAccordion>
   );
 };
