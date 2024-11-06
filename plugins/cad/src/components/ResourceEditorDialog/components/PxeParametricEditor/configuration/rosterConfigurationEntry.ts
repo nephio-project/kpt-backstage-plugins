@@ -17,40 +17,52 @@
 import {
   PxeConfigurationEntry,
   PxeConfigurationEntryType,
-  PxeRosterWidgetEntry,
+  PxeSectionEntry,
   PxeValueType,
 } from '../types/PxeConfiguration.types';
+import { sectionConfigurationEntry } from './sectionConfigurationEntry';
 
+// TODO With the current UI every roster entry is wrapped in implicit section entry.
+// Also, name parameter is mandatory as it iss used for displaying section name.
+// Change this after UI redesign.
 export const objectTypeRosterConfigurationEntry = (
   {
+    name,
     path,
     isRequired = false,
-    name,
   }: {
+    name: string;
     path: string;
     isRequired?: boolean;
-    name?: string;
   },
   ...itemEntries: PxeConfigurationEntry[]
-): PxeRosterWidgetEntry => ({
-  type: PxeConfigurationEntryType.Roster,
-  values: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
-  itemEntries,
-});
+): PxeSectionEntry =>
+  sectionConfigurationEntry(
+    { name },
+    {
+      type: PxeConfigurationEntryType.Roster,
+      values: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
+      itemEntries,
+    },
+  );
 
 export const arrayTypeRosterConfigurationEntry = (
   {
+    name,
     path,
     isRequired = false,
-    name,
   }: {
+    name: string;
     path: string;
     isRequired?: boolean;
-    name?: string;
   },
   ...itemEntries: PxeConfigurationEntry[]
-): PxeRosterWidgetEntry => ({
-  type: PxeConfigurationEntryType.Roster,
-  values: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
-  itemEntries,
-});
+): PxeSectionEntry =>
+  sectionConfigurationEntry(
+    { name },
+    {
+      type: PxeConfigurationEntryType.Roster,
+      values: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
+      itemEntries,
+    },
+  );

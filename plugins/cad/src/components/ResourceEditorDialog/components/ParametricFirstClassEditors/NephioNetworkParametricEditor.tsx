@@ -25,28 +25,19 @@ export const NephioNetworkParametricEditor = createEditorFromConfiguration({
   entries: [
     metadataEditorSection({ isNamespacedResource: true }),
     section({ name: 'Topology' }, singleLineText({ path: 'spec.topology', isRequired: true })),
-    section(
-      { name: 'Routing tables' },
-      arrayTypeRoster(
-        { path: 'spec.routingTables', isRequired: false },
-        section(
-          { name: 'Routing table' },
-          singleLineText({ path: 'value.name', isRequired: true }),
+    arrayTypeRoster(
+      { name: 'Routing tables', path: 'spec.routingTables', isRequired: false },
+      section(
+        { name: 'Routing table' },
+        singleLineText({ path: 'value.name', isRequired: true }),
+        arrayTypeRoster(
+          { name: 'Prefixes', path: 'value.prefixes', isRequired: true },
           section(
-            { name: 'Prefixes' },
-            arrayTypeRoster(
-              { path: 'value.prefixes', isRequired: true },
-              section(
-                { name: 'Prefix' },
-                singleLineText({ path: 'value.prefix', isRequired: true }),
-                section(
-                  { name: 'Labels' },
-                  objectTypeRoster(
-                    { path: 'value.labels', isRequired: false },
-                    rowLayout(singleLineText({ path: 'key', isRequired: true }), singleLineText({ path: 'value' })),
-                  ),
-                ),
-              ),
+            { name: 'Prefix' },
+            singleLineText({ path: 'value.prefix', isRequired: true }),
+            objectTypeRoster(
+              { name: 'Labels', path: 'value.labels', isRequired: false },
+              rowLayout(singleLineText({ path: 'key', isRequired: true }), singleLineText({ path: 'value' })),
             ),
           ),
         ),
