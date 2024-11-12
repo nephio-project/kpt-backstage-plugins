@@ -28,7 +28,7 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
 }) => {
   const {
     textFilter,
-    values: [valueDescriptor],
+    valueDescriptors: [valueDescriptor],
   } = configurationEntry as PxeSingleLineTextWidgetEntry;
 
   return (

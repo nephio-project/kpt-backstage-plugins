@@ -47,7 +47,7 @@ export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercas
 };
 
 const generateValueDescriptionsForWidget = (widgetEntry: PxeWidgetEntry, resourceChunk: PxeResourceChunk): string[] =>
-  widgetEntry.values
+  widgetEntry.valueDescriptors
     .map(valueDescriptor => generateValueDescription(valueDescriptor, resourceChunk))
     .filter(segment => segment !== null) as string[];
 

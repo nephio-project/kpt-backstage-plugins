@@ -29,7 +29,7 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
   resourceChunk,
 }) => {
   const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
-  const valueDescriptor = widgetEntry.values[0];
+  const [valueDescriptor] = widgetEntry.valueDescriptors;
 
   const selectItems = widgetEntry.options.map(({ value, label }) => ({
     value: value !== undefined ? String(value) : DEFAULT_VALUE,

@@ -77,12 +77,12 @@ export type PxeWidgetEntry = PxeRosterWidgetEntry | PxeSingleLineTextWidgetEntry
 
 type PxeWidgetEntryBase = {
   readonly type: PxeConfigurationEntryType;
-  readonly values: readonly PxeValueDescriptor[];
+  readonly valueDescriptors: readonly PxeValueDescriptor[];
 };
 
 export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.Roster;
-  readonly itemValue: PxeValueDescriptor;
+  readonly itemValueDescriptor: PxeValueDescriptor;
   readonly itemEntries: readonly PxeConfigurationEntry[];
 }
 

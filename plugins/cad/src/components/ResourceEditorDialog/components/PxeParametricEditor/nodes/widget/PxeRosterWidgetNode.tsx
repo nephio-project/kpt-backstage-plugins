@@ -43,8 +43,11 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   onResourceChangeRequest,
   parentExpandedSectionState,
 }) => {
-  const { values, itemEntries, itemValue: itemValueDescriptor } = configurationEntry as PxeRosterWidgetEntry;
-  const valueDescriptor = values[0];
+  const {
+    valueDescriptors: [valueDescriptor],
+    itemValueDescriptor: itemValueDescriptor,
+    itemEntries,
+  } = configurationEntry as PxeRosterWidgetEntry;
   const rosterValueType = valueDescriptor.type as RosterValueType;
 
   const itemChunks = itemChunksFromValue(get(resourceChunk, valueDescriptor.path));

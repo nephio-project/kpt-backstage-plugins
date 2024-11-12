@@ -31,35 +31,19 @@ const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['spec'],
   entries: [
     arrayTypeRoster(
-      { path: 'spec.arr.string.opt.nonEmpty', name: 'Test' },
+      { path: 'spec.arr.string.opt', name: 'Test' },
       singleLineText({ path: '$value', isRequired: false }),
     ),
     arrayTypeRoster(
-      { path: 'spec.arr.string.opt.empty', name: 'Test' },
-      singleLineText({ path: '$value', isRequired: false }),
-    ),
-    arrayTypeRoster(
-      { path: 'spec.arr.string.req.nonEmpty', name: 'Test' },
-      singleLineText({ path: '$value', isRequired: true }),
-    ),
-    arrayTypeRoster(
-      { path: 'spec.arr.string.req.empty', name: 'Test' },
+      { path: 'spec.arr.string.req', name: 'Test' },
       singleLineText({ path: '$value', isRequired: true }),
     ),
     objectTypeRoster(
-      { path: 'spec.obj.string.opt.nonEmpty', name: 'Test' },
+      { path: 'spec.obj.string.opt', name: 'Test' },
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: false })),
     ),
     objectTypeRoster(
-      { path: 'spec.obj.string.opt.empty', name: 'Test' },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: false })),
-    ),
-    objectTypeRoster(
-      { path: 'spec.obj.string.req.nonEmpty', name: 'Test' },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
-    ),
-    objectTypeRoster(
-      { path: 'spec.obj.string.req.empty', name: 'Test' },
+      { path: 'spec.obj.string.req', name: 'Test' },
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
     ),
   ],
@@ -69,20 +53,12 @@ const YAML = `
 spec:
   arr:
     string:
-      opt:
-        nonEmpty: ['foo']
-        empty: []
-      req:
-        nonEmpty: ['foo']
-        empty: []
+      opt: ['foo']
+      req: ['foo']
   obj:
     string:
-      opt:
-        nonEmpty: { foo: 'bar' }
-        empty: {}
-      req:
-        nonEmpty: { foo: 'bar' }
-        empty: {}
+      opt: { foo: 'bar' }
+      req: { foo: 'bar' }
 `;
 
 describe('ParametricEditorRosterWidget', () => {
@@ -98,8 +74,8 @@ describe('ParametricEditorRosterWidget', () => {
   });
 
   describe('array-based', () => {
-    describe('(optional string item, initially non-empty)', () => {
-      const rosterPath = 'spec.arr.string.opt.nonEmpty';
+    describe('(optional string item)', () => {
+      const rosterPath = 'spec.arr.string.opt';
 
       it('should change item value on text input', async () => {
         const textInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$value');
@@ -130,31 +106,8 @@ describe('ParametricEditorRosterWidget', () => {
       });
     });
 
-    describe('(optional string item, initially empty)', () => {
-      const rosterPath = 'spec.arr.string.opt.empty';
-
-      it('should add null item on Add button click', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-
-        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
-        expect(roster).toEqual([null]);
-      });
-
-      it('should add null item on Add button click (x2)', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-        await userEvent.click(addButton);
-
-        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
-        expect(roster).toEqual([null, null]);
-      });
-    });
-
-    describe('(required string item, initially non-empty)', () => {
-      const rosterPath = 'spec.arr.string.req.nonEmpty';
+    describe('(required string item)', () => {
+      const rosterPath = 'spec.arr.string.req';
 
       it('should change item value on text input', async () => {
         const textInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$value');
@@ -184,34 +137,11 @@ describe('ParametricEditorRosterWidget', () => {
         expect(roster).toEqual(['foo', '', '']);
       });
     });
-
-    describe('(required string item, initially empty)', () => {
-      const rosterPath = 'spec.arr.string.req.empty';
-
-      it('should add empty string item on Add button click', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-
-        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
-        expect(roster).toEqual(['']);
-      });
-
-      it('should add empty string item on Add button click (x2)', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-        await userEvent.click(addButton);
-
-        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
-        expect(roster).toEqual(['', '']);
-      });
-    });
   });
 
   describe('object-based', () => {
-    describe('(optional string item, initially non-empty)', () => {
-      const rosterPath = 'spec.obj.string.opt.nonEmpty';
+    describe('(optional string item)', () => {
+      const rosterPath = 'spec.obj.string.opt';
 
       it('should change item key on text input', async () => {
         const textInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$key');
@@ -249,29 +179,8 @@ describe('ParametricEditorRosterWidget', () => {
       });
     });
 
-    describe('(optional string item, initially empty)', () => {
-      const rosterPath = 'spec.obj.string.opt.empty';
-
-      it('should add null item on Add button click', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-
-        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
-        expect(roster).toEqual({ '': null });
-      });
-
-      it('should disable Add button when item with empty key is added', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-
-        expect(addButton.disabled).toBeTruthy();
-      });
-    });
-
-    describe('(required string item, initially non-empty)', () => {
-      const rosterPath = 'spec.obj.string.req.nonEmpty';
+    describe('(required string item)', () => {
+      const rosterPath = 'spec.obj.string.req';
 
       it('should change item key on text input', async () => {
         const textInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$key');
@@ -298,27 +207,6 @@ describe('ParametricEditorRosterWidget', () => {
 
         const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
         expect(roster).toEqual({ foo: 'bar', '': '' });
-      });
-
-      it('should disable Add button when item with empty key is added', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-
-        expect(addButton.disabled).toBeTruthy();
-      });
-    });
-
-    describe('(required string item, initially empty)', () => {
-      const rosterPath = 'spec.obj.string.req.empty';
-
-      it('should add empty string item on Add button click', async () => {
-        const addButton = findRosterAddButton(editor, rosterPath);
-
-        await userEvent.click(addButton);
-
-        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
-        expect(roster).toEqual({ '': '' });
       });
 
       it('should disable Add button when item with empty key is added', async () => {

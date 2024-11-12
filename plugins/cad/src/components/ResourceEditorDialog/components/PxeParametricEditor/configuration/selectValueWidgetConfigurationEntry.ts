@@ -35,6 +35,6 @@ export const selectValueWidgetConfigurationEntry = ({
   options: readonly PxeValueOption[];
 }): PxeSelectValueWidgetEntry => ({
   type: PxeConfigurationEntryType.SelectValue,
-  values: [{ path, type, isRequired, display: { name } }],
+  valueDescriptors: [{ path, type, isRequired, display: { name } }],
   options,
 });

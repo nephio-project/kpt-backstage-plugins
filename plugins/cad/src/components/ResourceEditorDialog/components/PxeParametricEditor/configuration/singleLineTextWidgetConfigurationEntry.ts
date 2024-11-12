@@ -31,7 +31,7 @@ export const singleLineTextWidgetConfigurationEntry = ({
   textFilter?: TextFilter;
 }): PxeSingleLineTextWidgetEntry => ({
   type: PxeConfigurationEntryType.SingleLineText,
-  values: [{ path, type, isRequired, display: { name } }],
+  valueDescriptors: [{ path, type, isRequired, display: { name } }],
   textFilter,
 });
 

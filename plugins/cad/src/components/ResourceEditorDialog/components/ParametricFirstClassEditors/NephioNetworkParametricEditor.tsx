@@ -17,6 +17,7 @@
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
 import { metadataEditorSection } from './partial/metadataEditorSection';
+import { PxeValueType } from '../PxeParametricEditor/types/PxeConfiguration.types';
 
 const { section, rowLayout, arrayTypeRoster, objectTypeRoster, singleLineText } = PxeConfigurationFactory;
 
@@ -26,12 +27,24 @@ export const NephioNetworkParametricEditor = createEditorFromConfiguration({
     metadataEditorSection({ isNamespacedResource: true }),
     section({ name: 'Topology' }, singleLineText({ path: 'spec.topology', isRequired: true })),
     arrayTypeRoster(
-      { name: 'Routing tables', path: 'spec.routingTables', isRequired: false },
+      {
+        name: 'Routing tables',
+        path: 'spec.routingTables',
+        isRequired: false,
+        // FIXME Not a best way of doing this. E.g path is redundant.
+        itemValue: { type: PxeValueType.Object, isRequired: true, path: '$value' },
+      },
       section(
         { name: 'Routing table' },
         singleLineText({ path: 'value.name', isRequired: true }),
         arrayTypeRoster(
-          { name: 'Prefixes', path: 'value.prefixes', isRequired: true },
+          {
+            name: 'Prefixes',
+            path: 'value.prefixes',
+            isRequired: true,
+            // FIXME Not a best way of doing this. E.g path is redundant.
+            itemValue: { type: PxeValueType.Object, isRequired: true, path: '$value' },
+          },
           section(
             { name: 'Prefix' },
             singleLineText({ path: 'value.prefix', isRequired: true }),

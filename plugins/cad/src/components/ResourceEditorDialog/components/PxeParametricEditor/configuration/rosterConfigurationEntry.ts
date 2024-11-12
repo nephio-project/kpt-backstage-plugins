@@ -46,8 +46,8 @@ export const objectTypeRosterConfigurationEntry = (
     { name },
     {
       type: PxeConfigurationEntryType.Roster,
-      values: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
-      itemValue: resolveItemValueDescriptor(name, itemValue ?? null, itemEntries),
+      valueDescriptors: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
+      itemValueDescriptor: resolveItemValueDescriptor(name, itemValue ?? null, itemEntries),
       itemEntries,
     },
   );
@@ -70,8 +70,8 @@ export const arrayTypeRosterConfigurationEntry = (
     { name },
     {
       type: PxeConfigurationEntryType.Roster,
-      values: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
-      itemValue: resolveItemValueDescriptor(name, itemValue ?? null, itemEntries),
+      valueDescriptors: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
+      itemValueDescriptor: resolveItemValueDescriptor(name, itemValue ?? null, itemEntries),
       itemEntries,
     },
   );
@@ -83,7 +83,7 @@ const resolveItemValueDescriptor = (
 ): PxeValueDescriptor => {
   const itemValueEntry = findInConfigurationEntries(
     itemEntries,
-    entry => 'values' in entry && entry.values[0]?.path === '$value',
+    entry => 'valueDescriptors' in entry && entry.valueDescriptors[0]?.path === '$value',
   ) as PxeWidgetEntry | null;
 
   if (explicitItemValueDescriptor && itemValueEntry) {
@@ -91,6 +91,6 @@ const resolveItemValueDescriptor = (
   } else if (!explicitItemValueDescriptor && !itemValueEntry) {
     throw new Error(`No itemValue definition in roster ${rosterName}.`);
   } else {
-    return explicitItemValueDescriptor || itemValueEntry?.values[0]!;
+    return explicitItemValueDescriptor || itemValueEntry?.valueDescriptors[0]!;
   }
 };
