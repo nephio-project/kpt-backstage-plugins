@@ -177,6 +177,30 @@ describe('ParametricEditorRosterWidget', () => {
 
         expect(addButton.disabled).toBeTruthy();
       });
+
+      it('should not update resource when roster is in illegal state (duplicate key)', async () => {
+        const addButton = findRosterAddButton(editor, rosterPath);
+
+        await userEvent.click(addButton);
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 1), '$key');
+        await userEvent.type(keyTextInput, 'foo');
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+
+        expect(resourceChangeHandler.mock.calls.length).toBe(3);
+        expect(roster).toEqual({ foo: 'bar', fo: null });
+      });
+
+      it('should recover from illegal state (duplicate key) when duplicate key is edited', async () => {
+        const addButton = findRosterAddButton(editor, rosterPath);
+
+        await userEvent.click(addButton);
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 1), '$key');
+        await userEvent.type(keyTextInput, 'foo2');
+
+        expect(resourceChangeHandler.mock.calls.length).toBe(4);
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+        expect(roster).toEqual({ foo: 'bar', foo2: null });
+      });
     });
 
     describe('(required string item)', () => {
@@ -215,6 +239,30 @@ describe('ParametricEditorRosterWidget', () => {
         await userEvent.click(addButton);
 
         expect(addButton.disabled).toBeTruthy();
+      });
+
+      it('should not update resource when roster is in illegal state (duplicate key)', async () => {
+        const addButton = findRosterAddButton(editor, rosterPath);
+
+        await userEvent.click(addButton);
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 1), '$key');
+        await userEvent.type(keyTextInput, 'foo');
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+
+        expect(resourceChangeHandler.mock.calls.length).toBe(3);
+        expect(roster).toEqual({ foo: 'bar', fo: '' });
+      });
+
+      it('should recover from illegal state (duplicate key) when duplicate key is edited', async () => {
+        const addButton = findRosterAddButton(editor, rosterPath);
+
+        await userEvent.click(addButton);
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 1), '$key');
+        await userEvent.type(keyTextInput, 'foo2');
+
+        expect(resourceChangeHandler.mock.calls.length).toBe(4);
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+        expect(roster).toEqual({ foo: 'bar', foo2: '' });
       });
     });
   });

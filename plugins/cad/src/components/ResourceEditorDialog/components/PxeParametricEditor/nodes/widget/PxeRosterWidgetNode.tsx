@@ -18,7 +18,7 @@ import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { get } from 'lodash';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { IconButton } from '../../../../../Controls';
 import { useEditorStyles } from '../../../FirstClassEditors/styles';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
@@ -50,7 +50,13 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   } = configurationEntry as PxeRosterWidgetEntry;
   const rosterValueType = valueDescriptor.type as RosterValueType;
 
-  const itemChunks = itemChunksFromValue(get(resourceChunk, valueDescriptor.path));
+  const [itemChunks, setItemChunks] = useState<readonly RosterItemResourceChunk[]>(
+    itemChunksFromValue(get(resourceChunk, valueDescriptor.path)),
+  );
+
+  useEffect(() => {
+    setItemChunks(itemChunksFromValue(get(resourceChunk, valueDescriptor.path)));
+  }, [resourceChunk, valueDescriptor]);
 
   const handleResourceChangeRequestForItem = (itemIndex: number, changeRequest: PxeResourceChangeRequest) => {
     const newItemChunk = createResourceChunkAfterChangeRequest(
@@ -58,8 +64,13 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
       changeRequest,
     ) as RosterItemResourceChunk;
 
-    const newValue = valueFromItemChunks(arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk), rosterValueType);
-    onResourceChangeRequest({ valueDescriptor, newValue });
+    const newItemChunks = arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk);
+    const newValue = valueFromItemChunks(newItemChunks, rosterValueType);
+    if (Object.values(newValue).length === itemChunks.length) {
+      onResourceChangeRequest({ valueDescriptor, newValue });
+    } else {
+      setItemChunks(newItemChunks);
+    }
   };
 
   const handleItemAddition = () => {
@@ -143,7 +154,10 @@ const itemChunksFromValue = (value: PxeValue): readonly RosterItemResourceChunk[
     $value: itemValue as PxeValue,
   }));
 
-const valueFromItemChunks = (itemChunks: readonly RosterItemResourceChunk[], rosterType: RosterValueType): PxeValue =>
+const valueFromItemChunks = (
+  itemChunks: readonly RosterItemResourceChunk[],
+  rosterType: RosterValueType,
+): object | readonly any[] =>
   rosterType === PxeValueType.Object
     ? Object.fromEntries(itemChunks.map(itemChunk => [itemChunk.$key, itemChunk.$value]))
     : itemChunks.map(itemChunk => itemChunk.$value);
