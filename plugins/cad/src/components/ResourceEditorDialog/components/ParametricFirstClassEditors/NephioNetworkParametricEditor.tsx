@@ -37,7 +37,7 @@ export const NephioNetworkParametricEditor = createEditorFromConfiguration({
             singleLineText({ path: 'value.prefix', isRequired: true }),
             objectTypeRoster(
               { name: 'Labels', path: 'value.labels', isRequired: false },
-              rowLayout(singleLineText({ path: 'key', isRequired: true }), singleLineText({ path: 'value' })),
+              rowLayout(singleLineText({ path: '$key', isRequired: true }), singleLineText({ path: '$value' })),
             ),
           ),
         ),

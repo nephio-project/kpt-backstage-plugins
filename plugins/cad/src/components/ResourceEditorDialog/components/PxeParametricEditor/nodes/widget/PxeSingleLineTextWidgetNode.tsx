@@ -33,6 +33,7 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
 
   return (
     <TextField
+      data-testid={`TextField_${valueDescriptor.path}`}
       label={generateValueLabel(valueDescriptor)}
       variant="outlined"
       value={get(resourceChunk, valueDescriptor.path) ?? ''}

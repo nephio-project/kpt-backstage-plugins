@@ -27,10 +27,11 @@ import { PxeResourceChangeRequest, PxeValue } from '../../types/PxeParametricEdi
 import { createResourceChunkAfterChangeRequest } from '../../utils/createResourceChunkAfterChangeRequest';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { arrayWithItemRemoved, arrayWithItemReplaced } from '../../utils/general/immutableArrays';
+import { defaultValueForType } from '../../utils/defaultValueForType';
 
 type RosterItemResourceChunk = {
-  readonly key: string;
-  readonly value: PxeValue;
+  readonly $key: string;
+  readonly $value: PxeValue;
 };
 
 type RosterValueType = PxeValueType.Object | PxeValueType.Array;
@@ -42,7 +43,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   onResourceChangeRequest,
   parentExpandedSectionState,
 }) => {
-  const { values, itemEntries } = configurationEntry as PxeRosterWidgetEntry;
+  const { values, itemEntries, itemValue: itemValueDescriptor } = configurationEntry as PxeRosterWidgetEntry;
   const valueDescriptor = values[0];
   const rosterValueType = valueDescriptor.type as RosterValueType;
 
@@ -60,8 +61,8 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
 
   const handleItemAddition = () => {
     const newItemChunk: RosterItemResourceChunk = {
-      key: rosterValueType === PxeValueType.Array ? String(itemChunks.length) : '',
-      value: undefined,
+      $key: rosterValueType === PxeValueType.Array ? String(itemChunks.length) : '',
+      $value: itemValueDescriptor.isRequired ? defaultValueForType(itemValueDescriptor.type) : null,
     };
 
     const newValue = valueFromItemChunks([...itemChunks, newItemChunk], rosterValueType);
@@ -73,6 +74,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
     onResourceChangeRequest({ valueDescriptor, newValue });
   };
 
+  const isAddButtonEnabled = rosterValueType === PxeValueType.Array || itemChunks.every(({ $key }) => $key !== '');
   const editorClasses = useEditorStyles();
   const rosterClasses = useStyles();
 
@@ -86,7 +88,11 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
     return (
       <Fragment>
         {itemChunks.map((itemChunk, itemIndex) => (
-          <div className={rosterClasses.item} key={itemIndex}>
+          <div
+            key={itemIndex}
+            className={rosterClasses.item}
+            data-testid={`RosterItem_${valueDescriptor.path}_${itemIndex}`}
+          >
             <div className={rosterClasses.itemContent}>
               <PxeParametricEditorNode
                 configurationEntry={itemEntries[0]}
@@ -114,7 +120,13 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
             )}
           </div>
         ))}
-        <Button variant="outlined" startIcon={<AddIcon />} onClick={handleItemAddition}>
+        <Button
+          data-testid={`RosterAddButton_${valueDescriptor.path}`}
+          variant="outlined"
+          startIcon={<AddIcon />}
+          disabled={!isAddButtonEnabled}
+          onClick={handleItemAddition}
+        >
           Add {generateValueLabel(valueDescriptor)}
         </Button>
       </Fragment>
@@ -124,14 +136,14 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
 
 const itemChunksFromValue = (value: PxeValue): readonly RosterItemResourceChunk[] =>
   Object.entries(value ?? {}).map(([itemKey, itemValue]) => ({
-    key: itemKey,
-    value: itemValue as PxeValue,
+    $key: itemKey,
+    $value: itemValue as PxeValue,
   }));
 
 const valueFromItemChunks = (itemChunks: readonly RosterItemResourceChunk[], rosterType: RosterValueType): PxeValue =>
   rosterType === PxeValueType.Object
-    ? Object.fromEntries(itemChunks.map(itemChunk => [itemChunk.key, itemChunk.value]))
-    : itemChunks.map(itemChunk => itemChunk.value);
+    ? Object.fromEntries(itemChunks.map(itemChunk => [itemChunk.$key, itemChunk.$value]))
+    : itemChunks.map(itemChunk => itemChunk.$value);
 
 const useStyles = makeStyles(() => ({
   item: {

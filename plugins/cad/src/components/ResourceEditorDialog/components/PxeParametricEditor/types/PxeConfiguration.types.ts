@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { PxeValue } from './PxeParametricEditor.types';
 import { TextFilter } from '../validation/textFilters';
 
@@ -38,7 +39,6 @@ export enum PxeConfigurationEntryType {
 // Values
 
 export enum PxeValueType {
-  Any = 'Any',
   String = 'String',
   Number = 'Number',
   Object = 'Object',
@@ -82,6 +82,7 @@ type PxeWidgetEntryBase = {
 
 export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
   readonly type: PxeConfigurationEntryType.Roster;
+  readonly itemValue: PxeValueDescriptor;
   readonly itemEntries: readonly PxeConfigurationEntry[];
 }
 

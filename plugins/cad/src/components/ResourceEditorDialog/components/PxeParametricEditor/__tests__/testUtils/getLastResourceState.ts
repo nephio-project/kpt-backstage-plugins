@@ -14,27 +14,8 @@
  * limitations under the License.
  */
 
-import {
-  PxeConfigurationEntryType,
-  PxeSelectValueWidgetEntry,
-  PxeValueOption,
-  PxeValueType,
-} from '../types/PxeConfiguration.types';
+import { load } from 'js-yaml';
+import { PxeResourceChunk } from '../../types/PxeParametricEditor.types';
 
-export const selectValueWidgetConfigurationEntry = ({
-  path,
-  type,
-  isRequired = false,
-  name,
-  options,
-}: {
-  path: string;
-  type: PxeValueType;
-  isRequired?: boolean;
-  name?: string;
-  options: readonly PxeValueOption[];
-}): PxeSelectValueWidgetEntry => ({
-  type: PxeConfigurationEntryType.SelectValue,
-  values: [{ path, type, isRequired, display: { name } }],
-  options,
-});
+export const getLastResourceState = (resourceChangeHandler: jest.Mock): PxeResourceChunk & any =>
+  load(resourceChangeHandler.mock.lastCall[0]);

@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-import {
-  PxeConfigurationEntryType,
-  PxeSelectValueWidgetEntry,
-  PxeValueOption,
-  PxeValueType,
-} from '../types/PxeConfiguration.types';
+import { PxeValueType } from '../types/PxeConfiguration.types';
+import { PxeValue } from '../types/PxeParametricEditor.types';
 
-export const selectValueWidgetConfigurationEntry = ({
-  path,
-  type,
-  isRequired = false,
-  name,
-  options,
-}: {
-  path: string;
-  type: PxeValueType;
-  isRequired?: boolean;
-  name?: string;
-  options: readonly PxeValueOption[];
-}): PxeSelectValueWidgetEntry => ({
-  type: PxeConfigurationEntryType.SelectValue,
-  values: [{ path, type, isRequired, display: { name } }],
-  options,
-});
+export const defaultValueForType = (valueType: PxeValueType): PxeValue => {
+  switch (valueType) {
+    case PxeValueType.String:
+      return '';
+    case PxeValueType.Number:
+      return 0;
+    case PxeValueType.Object:
+      return {};
+    case PxeValueType.Array:
+      return [];
+    default:
+      throw new Error(`Unsupported value type ${valueType}`);
+  }
+};

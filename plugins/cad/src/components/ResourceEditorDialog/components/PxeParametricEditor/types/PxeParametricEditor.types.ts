@@ -18,7 +18,9 @@ import { Dispatch, SetStateAction } from 'react';
 import { PxeValueDescriptor } from './PxeConfiguration.types';
 
 export type PxeResourceChunk = object;
-export type PxeValue = undefined | string | object | readonly any[];
+
+// `undefined` = absence of value in Yaml, `null` = null value in Yaml
+export type PxeValue = undefined | null | string | number | object | readonly any[];
 
 // TODO Semantically "null" should be used instead of "undefined".
 // Consider project-wide refactoring alongside the update of prettier settings.
