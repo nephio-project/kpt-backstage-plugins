@@ -25,6 +25,12 @@ import {
 import { sectionConfigurationEntry } from './sectionConfigurationEntry';
 import { findInConfigurationEntries } from '../utils/findInConfigurationEntries';
 
+// FIXME Think of something different (name? form?).
+type RosterItemDefinition = {
+  readonly type: PxeValueType;
+  readonly isRequired?: boolean;
+};
+
 // TODO With the current UI every roster entry is wrapped in implicit section entry.
 // Also, name parameter is mandatory as it iss used for displaying section name.
 // Change this after UI redesign.
@@ -33,12 +39,12 @@ export const objectTypeRosterConfigurationEntry = (
     name,
     path,
     isRequired = false,
-    itemValue,
+    item,
   }: {
     name: string;
     path: string;
     isRequired?: boolean;
-    itemValue?: PxeValueDescriptor;
+    item?: RosterItemDefinition;
   },
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeSectionEntry =>
@@ -47,7 +53,7 @@ export const objectTypeRosterConfigurationEntry = (
     {
       type: PxeConfigurationEntryType.Roster,
       valueDescriptors: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
-      itemValueDescriptor: resolveItemValueDescriptor(name, itemValue ?? null, itemEntries),
+      itemValueDescriptor: resolveItemValueDescriptor(name, item ?? null, itemEntries),
       itemEntries,
     },
   );
@@ -57,12 +63,12 @@ export const arrayTypeRosterConfigurationEntry = (
     name,
     path,
     isRequired = false,
-    itemValue,
+    item,
   }: {
     name: string;
     path: string;
     isRequired?: boolean;
-    itemValue?: PxeValueDescriptor;
+    item?: RosterItemDefinition;
   },
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeSectionEntry =>
@@ -71,14 +77,14 @@ export const arrayTypeRosterConfigurationEntry = (
     {
       type: PxeConfigurationEntryType.Roster,
       valueDescriptors: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
-      itemValueDescriptor: resolveItemValueDescriptor(name, itemValue ?? null, itemEntries),
+      itemValueDescriptor: resolveItemValueDescriptor(name, item ?? null, itemEntries),
       itemEntries,
     },
   );
 
 const resolveItemValueDescriptor = (
   rosterName: string,
-  explicitItemValueDescriptor: PxeValueDescriptor | null,
+  explicitRosterItemDef: RosterItemDefinition | null,
   itemEntries: PxeConfigurationEntry[],
 ): PxeValueDescriptor => {
   const itemValueEntry = findInConfigurationEntries(
@@ -86,11 +92,13 @@ const resolveItemValueDescriptor = (
     entry => 'valueDescriptors' in entry && entry.valueDescriptors[0]?.path === '$value',
   ) as PxeWidgetEntry | null;
 
-  if (explicitItemValueDescriptor && itemValueEntry) {
-    throw new Error(`Redundant itemValue definition in roster ${rosterName}. Descriptor inherited from $value entry.`);
-  } else if (!explicitItemValueDescriptor && !itemValueEntry) {
-    throw new Error(`No itemValue definition in roster ${rosterName}.`);
+  if (explicitRosterItemDef && itemValueEntry) {
+    throw new Error(`Redundant item definition in roster ${rosterName}. Descriptor inherited from $value entry.`);
+  } else if (!explicitRosterItemDef && !itemValueEntry) {
+    throw new Error(`No item definition in roster ${rosterName}.`);
   } else {
-    return explicitItemValueDescriptor || itemValueEntry?.valueDescriptors[0]!;
+    return explicitRosterItemDef
+      ? { path: '$value', type: explicitRosterItemDef.type, isRequired: explicitRosterItemDef.isRequired ?? false }
+      : itemValueEntry?.valueDescriptors[0]!;
   }
 };

@@ -32,7 +32,10 @@ const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 export const generateSectionDescription = (sectionEntry: PxeSectionEntry, resourceChunk: PxeResourceChunk): string =>
   sectionEntry.entries
     .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
-    .flatMap(childEntry => generateValueDescriptionsForWidget(childEntry as PxeWidgetEntry, resourceChunk))
+    // FIXME 1) needs type predicates (widget / layout), 2) handle layouts
+    .flatMap(childEntry =>
+      'valueDescriptors' in childEntry ? generateValueDescriptionsForWidget(childEntry, resourceChunk) : [],
+    )
     .join(', ');
 
 export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercase: boolean = true): string => {

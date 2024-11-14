@@ -23,13 +23,13 @@ import {
 
 export const selectValueWidgetConfigurationEntry = ({
   path,
-  type,
+  type = PxeValueType.String,
   isRequired = false,
   name,
   options,
 }: {
   path: string;
-  type: PxeValueType;
+  type?: PxeValueType;
   isRequired?: boolean;
   name?: string;
   options: readonly PxeValueOption[];
