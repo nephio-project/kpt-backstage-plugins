@@ -20,6 +20,7 @@ import { Select } from '../../../../../Controls';
 import { PxeSelectValueWidgetEntry } from '../../types/PxeConfiguration.types';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
+import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
 
@@ -28,6 +29,7 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
   onResourceChangeRequest,
   resourceChunk,
 }) => {
+  useDiagnostics(configurationEntry);
   const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
   const [valueDescriptor] = widgetEntry.valueDescriptors;
 

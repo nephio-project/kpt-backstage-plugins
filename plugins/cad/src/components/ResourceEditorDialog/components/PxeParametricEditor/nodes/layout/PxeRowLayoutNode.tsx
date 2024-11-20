@@ -18,6 +18,7 @@ import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { makeStyles } from '@material-ui/core';
+import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
@@ -33,6 +34,7 @@ export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = ({
   onResourceChangeRequest,
   resourceChunk,
 }) => {
+  useDiagnostics(configurationEntry);
   const { entries } = configurationEntry as PxeRowLayoutEntry;
 
   const classes = useStyles();

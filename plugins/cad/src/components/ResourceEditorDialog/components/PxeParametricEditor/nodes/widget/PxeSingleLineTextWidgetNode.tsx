@@ -20,12 +20,14 @@ import React from 'react';
 import { PxeSingleLineTextWidgetEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
+import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   configurationEntry,
   onResourceChangeRequest,
   resourceChunk,
 }) => {
+  useDiagnostics(configurationEntry);
   const {
     textFilter,
     valueDescriptors: [valueDescriptor],

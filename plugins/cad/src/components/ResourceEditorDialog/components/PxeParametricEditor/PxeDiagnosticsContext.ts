@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-import { PxeNodeType, PxeSelectValueWidgetEntry, PxeValueOption, PxeValueType } from '../types/PxeConfiguration.types';
+import { createContext, useContext } from 'react';
+import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
+import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
 
-export const selectValueWidgetConfigurationEntry = ({
-  path,
-  type = PxeValueType.String,
-  isRequired = false,
-  name,
-  options,
-}: {
-  path: string;
-  type?: PxeValueType;
-  isRequired?: boolean;
-  name?: string;
-  options: readonly PxeValueOption[];
-}): PxeSelectValueWidgetEntry => ({
-  type: PxeNodeType.SelectValue,
-  valueDescriptors: [{ path, type, isRequired, display: { name } }],
-  options,
-});
+export const PxeDiagnosticsContext = createContext<PxeDiagnosticsReporter | null>(null);
+
+export const useDiagnostics = (configurationEntry: PxeConfigurationEntry) => {
+  const diagnosticsReporter = useContext(PxeDiagnosticsContext);
+  if (diagnosticsReporter) {
+    diagnosticsReporter.reportRender(configurationEntry);
+  }
+};

@@ -18,16 +18,17 @@ import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { get } from 'lodash';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { IconButton } from '../../../../../Controls';
 import { useEditorStyles } from '../../../FirstClassEditors/styles';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
-import { PxeConfigurationEntryType, PxeRosterWidgetEntry, PxeValueType } from '../../types/PxeConfiguration.types';
+import { PxeNodeType, PxeRosterWidgetEntry, PxeValueType } from '../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest, PxeValue } from '../../types/PxeParametricEditor.types';
 import { createResourceChunkAfterChangeRequest } from '../../utils/createResourceChunkAfterChangeRequest';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { arrayWithItemRemoved, arrayWithItemReplaced } from '../../utils/general/immutableArrays';
 import { defaultValueForType } from '../../utils/defaultValueForType';
+import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 type RosterItemResourceChunk = {
   readonly $key: string;
@@ -43,6 +44,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   onResourceChangeRequest,
   parentExpandedSectionState,
 }) => {
+  useDiagnostics(configurationEntry);
   const {
     valueDescriptors: [valueDescriptor],
     itemValueDescriptor: itemValueDescriptor,
@@ -54,9 +56,11 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
     itemChunksFromValue(get(resourceChunk, valueDescriptor.path)),
   );
 
-  useEffect(() => {
+  const [previousResourceChunk, setPreviousResourceChunk] = useState(resourceChunk);
+  if (previousResourceChunk !== resourceChunk) {
     setItemChunks(itemChunksFromValue(get(resourceChunk, valueDescriptor.path)));
-  }, [resourceChunk, valueDescriptor]);
+    setPreviousResourceChunk(resourceChunk);
+  }
 
   const handleResourceChangeRequestForItem = (itemIndex: number, changeRequest: PxeResourceChangeRequest) => {
     const newItemChunk = createResourceChunkAfterChangeRequest(
@@ -114,14 +118,14 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
                 onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
                 parentExpandedSectionState={parentExpandedSectionState}
               >
-                {itemEntries[0].type === PxeConfigurationEntryType.Section && (
+                {itemEntries[0].type === PxeNodeType.Section && (
                   <Button variant="outlined" startIcon={<AddIcon />} onClick={() => handleItemDeletion(itemIndex)}>
                     Delete {generateValueLabel(valueDescriptor)}
                   </Button>
                 )}
               </PxeParametricEditorNode>
             </div>
-            {itemEntries[0].type !== PxeConfigurationEntryType.Section && (
+            {itemEntries[0].type !== PxeNodeType.Section && (
               <div className={rosterClasses.itemActions}>
                 <IconButton
                   title="Delete"

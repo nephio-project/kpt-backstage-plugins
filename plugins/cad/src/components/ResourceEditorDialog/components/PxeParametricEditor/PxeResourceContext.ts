@@ -14,22 +14,7 @@
  * limitations under the License.
  */
 
-import { PxeNodeType, PxeSelectValueWidgetEntry, PxeValueOption, PxeValueType } from '../types/PxeConfiguration.types';
+import { createContext } from 'react';
+import { PxeResourceChunk } from './types/PxeParametricEditor.types';
 
-export const selectValueWidgetConfigurationEntry = ({
-  path,
-  type = PxeValueType.String,
-  isRequired = false,
-  name,
-  options,
-}: {
-  path: string;
-  type?: PxeValueType;
-  isRequired?: boolean;
-  name?: string;
-  options: readonly PxeValueOption[];
-}): PxeSelectValueWidgetEntry => ({
-  type: PxeNodeType.SelectValue,
-  valueDescriptors: [{ path, type, isRequired, display: { name } }],
-  options,
-});
+export const PxeResourceContext = createContext<PxeResourceChunk>({});

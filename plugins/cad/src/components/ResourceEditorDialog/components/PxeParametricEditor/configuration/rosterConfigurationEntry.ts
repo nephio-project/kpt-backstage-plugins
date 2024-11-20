@@ -16,7 +16,7 @@
 
 import {
   PxeConfigurationEntry,
-  PxeConfigurationEntryType,
+  PxeNodeType,
   PxeSectionEntry,
   PxeValueDescriptor,
   PxeValueType,
@@ -51,7 +51,7 @@ export const objectTypeRosterConfigurationEntry = (
   sectionConfigurationEntry(
     { name },
     {
-      type: PxeConfigurationEntryType.Roster,
+      type: PxeNodeType.Roster,
       valueDescriptors: [{ path, type: PxeValueType.Object, isRequired, display: { name } }],
       itemValueDescriptor: resolveItemValueDescriptor(name, item ?? null, itemEntries),
       itemEntries,
@@ -75,7 +75,7 @@ export const arrayTypeRosterConfigurationEntry = (
   sectionConfigurationEntry(
     { name },
     {
-      type: PxeConfigurationEntryType.Roster,
+      type: PxeNodeType.Roster,
       valueDescriptors: [{ path, type: PxeValueType.Array, isRequired, display: { name } }],
       itemValueDescriptor: resolveItemValueDescriptor(name, item ?? null, itemEntries),
       itemEntries,

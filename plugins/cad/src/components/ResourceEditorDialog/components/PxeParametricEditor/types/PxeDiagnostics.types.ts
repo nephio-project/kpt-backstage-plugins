@@ -13,23 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { PxeConfigurationEntry } from './PxeConfiguration.types';
 
-import { PxeNodeType, PxeSelectValueWidgetEntry, PxeValueOption, PxeValueType } from '../types/PxeConfiguration.types';
-
-export const selectValueWidgetConfigurationEntry = ({
-  path,
-  type = PxeValueType.String,
-  isRequired = false,
-  name,
-  options,
-}: {
-  path: string;
-  type?: PxeValueType;
-  isRequired?: boolean;
-  name?: string;
-  options: readonly PxeValueOption[];
-}): PxeSelectValueWidgetEntry => ({
-  type: PxeNodeType.SelectValue,
-  valueDescriptors: [{ path, type, isRequired, display: { name } }],
-  options,
-});
+export type PxeDiagnosticsReporter = {
+  readonly reportRender: (entry: PxeConfigurationEntry) => void;
+};

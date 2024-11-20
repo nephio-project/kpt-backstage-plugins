@@ -20,20 +20,24 @@ import { useSetStateAndCall } from '../../../../hooks/useSetStateAndCall';
 import { useEditorStyles } from '../FirstClassEditors/styles';
 import { PxeConfiguration } from './types/PxeConfiguration.types';
 import { PxeExpandedSectionState, PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
+import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
 import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
+import { PxeDiagnosticsContext } from './PxeDiagnosticsContext';
 
 export type PxeParametricEditorProps = {
   readonly configuration: PxeConfiguration;
   readonly yamlText: string;
   readonly onResourceChange: (yaml: string) => void;
+  readonly __diagnosticsReporter?: PxeDiagnosticsReporter;
 };
 
 export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
   configuration: { topLevelProperties, entries },
   yamlText,
   onResourceChange,
+  __diagnosticsReporter,
 }) => {
   const { yamlObject: initialYamlObject } = parseYaml(yamlText);
   const initialResourceState = pick(initialYamlObject, topLevelProperties);
@@ -53,14 +57,17 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
   );
 
   const classes = useEditorStyles();
+
   return (
     <div className={classes.root}>
-      <PxeParametricEditorNodeList
-        entries={entries}
-        resourceChunk={resource}
-        onResourceChangeRequest={handleResourceChangeRequest}
-        parentExpandedSectionState={[expandedSection, setExpandedSection]}
-      />
+      <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
+        <PxeParametricEditorNodeList
+          entries={entries}
+          resourceChunk={resource}
+          onResourceChangeRequest={handleResourceChangeRequest}
+          parentExpandedSectionState={[expandedSection, setExpandedSection]}
+        />
+      </PxeDiagnosticsContext.Provider>
     </div>
   );
 };

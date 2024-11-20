@@ -26,7 +26,7 @@ export type PxeConfiguration = {
 
 export type PxeConfigurationEntry = PxeSectionEntry | PxeRowLayoutEntry | PxeWidgetEntry;
 
-export enum PxeConfigurationEntryType {
+export enum PxeNodeType {
   Section = 'Section',
   Roster = 'Roster',
 
@@ -57,7 +57,7 @@ export type PxeValueDescriptor = {
 // Section
 
 export type PxeSectionEntry = {
-  readonly type: PxeConfigurationEntryType.Section;
+  readonly type: PxeNodeType.Section;
   readonly name: string;
   readonly entries: readonly PxeConfigurationEntry[];
 };
@@ -67,7 +67,7 @@ export type PxeSectionEntry = {
 export type PxeLayoutEntry = PxeRowLayoutEntry;
 
 export interface PxeRowLayoutEntry {
-  readonly type: PxeConfigurationEntryType.RowLayout;
+  readonly type: PxeNodeType.RowLayout;
   readonly entries: readonly PxeConfigurationEntry[];
 }
 
@@ -76,23 +76,23 @@ export interface PxeRowLayoutEntry {
 export type PxeWidgetEntry = PxeRosterWidgetEntry | PxeSingleLineTextWidgetEntry | PxeSelectValueWidgetEntry;
 
 type PxeWidgetEntryBase = {
-  readonly type: PxeConfigurationEntryType;
+  readonly type: PxeNodeType;
   readonly valueDescriptors: readonly PxeValueDescriptor[];
 };
 
 export interface PxeRosterWidgetEntry extends PxeWidgetEntryBase {
-  readonly type: PxeConfigurationEntryType.Roster;
+  readonly type: PxeNodeType.Roster;
   readonly itemValueDescriptor: PxeValueDescriptor;
   readonly itemEntries: readonly PxeConfigurationEntry[];
 }
 
 export interface PxeSingleLineTextWidgetEntry extends PxeWidgetEntryBase {
-  readonly type: PxeConfigurationEntryType.SingleLineText;
+  readonly type: PxeNodeType.SingleLineText;
   readonly textFilter: TextFilter;
 }
 
 export interface PxeSelectValueWidgetEntry extends PxeWidgetEntryBase {
-  readonly type: PxeConfigurationEntryType.SelectValue;
+  readonly type: PxeNodeType.SelectValue;
   readonly options: readonly PxeValueOption[];
 }
 

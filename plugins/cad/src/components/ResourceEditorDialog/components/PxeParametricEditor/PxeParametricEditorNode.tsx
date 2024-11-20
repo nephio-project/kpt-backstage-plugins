@@ -20,7 +20,7 @@ import {
   PxeResourceChangeRequestHandler,
   PxeResourceChunk,
 } from './types/PxeParametricEditor.types';
-import { PxeConfigurationEntry, PxeConfigurationEntryType } from './types/PxeConfiguration.types';
+import { PxeConfigurationEntry, PxeNodeType } from './types/PxeConfiguration.types';
 import { PxeSectionNode } from './nodes/PxeSectionNode';
 import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
 import { PxeRosterWidgetNode } from './nodes/widget/PxeRosterWidgetNode';
@@ -34,19 +34,19 @@ export type PxeParametricEditorNodeProps = {
   readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };
 
-const NODE_BY_ENTRY_TYPE_RECORD: Record<PxeConfigurationEntryType, React.FC<PxeParametricEditorNodeProps>> = {
-  [PxeConfigurationEntryType.Section]: PxeSectionNode,
+const NODE_BY_TYPE_RECORD: Record<PxeNodeType, React.FC<PxeParametricEditorNodeProps>> = {
+  [PxeNodeType.Section]: PxeSectionNode,
 
-  [PxeConfigurationEntryType.RowLayout]: PxeRowLayoutNode,
+  [PxeNodeType.RowLayout]: PxeRowLayoutNode,
 
-  [PxeConfigurationEntryType.Roster]: PxeRosterWidgetNode,
-  [PxeConfigurationEntryType.SingleLineText]: PxeSingleLineTextWidgetNode,
-  [PxeConfigurationEntryType.SelectValue]: PxeSelectValueWidgetNode,
+  [PxeNodeType.Roster]: PxeRosterWidgetNode,
+  [PxeNodeType.SingleLineText]: PxeSingleLineTextWidgetNode,
+  [PxeNodeType.SelectValue]: PxeSelectValueWidgetNode,
 };
 
 export const PxeParametricEditorNode: React.FC<PxeParametricEditorNodeProps> = props => {
   const { configurationEntry } = props;
-  const ConcreteEditorNode = NODE_BY_ENTRY_TYPE_RECORD[configurationEntry.type];
+  const ConcreteEditorNode = NODE_BY_TYPE_RECORD[configurationEntry.type];
 
   return <ConcreteEditorNode {...props} />;
 };

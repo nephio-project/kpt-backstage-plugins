@@ -23,21 +23,23 @@ import { PxeSectionEntry } from '../types/PxeConfiguration.types';
 import { generateSectionDescription } from '../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
 import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
+import { useDiagnostics } from '../PxeDiagnosticsContext';
 
 export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry: configurationEntryUncasted,
+  configurationEntry,
   resourceChunk,
   onResourceChangeRequest,
   parentExpandedSectionState,
   children,
 }) => {
-  const configurationEntry = configurationEntryUncasted as PxeSectionEntry;
-  const { name, entries: childEntries } = configurationEntry;
+  useDiagnostics(configurationEntry);
+  const sectionEntry = configurationEntry as PxeSectionEntry;
+  const { name, entries: childEntries } = sectionEntry;
 
   const sectionIdRef = useRef(`section-${nanoid()}`);
   const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
 
-  const description = generateSectionDescription(configurationEntry, resourceChunk);
+  const description = generateSectionDescription(sectionEntry, resourceChunk);
 
   return (
     <EditorAccordion
