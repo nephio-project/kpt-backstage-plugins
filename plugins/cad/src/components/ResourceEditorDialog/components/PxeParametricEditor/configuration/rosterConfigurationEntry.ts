@@ -24,6 +24,7 @@ import {
 } from '../types/PxeConfiguration.types';
 import { sectionConfigurationEntry } from './sectionConfigurationEntry';
 import { findInConfigurationEntries } from '../utils/findInConfigurationEntries';
+import { isWidgetNode } from '../utils/nodePredicates';
 
 // FIXME Think of something different (name? form?).
 type RosterItemDefinition = {
@@ -89,7 +90,7 @@ const resolveItemValueDescriptor = (
 ): PxeValueDescriptor => {
   const itemValueEntry = findInConfigurationEntries(
     itemEntries,
-    entry => 'valueDescriptors' in entry && entry.valueDescriptors[0]?.path === '$value',
+    entry => isWidgetNode(entry) && entry.valueDescriptors[0]?.path === '$value',
   ) as PxeWidgetEntry | null;
 
   if (explicitRosterItemDef && itemValueEntry) {

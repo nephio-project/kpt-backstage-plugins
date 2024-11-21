@@ -20,41 +20,37 @@ import React, { useRef, useState } from 'react';
 import { EditorAccordion } from '../../FirstClassEditors/Controls';
 import { PxeExpandedSectionState } from '../types/PxeParametricEditor.types';
 import { PxeSectionEntry } from '../types/PxeConfiguration.types';
-import { generateSectionDescription } from '../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
 import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
 import { useDiagnostics } from '../PxeDiagnosticsContext';
 
-export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry,
-  resourceChunk,
-  onResourceChangeRequest,
-  parentExpandedSectionState,
-  children,
-}) => {
-  useDiagnostics(configurationEntry);
-  const sectionEntry = configurationEntry as PxeSectionEntry;
-  const { name, entries: childEntries } = sectionEntry;
+export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
+  ({ configurationEntry, onResourceChangeRequest, parentExpandedSectionState, children }) => {
+    useDiagnostics(configurationEntry);
 
-  const sectionIdRef = useRef(`section-${nanoid()}`);
-  const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
+    const sectionEntry = configurationEntry as PxeSectionEntry;
+    const { name, entries: childEntries } = sectionEntry;
 
-  const description = generateSectionDescription(sectionEntry, resourceChunk);
+    const sectionIdRef = useRef(`section-${nanoid()}`);
+    const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
 
-  return (
-    <EditorAccordion
-      id={sectionIdRef.current}
-      title={name}
-      state={parentExpandedSectionState ?? [undefined, noop]}
-      description={description}
-    >
-      <PxeParametricEditorNodeList
-        entries={childEntries}
-        resourceChunk={resourceChunk}
-        onResourceChangeRequest={onResourceChangeRequest}
-        parentExpandedSectionState={[expandedSection, setExpandedSection]}
-      />
-      {children}
-    </EditorAccordion>
-  );
-};
+    // FIXME Will cause rerenders, repair later..
+    const description = 'TODO'; // generateSectionDescription(sectionEntry, resourceChunk);
+
+    return (
+      <EditorAccordion
+        id={sectionIdRef.current}
+        title={name}
+        state={parentExpandedSectionState ?? [undefined, noop]}
+        description={description}
+      >
+        <PxeParametricEditorNodeList
+          entries={childEntries}
+          onResourceChangeRequest={onResourceChangeRequest}
+          parentExpandedSectionState={[expandedSection, setExpandedSection]}
+        />
+        {children}
+      </EditorAccordion>
+    );
+  },
+);

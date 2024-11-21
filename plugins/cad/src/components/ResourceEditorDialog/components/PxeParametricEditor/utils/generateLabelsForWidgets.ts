@@ -24,17 +24,18 @@ import {
   PxeWidgetEntry,
 } from '../types/PxeConfiguration.types';
 import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
-import { isEmptyPxeValue } from './isEmptyPxeValue';
 import { upperCaseFirstLetter } from './general/stringCasing';
+import { isEmptyPxeValue } from './isEmptyPxeValue';
+import { isWidgetNode } from './nodePredicates';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
 export const generateSectionDescription = (sectionEntry: PxeSectionEntry, resourceChunk: PxeResourceChunk): string =>
   sectionEntry.entries
     .filter(childEntry => childEntry.type !== PxeNodeType.Section)
-    // FIXME 1) needs type predicates (widget / layout), 2) handle layouts
+    // FIXME handle layouts
     .flatMap(childEntry =>
-      'valueDescriptors' in childEntry ? generateValueDescriptionsForWidget(childEntry, resourceChunk) : [],
+      isWidgetNode(childEntry) ? generateValueDescriptionsForWidget(childEntry, resourceChunk) : [],
     )
     .join(', ');
 

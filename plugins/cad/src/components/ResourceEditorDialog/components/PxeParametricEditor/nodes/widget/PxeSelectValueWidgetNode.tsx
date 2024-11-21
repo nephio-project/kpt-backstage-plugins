@@ -14,41 +14,40 @@
  * limitations under the License.
  */
 
-import { get } from 'lodash';
 import React from 'react';
 import { Select } from '../../../../../Controls';
 import { PxeSelectValueWidgetEntry } from '../../types/PxeConfiguration.types';
+import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
 
-export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry,
-  onResourceChangeRequest,
-  resourceChunk,
-}) => {
-  useDiagnostics(configurationEntry);
-  const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
-  const [valueDescriptor] = widgetEntry.valueDescriptors;
+export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
+  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
+    useDiagnostics(configurationEntry);
 
-  const selectItems = widgetEntry.options.map(({ value, label }) => ({
-    value: value !== undefined ? String(value) : DEFAULT_VALUE,
-    label,
-  }));
+    const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
+    const [valueDescriptor] = widgetEntry.valueDescriptors;
 
-  return (
-    <Select
-      label={generateValueLabel(valueDescriptor)}
-      items={selectItems}
-      selected={get(resourceChunk, valueDescriptor.path) ?? DEFAULT_VALUE}
-      onChange={value => {
-        onResourceChangeRequest({
-          valueDescriptor,
-          newValue: value !== DEFAULT_VALUE ? value : undefined,
-        });
-      }}
-    />
-  );
-};
+    const selectItems = widgetEntry.options.map(({ value, label }) => ({
+      value: value !== undefined ? String(value) : DEFAULT_VALUE,
+      label,
+    }));
+
+    return (
+      <Select
+        label={generateValueLabel(valueDescriptor)}
+        items={selectItems}
+        selected={(currentValue ?? DEFAULT_VALUE) as string}
+        onChange={value => {
+          onResourceChangeRequest({
+            valueDescriptor,
+            newValue: value !== DEFAULT_VALUE ? value : undefined,
+          });
+        }}
+      />
+    );
+  },
+);

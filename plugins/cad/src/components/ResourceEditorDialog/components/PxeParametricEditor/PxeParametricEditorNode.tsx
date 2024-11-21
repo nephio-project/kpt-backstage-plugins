@@ -15,11 +15,7 @@
  */
 
 import React from 'react';
-import {
-  PxeExpandedSectionStateTuple,
-  PxeResourceChangeRequestHandler,
-  PxeResourceChunk,
-} from './types/PxeParametricEditor.types';
+import { PxeExpandedSectionStateTuple, PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { PxeConfigurationEntry, PxeNodeType } from './types/PxeConfiguration.types';
 import { PxeSectionNode } from './nodes/PxeSectionNode';
 import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
@@ -29,7 +25,6 @@ import { PxeSelectValueWidgetNode } from './nodes/widget/PxeSelectValueWidgetNod
 
 export type PxeParametricEditorNodeProps = {
   readonly configurationEntry: PxeConfigurationEntry;
-  readonly resourceChunk: PxeResourceChunk;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
   readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };

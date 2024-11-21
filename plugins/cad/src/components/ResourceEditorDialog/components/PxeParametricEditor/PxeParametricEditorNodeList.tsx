@@ -15,30 +15,25 @@
  */
 
 import React, { Fragment } from 'react';
-import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
+import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
+import { PxeExpandedSectionStateTuple, PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { chunkByTrait } from './utils/general/chunkByTrait';
-import { PxeConfigurationEntry, PxeNodeType } from './types/PxeConfiguration.types';
-import {
-  PxeExpandedSectionStateTuple,
-  PxeResourceChangeRequestHandler,
-  PxeResourceChunk,
-} from './types/PxeParametricEditor.types';
+import { isSectionNode } from './utils/nodePredicates';
+import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
-  readonly resourceChunk: PxeResourceChunk;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
   readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };
 
 export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = ({
   entries,
-  resourceChunk,
   onResourceChangeRequest,
   parentExpandedSectionState,
 }) => {
-  const groupedEntries = chunkByTrait(entries, entry => entry.type === PxeNodeType.Section || null);
+  const groupedEntries = chunkByTrait(entries, entry => isSectionNode(entry) || null);
 
   return (
     <Fragment>
@@ -46,7 +41,6 @@ export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListPr
         <PxeParametricEditorNode
           key={`${groupIndex}-${itemIndex}`}
           configurationEntry={entry}
-          resourceChunk={resourceChunk}
           parentExpandedSectionState={parentExpandedSectionState}
           onResourceChangeRequest={onResourceChangeRequest}
         />

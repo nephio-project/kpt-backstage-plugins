@@ -28,27 +28,23 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry,
-  parentExpandedSectionState,
-  onResourceChangeRequest,
-  resourceChunk,
-}) => {
-  useDiagnostics(configurationEntry);
-  const { entries } = configurationEntry as PxeRowLayoutEntry;
+export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
+  ({ configurationEntry, parentExpandedSectionState, onResourceChangeRequest }) => {
+    useDiagnostics(configurationEntry);
+    const { entries } = configurationEntry as PxeRowLayoutEntry;
 
-  const classes = useStyles();
-  return (
-    <div className={classes.rowContainer}>
-      {entries.map((entry, index) => (
-        <PxeParametricEditorNode
-          key={`${index}`}
-          configurationEntry={entry}
-          resourceChunk={resourceChunk}
-          parentExpandedSectionState={parentExpandedSectionState}
-          onResourceChangeRequest={onResourceChangeRequest}
-        />
-      ))}
-    </div>
-  );
-};
+    const classes = useStyles();
+    return (
+      <div className={classes.rowContainer}>
+        {entries.map((entry, index) => (
+          <PxeParametricEditorNode
+            key={`${index}`}
+            configurationEntry={entry}
+            parentExpandedSectionState={parentExpandedSectionState}
+            onResourceChangeRequest={onResourceChangeRequest}
+          />
+        ))}
+      </div>
+    );
+  },
+);
