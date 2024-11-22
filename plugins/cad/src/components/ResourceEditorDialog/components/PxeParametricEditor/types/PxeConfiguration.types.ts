@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { PxeValue } from './PxeParametricEditor.types';
 import { TextFilter } from '../validation/textFilters';
 
 export type PxeConfiguration = {
@@ -97,6 +96,6 @@ export interface PxeSelectValueWidgetEntry extends PxeWidgetEntryBase {
 }
 
 export type PxeValueOption = {
-  readonly value: PxeValue;
+  readonly value: string | number | undefined;
   readonly label: string;
 };

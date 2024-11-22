@@ -17,26 +17,32 @@
 /* eslint @backstage/no-undeclared-imports: off */
 import { RenderResult } from '@testing-library/react';
 
-export const findTextFieldInput = (searchRoot: RenderResult | HTMLElement, path: string): HTMLInputElement => {
+export const findTextFieldInput = (searchRoot: RenderResult | HTMLElement, path: string): HTMLInputElement =>
+  findElement(searchRoot, `[data-testid="TextField_${path}"] input`, `Text field ${path}`);
+
+export const findSelectInput = (searchRoot: RenderResult | HTMLElement, path: string): HTMLDivElement =>
+  findElement(searchRoot, `[data-testid="Select_${path}"] [role="button"]`, `Select ${path}`);
+
+export const findSelectLabel = (searchRoot: RenderResult | HTMLElement, path: string): HTMLDivElement =>
+  findElement(searchRoot, `[data-testid="Select_${path}"] label`, `Select label ${path}`);
+
+export const findSelectOption = (searchRoot: RenderResult | HTMLElement, optionNumber: number): HTMLDivElement =>
+  findElement(searchRoot, `[role="listbox"] > li:nth-child(${optionNumber})`, `Select option ${optionNumber}`);
+
+export const findRosterItem = (searchRoot: RenderResult | HTMLElement, path: string, index: number): HTMLElement =>
+  findElement(searchRoot, `[data-testid="RosterItem_${path}_${index}"]`, `Roster item ${path} [${index}]`);
+
+export const findRosterAddButton = (searchRoot: RenderResult | HTMLElement, path: string): HTMLButtonElement =>
+  findElement(searchRoot, `[data-testid="RosterAddButton_${path}"]`, `Roster add button ${path}`);
+
+const findElement = <T extends HTMLElement>(
+  searchRoot: RenderResult | HTMLElement,
+  selector: string,
+  description: string,
+): T => {
   const searchRootElement = 'baseElement' in searchRoot ? searchRoot.baseElement : searchRoot;
-  const inputElement = searchRootElement?.querySelector(`[data-testid="TextField_${path}"]`)?.querySelector('input');
+  const inputElement = searchRootElement?.querySelector(selector);
 
-  if (inputElement) return inputElement;
-  else throw new Error(`Text field ${path} not found.`);
-};
-
-export const findRosterItem = (searchRoot: RenderResult | HTMLElement, path: string, index: number): HTMLElement => {
-  const searchRootElement = 'baseElement' in searchRoot ? searchRoot.baseElement : searchRoot;
-  const rosterItemElement = searchRootElement?.querySelector(`[data-testid="RosterItem_${path}_${index}"]`);
-
-  if (rosterItemElement) return rosterItemElement as HTMLElement;
-  else throw new Error(`Roster item ${path} [${index}] not found.`);
-};
-
-export const findRosterAddButton = (searchRoot: RenderResult | HTMLElement, path: string): HTMLButtonElement => {
-  const searchRootElement = 'baseElement' in searchRoot ? searchRoot.baseElement : searchRoot;
-  const rosterAddButtonElement = searchRootElement?.querySelector(`[data-testid="RosterAddButton_${path}"]`);
-
-  if (rosterAddButtonElement) return rosterAddButtonElement as HTMLButtonElement;
-  else throw new Error(`Roster add button ${path} not found.`);
+  if (inputElement) return inputElement as T;
+  else throw new Error(`${description} not found.`);
 };

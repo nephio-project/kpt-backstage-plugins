@@ -28,8 +28,14 @@ export const selectValueWidgetConfigurationEntry = ({
   isRequired?: boolean;
   name?: string;
   options: readonly PxeValueOption[];
-}): PxeSelectValueWidgetEntry => ({
-  type: PxeNodeType.SelectValue,
-  valueDescriptors: [{ path, type, isRequired, display: { name } }],
-  options,
-});
+}): PxeSelectValueWidgetEntry => {
+  if (![PxeValueType.String, PxeValueType.Number].includes(type)) {
+    throw new Error('Select value widget only supports String and Number types.');
+  }
+
+  return {
+    type: PxeNodeType.SelectValue,
+    valueDescriptors: [{ path, type, isRequired, display: { name } }],
+    options,
+  };
+};

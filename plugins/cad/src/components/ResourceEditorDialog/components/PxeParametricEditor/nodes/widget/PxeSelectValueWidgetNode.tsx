@@ -32,12 +32,13 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
     const [valueDescriptor] = widgetEntry.valueDescriptors;
 
     const selectItems = widgetEntry.options.map(({ value, label }) => ({
-      value: value !== undefined ? String(value) : DEFAULT_VALUE,
+      value: value !== undefined ? value : DEFAULT_VALUE,
       label,
     }));
 
     return (
       <Select
+        data-testid={`Select_${valueDescriptor.path}`}
         label={generateValueLabel(valueDescriptor)}
         items={selectItems}
         selected={(currentValue ?? DEFAULT_VALUE) as string}

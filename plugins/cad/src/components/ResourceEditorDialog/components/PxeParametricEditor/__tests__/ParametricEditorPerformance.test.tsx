@@ -19,7 +19,7 @@ import { RenderResult } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { noop } from 'lodash';
 import React from 'react';
-import { findTextFieldInput } from './testUtils/findEditorElement';
+import { findSelectInput, findSelectOption, findTextFieldInput } from './testUtils/findEditorElement';
 import { PxeConfiguration } from '../types/PxeConfiguration.types';
 import { PxeConfigurationFactory } from '../configuration';
 import { PxeParametricEditor } from '../PxeParametricEditor';
@@ -33,7 +33,13 @@ const CONFIGURATION: PxeConfiguration = {
       { name: 'Section' },
       rowLayout(
         singleLineText({ path: 'spec.singleLineText' }),
-        selectValue({ path: 'spec.selectValue', options: [{ value: 'foo', label: 'foo' }] }),
+        selectValue({
+          path: 'spec.selectValue',
+          options: [
+            { value: 'foo', label: 'Foo' },
+            { value: 'bar', label: 'Bar' },
+          ],
+        }),
       ),
       arrayTypeRoster({ name: 'Array', path: 'spec.arrayTypeRoster' }, singleLineText({ path: '$value' })),
       objectTypeRoster(
@@ -55,10 +61,9 @@ spec:
 `;
 
 describe('PxeParametricEditor performance', () => {
-  const INITIAL_NON_ITEM_NODE_COUNT = 6;
-  const INITIAL_ROSTER_SECTION_COUNT = 2;
+  const INITIAL_NON_ITEM_NODE_COUNT = 6 + 2; // 2 implicit roster sections
   const INITIAL_ITEM_NODE_COUNT = 4;
-  const INITIAL_NODE_COUNT = INITIAL_NON_ITEM_NODE_COUNT + INITIAL_ITEM_NODE_COUNT + INITIAL_ROSTER_SECTION_COUNT;
+  const INITIAL_NODE_COUNT = INITIAL_NON_ITEM_NODE_COUNT + INITIAL_ITEM_NODE_COUNT;
 
   let editor: RenderResult;
   let renderReporter: jest.Mock;
@@ -77,7 +82,7 @@ describe('PxeParametricEditor performance', () => {
   });
 
   it('should render with minimal number of component renders', () => {
-    expect(renderReporter.mock.calls.length).toBe(INITIAL_NODE_COUNT);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT);
   });
 
   it('should rerender text widget when single character is inputted', async () => {
@@ -85,7 +90,7 @@ describe('PxeParametricEditor performance', () => {
 
     await userEvent.type(textInput, 'a');
 
-    expect(renderReporter.mock.calls.length).toBe(INITIAL_NODE_COUNT + 1);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 1);
   });
 
   it('should rerender text widget multiple times when multiple characters are inputted', async () => {
@@ -93,6 +98,23 @@ describe('PxeParametricEditor performance', () => {
 
     await userEvent.type(textInput, 'aaa');
 
-    expect(renderReporter.mock.calls.length).toBe(INITIAL_NODE_COUNT + 3);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 3);
+  });
+
+  it('should rerender text widget when input is cleared', async () => {
+    const textInput = findTextFieldInput(editor, `spec.singleLineText`);
+
+    await userEvent.clear(textInput);
+
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 1);
+  });
+
+  it('should rerender select widget when value is changed', async () => {
+    const selectInput = findSelectInput(editor, `spec.selectValue`);
+
+    await userEvent.click(selectInput);
+    await userEvent.click(findSelectOption(editor, 2));
+
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 1);
   });
 });
