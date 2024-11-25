@@ -18,6 +18,7 @@ import { createEditorFromConfiguration } from '../PxeParametricEditor/createEdit
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
 import { metadataEditorSection } from './partial/metadataEditorSection';
 import { PxeValueType } from '../PxeParametricEditor/types/PxeConfiguration.types';
+import { selectorRosters } from './partial/selectorRosters';
 
 const { section, rowLayout, arrayTypeRoster, objectTypeRoster, selectValue, singleLineText } = PxeConfigurationFactory;
 
@@ -29,13 +30,6 @@ const INTERFACE_KIND_OPTIONS = [
 const INTERFACE_ATTACHMENT_TYPE_OPTIONS = [
   { value: undefined, label: 'None' },
   { value: 'vlan', label: 'VLAN' },
-];
-
-const SELECTOR_OPERATOR_OPTIONS = [
-  { value: 'In', label: 'In' },
-  { value: 'NotIn', label: 'Not In' },
-  { value: 'Exists', label: 'Exists' },
-  { value: 'DoesNotExist', label: 'Does Not Exist' },
 ];
 
 export const NephioNetworkParametricEditor = createEditorFromConfiguration({
@@ -112,7 +106,7 @@ function interfaceItemConfiguration() {
     singleLineText({ path: '$value.bridgeDomainName' }),
     singleLineText({ path: '$value.nodeName' }),
     selectValue({ path: '$value.attachmentType', options: INTERFACE_ATTACHMENT_TYPE_OPTIONS }),
-    ...selectorConfiguration('$value.selector'),
+    ...selectorRosters('$value.selector'),
   );
 }
 
@@ -125,33 +119,4 @@ function prefixItemConfiguration() {
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
     ),
   );
-}
-
-// FIXME Extract.
-function selectorConfiguration(pathPrefix: string) {
-  return [
-    objectTypeRoster(
-      { name: 'Match labels', path: `${pathPrefix}.matchLabels` },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value' })),
-    ),
-    arrayTypeRoster(
-      {
-        name: 'Match expressions',
-        path: `${pathPrefix}.matchExpressions`,
-        item: { type: PxeValueType.Object, isRequired: true },
-      },
-      section(
-        { name: 'Match expression' },
-        rowLayout(
-          singleLineText({ path: '$value.key', isRequired: true }),
-          selectValue({ path: '$value.operator', isRequired: true, options: SELECTOR_OPERATOR_OPTIONS }),
-        ),
-        // TODO Different value requirements for different operators.
-        arrayTypeRoster(
-          { name: 'Values', path: '$value.values' },
-          singleLineText({ path: '$value', isRequired: true }),
-        ),
-      ),
-    ),
-  ];
 }

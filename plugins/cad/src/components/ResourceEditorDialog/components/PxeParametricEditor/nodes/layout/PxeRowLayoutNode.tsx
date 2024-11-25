@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
@@ -47,4 +48,5 @@ export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.me
       </div>
     );
   },
+  isEqual,
 );

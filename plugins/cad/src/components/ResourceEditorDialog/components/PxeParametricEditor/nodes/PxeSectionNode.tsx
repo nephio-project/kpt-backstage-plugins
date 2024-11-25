@@ -23,9 +23,10 @@ import { PxeSectionEntry } from '../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
 import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
 import { useDiagnostics } from '../PxeDiagnosticsContext';
+import { withSectionDescription } from '../utils/rendering/withSectionDescription';
 
-export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
-  ({ configurationEntry, onResourceChangeRequest, parentExpandedSectionState, children }) => {
+export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = withSectionDescription(
+  ({ configurationEntry, onResourceChangeRequest, parentExpandedSectionState, children, sectionDescription }) => {
     useDiagnostics(configurationEntry);
 
     const sectionEntry = configurationEntry as PxeSectionEntry;
@@ -34,15 +35,12 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = React.memo
     const sectionIdRef = useRef(`section-${nanoid()}`);
     const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
 
-    // FIXME Will cause rerenders, repair later..
-    const description = 'TODO'; // generateSectionDescription(sectionEntry, resourceChunk);
-
     return (
       <EditorAccordion
         id={sectionIdRef.current}
         title={name}
         state={parentExpandedSectionState ?? [undefined, noop]}
-        description={description}
+        description={sectionDescription}
       >
         <PxeParametricEditorNodeList
           entries={childEntries}

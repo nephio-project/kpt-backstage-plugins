@@ -26,8 +26,7 @@ import { sectionConfigurationEntry } from './sectionConfigurationEntry';
 import { findInConfigurationEntries } from '../utils/findInConfigurationEntries';
 import { isWidgetNode } from '../utils/nodePredicates';
 
-// FIXME Think of something different (name? form?).
-type RosterItemDefinition = {
+type RosterItemParams = {
   readonly type: PxeValueType;
   readonly isRequired?: boolean;
 };
@@ -45,7 +44,7 @@ export const objectTypeRosterConfigurationEntry = (
     name: string;
     path: string;
     isRequired?: boolean;
-    item?: RosterItemDefinition;
+    item?: RosterItemParams;
   },
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeSectionEntry =>
@@ -69,7 +68,7 @@ export const arrayTypeRosterConfigurationEntry = (
     name: string;
     path: string;
     isRequired?: boolean;
-    item?: RosterItemDefinition;
+    item?: RosterItemParams;
   },
   ...itemEntries: PxeConfigurationEntry[]
 ): PxeSectionEntry =>
@@ -85,7 +84,7 @@ export const arrayTypeRosterConfigurationEntry = (
 
 const resolveItemValueDescriptor = (
   rosterName: string,
-  explicitRosterItemDef: RosterItemDefinition | null,
+  rosterItemParams: RosterItemParams | null,
   itemEntries: PxeConfigurationEntry[],
 ): PxeValueDescriptor => {
   const itemValueEntry = findInConfigurationEntries(
@@ -93,13 +92,13 @@ const resolveItemValueDescriptor = (
     entry => isWidgetNode(entry) && entry.valueDescriptors[0]?.path === '$value',
   ) as PxeWidgetEntry | null;
 
-  if (explicitRosterItemDef && itemValueEntry) {
-    throw new Error(`Redundant item definition in roster ${rosterName}. Descriptor inherited from $value entry.`);
-  } else if (!explicitRosterItemDef && !itemValueEntry) {
-    throw new Error(`No item definition in roster ${rosterName}.`);
+  if (rosterItemParams && itemValueEntry) {
+    throw new Error(`Redundant item params in roster ${rosterName}. Descriptor inherited from $value entry.`);
+  } else if (!rosterItemParams && !itemValueEntry) {
+    throw new Error(`Roster ${rosterName} needs explicit item params. No $value entry to inherit descriptor from.`);
   } else {
-    return explicitRosterItemDef
-      ? { path: '$value', type: explicitRosterItemDef.type, isRequired: explicitRosterItemDef.isRequired ?? false }
+    return rosterItemParams
+      ? { path: '$value', type: rosterItemParams.type, isRequired: rosterItemParams.isRequired ?? false }
       : itemValueEntry?.valueDescriptors[0]!;
   }
 };

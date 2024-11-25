@@ -15,17 +15,18 @@
  */
 import { PxeConfigurationEntry } from '../types/PxeConfiguration.types';
 import { isArray } from 'lodash';
+import { isLayoutNode, isSectionNode } from './nodePredicates';
 
 export const findInConfigurationEntries = (
   searchIn: PxeConfigurationEntry | readonly PxeConfigurationEntry[],
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
 ): PxeConfigurationEntry | null => {
-  const entries = isArray(searchIn) ? searchIn : [searchIn];
+  const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
 
   for (const entry of entries) {
     if (isSuccess(entry)) {
       return entry;
-    } else if ('entries' in entry) {
+    } else if (isSectionNode(entry) || isLayoutNode(entry)) {
       const foundEntry = findInConfigurationEntries(entry.entries, isSuccess);
       if (foundEntry) {
         return foundEntry;
@@ -33,4 +34,22 @@ export const findInConfigurationEntries = (
     }
   }
   return null;
+};
+
+export const findAllInConfigurationEntries = (
+  searchIn: PxeConfigurationEntry | readonly PxeConfigurationEntry[],
+  isSuccess: (entry: PxeConfigurationEntry) => boolean,
+): PxeConfigurationEntry[] => {
+  const foundEntries: PxeConfigurationEntry[] = [];
+  const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
+
+  for (const entry of entries) {
+    if (isSuccess(entry)) {
+      foundEntries.push(entry);
+    }
+    if (isSectionNode(entry) || isLayoutNode(entry)) {
+      foundEntries.push(...findAllInConfigurationEntries(entry.entries, isSuccess));
+    }
+  }
+  return foundEntries;
 };

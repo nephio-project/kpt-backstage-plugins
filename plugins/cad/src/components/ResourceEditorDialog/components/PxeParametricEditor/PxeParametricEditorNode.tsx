@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
+import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeExpandedSectionStateTuple, PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { PxeConfigurationEntry, PxeNodeType } from './types/PxeConfiguration.types';
 import { PxeSectionNode } from './nodes/PxeSectionNode';
 import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
-import { PxeRosterWidgetNode } from './nodes/widget/PxeRosterWidgetNode';
+import { PxeRosterWidgetNode } from './nodes/widget/roster/PxeRosterWidgetNode';
 import { PxeSingleLineTextWidgetNode } from './nodes/widget/PxeSingleLineTextWidgetNode';
 import { PxeSelectValueWidgetNode } from './nodes/widget/PxeSelectValueWidgetNode';
 
 export type PxeParametricEditorNodeProps = {
   readonly configurationEntry: PxeConfigurationEntry;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
-  readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
+  readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
 };
 
 const NODE_BY_TYPE_RECORD: Record<PxeNodeType, React.FC<PxeParametricEditorNodeProps>> = {
@@ -39,9 +40,9 @@ const NODE_BY_TYPE_RECORD: Record<PxeNodeType, React.FC<PxeParametricEditorNodeP
   [PxeNodeType.SelectValue]: PxeSelectValueWidgetNode,
 };
 
-export const PxeParametricEditorNode: React.FC<PxeParametricEditorNodeProps> = props => {
+export const PxeParametricEditorNode: React.FC<PxeParametricEditorNodeProps> = React.memo(props => {
   const { configurationEntry } = props;
   const ConcreteEditorNode = NODE_BY_TYPE_RECORD[configurationEntry.type];
 
   return <ConcreteEditorNode {...props} />;
-};
+}, isEqual);

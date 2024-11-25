@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { isEqual } from 'lodash';
 import React, { Fragment } from 'react';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
@@ -25,26 +26,25 @@ import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
-  readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
+  readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
 };
 
-export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = ({
-  entries,
-  onResourceChangeRequest,
-  parentExpandedSectionState,
-}) => {
-  const groupedEntries = chunkByTrait(entries, entry => isSectionNode(entry) || null);
+export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
+  ({ entries, onResourceChangeRequest, parentExpandedSectionState }) => {
+    const groupedEntries = chunkByTrait(entries, entry => isSectionNode(entry) || null);
 
-  return (
-    <Fragment>
-      {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
-        <PxeParametricEditorNode
-          key={`${groupIndex}-${itemIndex}`}
-          configurationEntry={entry}
-          parentExpandedSectionState={parentExpandedSectionState}
-          onResourceChangeRequest={onResourceChangeRequest}
-        />
-      ))}
-    </Fragment>
-  );
-};
+    return (
+      <Fragment>
+        {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
+          <PxeParametricEditorNode
+            key={`${groupIndex}-${itemIndex}`}
+            configurationEntry={entry}
+            parentExpandedSectionState={parentExpandedSectionState}
+            onResourceChangeRequest={onResourceChangeRequest}
+          />
+        ))}
+      </Fragment>
+    );
+  },
+  isEqual,
+);

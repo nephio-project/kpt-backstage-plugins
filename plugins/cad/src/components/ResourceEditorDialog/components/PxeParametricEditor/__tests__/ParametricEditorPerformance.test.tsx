@@ -85,36 +85,36 @@ describe('PxeParametricEditor performance', () => {
     expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT);
   });
 
-  it('should rerender text widget when single character is inputted', async () => {
+  it('should rerender text widget and its section when single character is inputted', async () => {
     const textInput = findTextFieldInput(editor, `spec.singleLineText`);
 
     await userEvent.type(textInput, 'a');
 
-    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 1);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 2 * 1);
   });
 
-  it('should rerender text widget multiple times when multiple characters are inputted', async () => {
+  it('should rerender text widget and its section multiple times when multiple characters are inputted', async () => {
     const textInput = findTextFieldInput(editor, `spec.singleLineText`);
 
     await userEvent.type(textInput, 'aaa');
 
-    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 3);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 2 * 3);
   });
 
-  it('should rerender text widget when input is cleared', async () => {
+  it('should rerender text widget and its section when input is cleared', async () => {
     const textInput = findTextFieldInput(editor, `spec.singleLineText`);
 
     await userEvent.clear(textInput);
 
-    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 1);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 2 * 1);
   });
 
-  it('should rerender select widget when value is changed', async () => {
+  it('should rerender select widget and its section when value is changed', async () => {
     const selectInput = findSelectInput(editor, `spec.selectValue`);
 
     await userEvent.click(selectInput);
     await userEvent.click(findSelectOption(editor, 2));
 
-    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 1);
+    expect(renderReporter).toHaveBeenCalledTimes(INITIAL_NODE_COUNT + 2 * 1);
   });
 });

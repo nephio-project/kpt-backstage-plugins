@@ -16,28 +16,15 @@
 
 import * as changeCase from 'change-case';
 import { get, size } from 'lodash';
-import {
-  PxeNodeType,
-  PxeSectionEntry,
-  PxeValueDescriptor,
-  PxeValueType,
-  PxeWidgetEntry,
-} from '../types/PxeConfiguration.types';
+import { PxeValueDescriptor, PxeValueType, PxeWidgetEntry } from '../types/PxeConfiguration.types';
 import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
 import { upperCaseFirstLetter } from './general/stringCasing';
 import { isEmptyPxeValue } from './isEmptyPxeValue';
-import { isWidgetNode } from './nodePredicates';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateSectionDescription = (sectionEntry: PxeSectionEntry, resourceChunk: PxeResourceChunk): string =>
-  sectionEntry.entries
-    .filter(childEntry => childEntry.type !== PxeNodeType.Section)
-    // FIXME handle layouts
-    .flatMap(childEntry =>
-      isWidgetNode(childEntry) ? generateValueDescriptionsForWidget(childEntry, resourceChunk) : [],
-    )
-    .join(', ');
+export const generateDescriptionForEntries = (entries: PxeWidgetEntry[], resourceChunk: PxeResourceChunk): string =>
+  entries.flatMap(widgetEntry => generateValueDescriptionsForWidget(widgetEntry, resourceChunk)).join(', ');
 
 export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercase: boolean = true): string => {
   if (valueDescriptor.display?.name) {
