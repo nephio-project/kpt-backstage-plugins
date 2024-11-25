@@ -16,7 +16,7 @@
 
 import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { PxeParametricEditorNodeProps } from '../../../PxeParametricEditorNode';
 import { PxeRosterWidgetEntry, PxeValueType } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest, PxeValue } from '../../../types/PxeParametricEditor.types';
@@ -38,7 +38,7 @@ type RosterValueType = PxeValueType.Object | PxeValueType.Array;
 
 // TODO Rework roster - instead of being index-based use temp ids for items.
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
-  ({ configurationEntry, onResourceChangeRequest, parentExpandedSectionState, currentValues: [currentValue] }) => {
+  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
 
     const {
@@ -89,13 +89,13 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
     const isAddButtonEnabled = rosterValueType === PxeValueType.Array || itemChunks.every(({ $key }) => $key !== '');
 
     if (itemEntries.length === 0) {
-      return <Fragment />;
+      return null;
     } else if (itemEntries.length > 1) {
       // TODO With proper styling this should be actually possible. Reconsider handling this.
       throw new Error('Roster Widget does not support multiple configuration entries per item.');
     } else {
       return (
-        <Fragment>
+        <>
           {itemChunks.map((itemChunk, itemIndex) => (
             <PxeResourceContext.Provider value={itemChunk} key={itemIndex}>
               <PxeRosterItem
@@ -103,7 +103,6 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
                 rosterValueDescriptor={valueDescriptor}
                 itemIndex={itemIndex}
                 entries={itemEntries}
-                parentExpandedSectionState={parentExpandedSectionState}
                 onResourceChangeRequestForItem={handleResourceChangeRequestForItem}
                 onItemDeletion={handleItemDeletion}
               />
@@ -118,7 +117,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
           >
             Add {generateValueLabel(valueDescriptor)}
           </Button>
-        </Fragment>
+        </>
       );
     }
   },

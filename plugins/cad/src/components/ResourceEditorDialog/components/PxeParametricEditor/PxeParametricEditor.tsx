@@ -15,20 +15,17 @@
  */
 
 import { pick } from 'lodash';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useEditorStyles } from '../FirstClassEditors/styles';
 import { PxeConfiguration } from './types/PxeConfiguration.types';
-import {
-  PxeExpandedSectionState,
-  PxeExpandedSectionStateTuple,
-  PxeResourceChangeRequestHandler,
-} from './types/PxeParametricEditor.types';
+import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
 import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
 import { PxeDiagnosticsContext } from './PxeDiagnosticsContext';
 import { PxeResourceContext } from './PxeResourceContext';
+import { PxeExpandedSectionContext, useNewExpandedSectionState } from './PxeExpandedSectionContext';
 
 export type PxeParametricEditorProps = {
   readonly configuration: PxeConfiguration;
@@ -52,17 +49,12 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
     onResourceChange(stringifyYaml({ ...initialYamlObject.current, ...resource }));
   }
 
+  const rootLevelExpandedSectionStateTuple = useNewExpandedSectionState();
+
   const handleResourceChangeRequest: PxeResourceChangeRequestHandler = useCallback(
     (changeRequest): void =>
       setResource(prevResource => createResourceChunkAfterChangeRequest(prevResource, changeRequest)),
     [],
-  );
-
-  // TODO Move to context.
-  const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
-  const expandedSectionState = useMemo<PxeExpandedSectionStateTuple>(
-    () => [expandedSection, setExpandedSection],
-    [expandedSection],
   );
 
   const classes = useEditorStyles();
@@ -70,13 +62,11 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
   return (
     <div className={classes.root}>
       <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
-        <PxeResourceContext.Provider value={resource}>
-          <PxeParametricEditorNodeList
-            entries={entries}
-            onResourceChangeRequest={handleResourceChangeRequest}
-            parentExpandedSectionState={expandedSectionState}
-          />
-        </PxeResourceContext.Provider>
+        <PxeExpandedSectionContext.Provider value={rootLevelExpandedSectionStateTuple}>
+          <PxeResourceContext.Provider value={resource}>
+            <PxeParametricEditorNodeList entries={entries} onResourceChangeRequest={handleResourceChangeRequest} />
+          </PxeResourceContext.Provider>
+        </PxeExpandedSectionContext.Provider>
       </PxeDiagnosticsContext.Provider>
     </div>
   );

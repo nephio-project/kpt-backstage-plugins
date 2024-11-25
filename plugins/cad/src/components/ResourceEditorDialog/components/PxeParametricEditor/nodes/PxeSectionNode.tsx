@@ -14,40 +14,42 @@
  * limitations under the License.
  */
 
-import { noop } from 'lodash';
 import { nanoid } from 'nanoid';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { EditorAccordion } from '../../FirstClassEditors/Controls';
-import { PxeExpandedSectionState } from '../types/PxeParametricEditor.types';
 import { PxeSectionEntry } from '../types/PxeConfiguration.types';
+import { withSectionDescription } from '../utils/rendering/withSectionDescription';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
 import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
+import {
+  PxeExpandedSectionContext,
+  useAncestorExpandedSectionState,
+  useNewExpandedSectionState,
+} from '../PxeExpandedSectionContext';
 import { useDiagnostics } from '../PxeDiagnosticsContext';
-import { withSectionDescription } from '../utils/rendering/withSectionDescription';
 
 export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = withSectionDescription(
-  ({ configurationEntry, onResourceChangeRequest, parentExpandedSectionState, children, sectionDescription }) => {
+  ({ configurationEntry, onResourceChangeRequest, children, sectionDescription }) => {
     useDiagnostics(configurationEntry);
 
     const sectionEntry = configurationEntry as PxeSectionEntry;
     const { name, entries: childEntries } = sectionEntry;
 
     const sectionIdRef = useRef(`section-${nanoid()}`);
-    const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
+    const ancestorLevelExpandedSectionState = useAncestorExpandedSectionState();
+    const sectionLevelExpandedSectionState = useNewExpandedSectionState();
 
     return (
       <EditorAccordion
         id={sectionIdRef.current}
         title={name}
-        state={parentExpandedSectionState ?? [undefined, noop]}
+        state={ancestorLevelExpandedSectionState}
         description={sectionDescription}
       >
-        <PxeParametricEditorNodeList
-          entries={childEntries}
-          onResourceChangeRequest={onResourceChangeRequest}
-          parentExpandedSectionState={[expandedSection, setExpandedSection]}
-        />
-        {children}
+        <PxeExpandedSectionContext.Provider value={sectionLevelExpandedSectionState}>
+          <PxeParametricEditorNodeList entries={childEntries} onResourceChangeRequest={onResourceChangeRequest} />
+          {children}
+        </PxeExpandedSectionContext.Provider>
       </EditorAccordion>
     );
   },

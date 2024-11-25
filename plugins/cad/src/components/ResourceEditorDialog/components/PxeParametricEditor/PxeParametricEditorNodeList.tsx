@@ -15,10 +15,10 @@
  */
 
 import { isEqual } from 'lodash';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
-import { PxeExpandedSectionStateTuple, PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
+import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { chunkByTrait } from './utils/general/chunkByTrait';
 import { isSectionNode } from './utils/nodePredicates';
 import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
@@ -26,24 +26,22 @@ import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
-  readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
 };
 
 export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
-  ({ entries, onResourceChangeRequest, parentExpandedSectionState }) => {
+  ({ entries, onResourceChangeRequest }) => {
     const groupedEntries = chunkByTrait(entries, entry => isSectionNode(entry) || null);
 
     return (
-      <Fragment>
+      <>
         {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
           <PxeParametricEditorNode
             key={`${groupIndex}-${itemIndex}`}
             configurationEntry={entry}
-            parentExpandedSectionState={parentExpandedSectionState}
             onResourceChangeRequest={onResourceChangeRequest}
           />
         ))}
-      </Fragment>
+      </>
     );
   },
   isEqual,

@@ -23,14 +23,13 @@ import { PxeParametricEditorNode } from '../../../PxeParametricEditorNode';
 import { PxeConfigurationEntry, PxeNodeType, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
 import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
 import { isSectionNode } from '../../../utils/nodePredicates';
-import { PxeExpandedSectionStateTuple, PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.types';
+import { PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.types';
 import { useEditorStyles } from '../../../../FirstClassEditors/styles';
 
 type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
   readonly itemIndex: number;
   readonly entries: readonly PxeConfigurationEntry[];
-  readonly parentExpandedSectionState: PxeExpandedSectionStateTuple;
   readonly onResourceChangeRequestForItem: (itemIndex: number, changeRequest: PxeResourceChangeRequest) => void;
   readonly onItemDeletion: (itemIndex: number) => void;
 };
@@ -40,7 +39,6 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
     rosterValueDescriptor,
     itemIndex,
     entries,
-    parentExpandedSectionState,
     onResourceChangeRequestForItem: handleResourceChangeRequestForItem,
     onItemDeletion: handleItemDeletion,
   }) => {
@@ -53,7 +51,6 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
           <PxeParametricEditorNode
             configurationEntry={entries[0]}
             onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
-            parentExpandedSectionState={parentExpandedSectionState}
           >
             {isSectionNode(entries[0]) && (
               <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleItemDeletion(itemIndex)}>

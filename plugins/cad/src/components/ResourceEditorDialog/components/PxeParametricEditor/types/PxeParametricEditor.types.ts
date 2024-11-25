@@ -22,10 +22,9 @@ export type PxeResourceChunk = object;
 // `undefined` = absence of value in Yaml, `null` = null value in Yaml
 export type PxeValue = undefined | null | string | number | object | readonly any[];
 
-// TODO Semantically "null" should be used instead of "undefined".
-// Consider project-wide refactoring alongside the update of prettier settings.
-export type PxeExpandedSectionState = string | undefined;
-export type PxeExpandedSectionStateTuple = [PxeExpandedSectionState, Dispatch<SetStateAction<PxeExpandedSectionState>>];
+// TODO Semantically "null" should be used instead of "undefined". Consider project-wide refactoring.
+export type PxeExpandedSection = string | undefined;
+export type PxeExpandedSectionStateTuple = [PxeExpandedSection, Dispatch<SetStateAction<PxeExpandedSection>>];
 
 export type PxeResourceChangeRequest = {
   readonly valueDescriptor: PxeValueDescriptor;

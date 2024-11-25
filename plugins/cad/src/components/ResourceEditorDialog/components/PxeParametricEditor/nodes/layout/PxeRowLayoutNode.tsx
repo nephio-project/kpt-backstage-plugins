@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
-  ({ configurationEntry, parentExpandedSectionState, onResourceChangeRequest }) => {
+  ({ configurationEntry, onResourceChangeRequest }) => {
     useDiagnostics(configurationEntry);
     const { entries } = configurationEntry as PxeRowLayoutEntry;
 
@@ -41,7 +41,6 @@ export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.me
           <PxeParametricEditorNode
             key={`${index}`}
             configurationEntry={entry}
-            parentExpandedSectionState={parentExpandedSectionState}
             onResourceChangeRequest={onResourceChangeRequest}
           />
         ))}
