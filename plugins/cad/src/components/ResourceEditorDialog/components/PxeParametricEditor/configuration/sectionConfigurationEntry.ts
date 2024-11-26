@@ -14,4 +14,17 @@
  * limitations under the License.
  */
 
-export { NephioTokenEditor } from './NephioTokenEditor';
+import {
+  PxeConfigurationEntry,
+  PxeConfigurationEntryType,
+  PxeSectionEntry,
+} from '../types/PxeConfiguration.types';
+
+export const sectionConfigurationEntry = (
+  { name }: { name: string },
+  ...childEntries: PxeConfigurationEntry[]
+): PxeSectionEntry => ({
+  type: PxeConfigurationEntryType.Section,
+  name,
+  entries: childEntries,
+});

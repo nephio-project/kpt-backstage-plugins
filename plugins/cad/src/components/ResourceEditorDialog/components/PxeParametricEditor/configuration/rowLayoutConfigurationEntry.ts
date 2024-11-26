@@ -14,4 +14,15 @@
  * limitations under the License.
  */
 
-export { CapacityEditor } from './CapacityEditor';
+import {
+  PxeConfigurationEntry,
+  PxeConfigurationEntryType,
+  PxeRowLayoutEntry,
+} from '../types/PxeConfiguration.types';
+
+export const rowLayoutConfigurationEntry = (
+  ...childEntries: PxeConfigurationEntry[]
+): PxeRowLayoutEntry => ({
+  type: PxeConfigurationEntryType.RowLayout,
+  entries: childEntries,
+});

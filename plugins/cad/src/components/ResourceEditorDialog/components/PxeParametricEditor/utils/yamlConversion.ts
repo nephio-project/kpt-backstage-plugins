@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2024 The Nephio Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 
-module.exports = require('@backstage/cli/config/eslint-factory')(__dirname, {
-  rules: {
-    '@typescript-eslint/no-use-before-define': 'off',
-    'no-else-return': 'off',
-  },
+import { dump, load } from 'js-yaml';
+
+export const parseYaml = <T extends object>(
+  yamlText: string,
+): { yamlObject: T } => ({
+  yamlObject: load(yamlText) as T,
 });
+
+export const stringifyYaml = <T extends object>(yamlObject: T): string =>
+  dump(yamlObject, {
+    // TODO The fact of hard-setting of formatting options leads to multiple changes in the editor output.
+    // Solution probably requires switching to "yaml" package.
+    noArrayIndent: true,
+    quotingType: '"',
+  });

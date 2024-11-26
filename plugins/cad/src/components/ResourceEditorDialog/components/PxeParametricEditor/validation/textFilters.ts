@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2024 The Nephio Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-module.exports = require('@backstage/cli/config/eslint-factory')(__dirname, {
-  rules: {
-    '@typescript-eslint/no-use-before-define': 'off',
-    'no-else-return': 'off',
-  },
-});
+import { identity } from 'lodash';
+
+export type TextFilter = (text: string) => string;
+
+export const identityTextFilter: TextFilter = identity;
+
+export const naturalNumberTextFilter: TextFilter = text =>
+  text.replaceAll(/[^\d]/g, '');
