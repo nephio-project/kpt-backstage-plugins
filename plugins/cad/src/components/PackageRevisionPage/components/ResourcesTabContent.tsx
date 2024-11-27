@@ -19,17 +19,11 @@ import Alert from '@material-ui/lab/Alert';
 import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { PackageRevisionLifecycle } from '../../../types/PackageRevision';
 import { PackageRevisionResourcesMap } from '../../../types/PackageRevisionResource';
-import {
-  getPackageRevision,
-  getPackageRevisionTitle,
-} from '../../../utils/packageRevision';
+import { getPackageRevision, getPackageRevisionTitle } from '../../../utils/packageRevision';
 import { RevisionSummary } from '../../../utils/revisionSummary';
 import { Select } from '../../Controls';
 import { PackageRevisionPageMode } from '../PackageRevisionPage';
-import {
-  PackageResourceFilter,
-  PackageResourcesList,
-} from './PackageResourcesList';
+import { PackageResourceFilter, PackageResourcesList } from './PackageResourcesList';
 
 export type AlertMessage = {
   key: string;
@@ -104,33 +98,23 @@ export const ResourcesTabContent = ({
 }: ResourcesTabContentProps) => {
   const classes = useStyles();
 
-  const [selectDiffItems, setSelectDiffItems] = useState<DiffSelectItem[]>([
-    HIDE_COMPARISON_SELECT_ITEM,
-  ]);
-  const [diffSelection, setDiffSelection] = useState<DiffSelectItem>(
-    HIDE_COMPARISON_SELECT_ITEM,
-  );
+  const [selectDiffItems, setSelectDiffItems] = useState<DiffSelectItem[]>([HIDE_COMPARISON_SELECT_ITEM]);
+  const [diffSelection, setDiffSelection] = useState<DiffSelectItem>(HIDE_COMPARISON_SELECT_ITEM);
   const [searchString, setSearchString] = useState<string>('');
-  const [filterSelection, setFilterSelection] = useState<string>(
-    RESOURCE_FILTER_OPTIONS[0].value,
-  );
-  const [baseResourcesMap, setBaseResourcesMap] =
-    useState<PackageRevisionResourcesMap>();
+  const [filterSelection, setFilterSelection] = useState<string>(RESOURCE_FILTER_OPTIONS[0].value);
+  const [baseResourcesMap, setBaseResourcesMap] = useState<PackageRevisionResourcesMap>();
 
   const lastPackageRevisionNameDiffSet = useRef<string>('');
 
   const resourceFilter = useMemo<PackageResourceFilter>(() => {
     const filterQuery: PackageResourceFilter =
-      RESOURCE_FILTER_OPTIONS.find(option => option.value === filterSelection)
-        ?.filter ?? (() => true);
+      RESOURCE_FILTER_OPTIONS.find(option => option.value === filterSelection)?.filter ?? (() => true);
     const searchQuery: PackageResourceFilter =
       searchString.length > 0
-        ? resource =>
-            resource.yaml.toLowerCase().includes(searchString.toLowerCase())
+        ? resource => resource.yaml.toLowerCase().includes(searchString.toLowerCase())
         : () => true;
 
-    return packageResource =>
-      filterQuery(packageResource) && searchQuery(packageResource);
+    return packageResource => filterQuery(packageResource) && searchQuery(packageResource);
   }, [filterSelection, searchString]);
 
   useEffect(() => {
@@ -138,20 +122,14 @@ export const ResourcesTabContent = ({
     const packageRevision = getPackageRevision(packageRevisions, packageName);
 
     const getDiffSelectItems = (): DiffSelectItem[] => {
-      const mapPreviousToSelectItem = (
-        revisionSummary: RevisionSummary,
-      ): DiffSelectItem => ({
+      const mapPreviousToSelectItem = (revisionSummary: RevisionSummary): DiffSelectItem => ({
         label: `Previous Revision (${revisionSummary.revision.spec.revision})`,
         value: revisionSummary.revision.metadata.name,
         resourcesMap: revisionSummary.resourcesMap,
       });
 
-      const mapUpstreamToSelectItem = (
-        revisionSummary: RevisionSummary,
-      ): DiffSelectItem => ({
-        label: `Upstream (${getPackageRevisionTitle(
-          revisionSummary.revision,
-        )})`,
+      const mapUpstreamToSelectItem = (revisionSummary: RevisionSummary): DiffSelectItem => ({
+        label: `Upstream (${getPackageRevisionTitle(revisionSummary.revision)})`,
         value: revisionSummary.revision.metadata.name,
         resourcesMap: revisionSummary.resourcesMap,
       });
@@ -173,15 +151,12 @@ export const ResourcesTabContent = ({
     const diffItems = getDiffSelectItems();
     setSelectDiffItems(diffItems);
 
-    const isPublished =
-      packageRevision.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED;
+    const isPublished = packageRevision.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED;
 
     if (isPublished) {
       setDiffSelection(HIDE_COMPARISON_SELECT_ITEM);
     } else {
-      const updateDiffSelection =
-        packageRevision.metadata.name !==
-        lastPackageRevisionNameDiffSet.current;
+      const updateDiffSelection = packageRevision.metadata.name !== lastPackageRevisionNameDiffSet.current;
 
       if (updateDiffSelection) {
         setDiffSelection(diffItems[1] ?? HIDE_COMPARISON_SELECT_ITEM);
@@ -229,11 +204,7 @@ export const ResourcesTabContent = ({
             <Select
               label="Compare Revision"
               onChange={value =>
-                setDiffSelection(
-                  selectDiffItems.find(
-                    selectItem => selectItem.value === value,
-                  ) as DiffSelectItem,
-                )
+                setDiffSelection(selectDiffItems.find(selectItem => selectItem.value === value) as DiffSelectItem)
               }
               selected={diffSelection.value}
               items={selectDiffItems}

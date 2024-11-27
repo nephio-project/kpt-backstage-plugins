@@ -29,12 +29,7 @@ type PackageLinkProps = {
   stopPropagation?: boolean;
 };
 
-export const PackageLink = ({
-  packageRevision,
-  breadcrumb,
-  packageNameOnly,
-  stopPropagation,
-}: PackageLinkProps) => {
+export const PackageLink = ({ packageRevision, breadcrumb, packageNameOnly, stopPropagation }: PackageLinkProps) => {
   const packageRef = useRouteRef(packageRouteRef);
 
   const classes = useLinkStyles();

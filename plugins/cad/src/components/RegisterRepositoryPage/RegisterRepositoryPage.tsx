@@ -92,13 +92,9 @@ export const RegisterRepositoryPage = () => {
     authPassword: '',
   });
 
-  const [selectAuthSecretItems, setSelectAuthSecretItems] = useState<
-    SelectItem[]
-  >([]);
+  const [selectAuthSecretItems, setSelectAuthSecretItems] = useState<SelectItem[]>([]);
 
-  const [selectAuthTypeItems, setSelectAuthTypeItems] = useState<SelectItem[]>(
-    [],
-  );
+  const [selectAuthTypeItems, setSelectAuthTypeItems] = useState<SelectItem[]>([]);
 
   const classes = useStyles();
   const navigate = useNavigate();
@@ -109,9 +105,7 @@ export const RegisterRepositoryPage = () => {
     const loadSecrets = async () => {
       const { items: secrets } = await api.listSecrets();
 
-      const secretSelectItems: SelectItem[] = secrets
-        .filter(isBasicAuthSecret)
-        .map(mapSecretToSelectItem);
+      const secretSelectItems: SelectItem[] = secrets.filter(isBasicAuthSecret).map(mapSecretToSelectItem);
       secretSelectItems.push({ label: 'Create new secret', value: 'new' });
 
       setSelectAuthSecretItems(secretSelectItems);
@@ -122,8 +116,7 @@ export const RegisterRepositoryPage = () => {
 
   const getRepositorySecretRef = (): RepositorySecretRef | undefined => {
     if (state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN) {
-      const secretName =
-        state.useSecret === 'new' ? state.authSecretName : state.useSecret;
+      const secretName = state.useSecret === 'new' ? state.authSecretName : state.useSecret;
 
       return getSecretRef(secretName);
     }
@@ -175,15 +168,8 @@ export const RegisterRepositoryPage = () => {
       throw Error('Resource json is not set');
     }
 
-    if (
-      state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN &&
-      state.useSecret === 'new'
-    ) {
-      const authSecret = getBasicAuthSecret(
-        state.authSecretName,
-        'access-token',
-        state.authPassword,
-      );
+    if (state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN && state.useSecret === 'new') {
+      const authSecret = getBasicAuthSecret(state.authSecretName, 'access-token', state.authPassword);
 
       await api.createSecret(authSecret);
     }
@@ -220,16 +206,9 @@ export const RegisterRepositoryPage = () => {
     if (toSet.repoUrl) {
       const repositoryUrl = toSet.repoUrl;
 
-      if (
-        repositoryUrl.startsWith('https:') ||
-        repositoryUrl.startsWith('git@') ||
-        repositoryUrl.endsWith('.git')
-      ) {
+      if (repositoryUrl.startsWith('https:') || repositoryUrl.startsWith('git@') || repositoryUrl.endsWith('.git')) {
         toSet.type = RepositoryType.GIT;
-      } else if (
-        repositoryUrl.startsWith('gcr.io/') ||
-        repositoryUrl.includes('docker.pkg.dev/')
-      ) {
+      } else if (repositoryUrl.startsWith('gcr.io/') || repositoryUrl.includes('docker.pkg.dev/')) {
         toSet.type = RepositoryType.OCI;
       }
 
@@ -239,11 +218,7 @@ export const RegisterRepositoryPage = () => {
         }
       }
 
-      const suggestedName = kebabCase(
-        repositoryUrl
-          .split('/')
-          [repositoryUrl.split('/').length - 1].split('.')[0],
-      );
+      const suggestedName = kebabCase(repositoryUrl.split('/')[repositoryUrl.split('/').length - 1].split('.')[0]);
 
       toSet.authSecretName = `${suggestedName}-auth`;
       toSet.description = startCase(suggestedName);
@@ -255,10 +230,7 @@ export const RegisterRepositoryPage = () => {
 
       setSelectAuthTypeItems(options);
 
-      if (
-        options.length === 1 ||
-        (state.authType && !options.find(o => o.value === state.authType))
-      ) {
+      if (options.length === 1 || (state.authType && !options.find(o => o.value === state.authType))) {
         toSet.authType = options[0].value as string;
       }
     }
@@ -266,28 +238,23 @@ export const RegisterRepositoryPage = () => {
     setState(s => ({ ...s, ...toSet }));
   };
 
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const target = event.target;
     updateStateValue(target.name, target.value);
   };
 
   const repositoryContentRadioOptions = useMemo(() => {
-    const selectItems: RadioOption[] = PackageContentSummaryOrder.map(
-      contentType => ({
-        label: `${contentType}s`,
-        value: contentType,
-        description: RepositoryContentDetails[contentType].description,
-      }),
-    );
+    const selectItems: RadioOption[] = PackageContentSummaryOrder.map(contentType => ({
+      label: `${contentType}s`,
+      value: contentType,
+      description: RepositoryContentDetails[contentType].description,
+    }));
 
     if (allowFunctionRepositoryRegistration()) {
       selectItems.push({
         label: 'Functions',
         value: ContentSummary.FUNCTION,
-        description:
-          RepositoryContentDetails[ContentSummary.FUNCTION].description,
+        description: RepositoryContentDetails[ContentSummary.FUNCTION].description,
       });
     }
 
@@ -361,56 +328,49 @@ export const RegisterRepositoryPage = () => {
           <div className={classes.stepContent}>
             <Select
               label="Authentication Type"
-              onChange={value =>
-                setState({ ...state, authType: value as AuthenticationType })
-              }
+              onChange={value => setState({ ...state, authType: value as AuthenticationType })}
               selected={state.authType}
               items={selectAuthTypeItems}
               helperText="The authentication type of the repository. Select None if the repository does not require any authentication."
             />
-            {state.authType &&
-              state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN && (
-                <Select
-                  label="Authentication Secret"
-                  onChange={value => setState({ ...state, useSecret: value })}
-                  selected={state.useSecret}
-                  items={selectAuthSecretItems}
-                  helperText="The secret for access to the repository."
-                />
-              )}
+            {state.authType && state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN && (
+              <Select
+                label="Authentication Secret"
+                onChange={value => setState({ ...state, useSecret: value })}
+                selected={state.useSecret}
+                items={selectAuthSecretItems}
+                helperText="The secret for access to the repository."
+              />
+            )}
 
-            {state.useSecret === 'new' &&
-              state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN && (
-                <Fragment>
-                  <TextField
-                    label="Secret Name"
-                    variant="outlined"
-                    name="authSecretName"
-                    value={state.authSecretName}
-                    onChange={handleInputChange}
-                    fullWidth
-                    helperText="The name of the secret to create."
-                  />
-                  <TextField
-                    label="Personal Access Token"
-                    variant="outlined"
-                    value={state.authPassword}
-                    name="authPassword"
-                    onChange={handleInputChange}
-                    fullWidth
-                    helperText={
-                      <Fragment>
-                        The personal access token for access to the repository.
-                        Personal access tokens can be created at{' '}
-                        <Link to="https://github.com/settings/tokens">
-                          https://github.com/settings/tokens
-                        </Link>{' '}
-                        and must include the 'repo' scope.
-                      </Fragment>
-                    }
-                  />
-                </Fragment>
-              )}
+            {state.useSecret === 'new' && state.authType === AuthenticationType.GITHUB_ACCESS_TOKEN && (
+              <Fragment>
+                <TextField
+                  label="Secret Name"
+                  variant="outlined"
+                  name="authSecretName"
+                  value={state.authSecretName}
+                  onChange={handleInputChange}
+                  fullWidth
+                  helperText="The name of the secret to create."
+                />
+                <TextField
+                  label="Personal Access Token"
+                  variant="outlined"
+                  value={state.authPassword}
+                  name="authPassword"
+                  onChange={handleInputChange}
+                  fullWidth
+                  helperText={
+                    <Fragment>
+                      The personal access token for access to the repository. Personal access tokens can be created at{' '}
+                      <Link to="https://github.com/settings/tokens">https://github.com/settings/tokens</Link> and must
+                      include the 'repo' scope.
+                    </Fragment>
+                  }
+                />
+              </Fragment>
+            )}
 
             <Select
               label="Repository Access"
@@ -471,14 +431,10 @@ export const RegisterRepositoryPage = () => {
           </div>
         </SimpleStepperStep>
 
-        <SimpleStepperStep
-          title="Confirm"
-          actions={{ nextText: 'Register Repository', onNext: registerRepo }}
-        >
+        <SimpleStepperStep title="Confirm" actions={{ nextText: 'Register Repository', onNext: registerRepo }}>
           <div>
             <Typography>
-              Confirm registration of the <strong>{state.name}</strong>{' '}
-              repository?
+              Confirm registration of the <strong>{state.name}</strong> repository?
             </Typography>
           </div>
         </SimpleStepperStep>

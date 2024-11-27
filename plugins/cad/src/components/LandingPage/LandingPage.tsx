@@ -44,16 +44,13 @@ const ConfigAsDataHeader = () => {
   const configApi = useApi(configApiRef);
   const cadConfig = configApi.getOptionalConfig('configAsData');
 
-  const getOptionalString = (key: string) =>
-    cadConfig ? cadConfig.getOptionalString(`branding.${key}`) : undefined;
+  const getOptionalString = (key: string) => (cadConfig ? cadConfig.getOptionalString(`branding.${key}`) : undefined);
 
   const title = getOptionalString('title') || 'Configuration as Data';
   const logoUrl = getOptionalString('header.logoUrl');
   const backgroundImageUrl = getOptionalString('header.backgroundImageUrl');
 
-  const cssBackgroundImage = backgroundImageUrl
-    ? `url("${backgroundImageUrl}")`
-    : undefined;
+  const cssBackgroundImage = backgroundImageUrl ? `url("${backgroundImageUrl}")` : undefined;
   const logo = <img src={logoUrl} alt="logo" style={{ maxHeight: '45px' }} />;
 
   return (
@@ -80,32 +77,14 @@ export const LandingPage = () => {
     return (
       <Routes>
         <Route path="/" element={<PackageManagementPage />} />
-        <Route
-          path={registerRepositoryRouteRef.path}
-          element={<RegisterRepositoryPage />}
-        />
+        <Route path={registerRepositoryRouteRef.path} element={<RegisterRepositoryPage />} />
         <Route path={packagesRouteRef.path} element={<PackagesPage />} />
         <Route path={repositoryRouteRef.path} element={<RepositoryPage />} />
-        <Route
-          path={addPackageRouteRef.path}
-          element={<AddPackagePage action={AddPackagePageAction.ADD} />}
-        />
-        <Route
-          path={addPackageToRepoRouteRef.path}
-          element={<AddPackagePage action={AddPackagePageAction.ADD} />}
-        />
-        <Route
-          path={packageRouteRef.path}
-          element={<PackageRevisionPage mode={PackageRevisionPageMode.VIEW} />}
-        />
-        <Route
-          path={clonePackageRouteRef.path}
-          element={<AddPackagePage action={AddPackagePageAction.CLONE} />}
-        />
-        <Route
-          path={editPackageRouteRef.path}
-          element={<PackageRevisionPage mode={PackageRevisionPageMode.EDIT} />}
-        />
+        <Route path={addPackageRouteRef.path} element={<AddPackagePage action={AddPackagePageAction.ADD} />} />
+        <Route path={addPackageToRepoRouteRef.path} element={<AddPackagePage action={AddPackagePageAction.ADD} />} />
+        <Route path={packageRouteRef.path} element={<PackageRevisionPage mode={PackageRevisionPageMode.VIEW} />} />
+        <Route path={clonePackageRouteRef.path} element={<AddPackagePage action={AddPackagePageAction.CLONE} />} />
+        <Route path={editPackageRouteRef.path} element={<PackageRevisionPage mode={PackageRevisionPageMode.EDIT} />} />
       </Routes>
     );
   };

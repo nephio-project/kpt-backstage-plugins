@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles } from '@material-ui/core';
 import React, { Fragment, useEffect, useState } from 'react';
 import { KubernetesResource } from '../../types/KubernetesResource';
 import { getGroupVersionKind } from '../../utils/kubernetesResource';
@@ -48,13 +41,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const ResourceViewerDialog = ({
-  open,
-  onClose,
-  yaml,
-  originalYaml,
-  showDiff,
-}: ResourceViewerProps) => {
+export const ResourceViewerDialog = ({ open, onClose, yaml, originalYaml, showDiff }: ResourceViewerProps) => {
   const [showYamlView, setShowYamlView] = useState<boolean>(false);
   const classes = useStyles();
 
@@ -88,16 +75,9 @@ export const ResourceViewerDialog = ({
       </DialogTitle>
       <DialogContent>
         <Fragment>
-          <div
-            className={classes.container}
-            style={{ height: `${displayYamlHeight}px` }}
-          >
+          <div className={classes.container} style={{ height: `${displayYamlHeight}px` }}>
             {showYamlView ? (
-              <YamlViewer
-                value={thisYaml}
-                original={originalYaml}
-                showDiff={showDiff}
-              />
+              <YamlViewer value={thisYaml} original={originalYaml} showDiff={showDiff} />
             ) : (
               <FirstClassViewerSelector
                 groupVersionKind={groupVersionKind}

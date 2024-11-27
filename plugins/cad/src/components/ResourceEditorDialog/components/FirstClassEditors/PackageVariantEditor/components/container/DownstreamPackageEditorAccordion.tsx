@@ -44,9 +44,7 @@ type RepositorySelectItem = SelectItem & {
   repository?: Repository;
 };
 
-const mapRepositoryToSelectItem = (
-  repository: Repository,
-): RepositorySelectItem => ({
+const mapRepositoryToSelectItem = (repository: Repository): RepositorySelectItem => ({
   label: repository.metadata.name,
   value: repository.metadata.name,
   repository: repository,
@@ -70,9 +68,7 @@ export const DownstreamPackageEditorAccordion = ({
   const repositoryName = viewModel.repo;
 
   const [repository, setRepository] = useState<Repository>();
-  const [repositorySelectItems, setRepositorySelectItems] = useState<
-    RepositorySelectItem[]
-  >([]);
+  const [repositorySelectItems, setRepositorySelectItems] = useState<RepositorySelectItem[]>([]);
 
   const keyValueObjectUpdated = (): void => {
     onUpdatedKeyValueObject(viewModel);
@@ -80,37 +76,22 @@ export const DownstreamPackageEditorAccordion = ({
 
   useAsync(async (): Promise<void> => {
     const { items: thisAllRepositories } = await api.listRepositories();
-    const thisRepository = repositoryName
-      ? getRepositoryData(thisAllRepositories, repositoryName)
-      : undefined;
+    const thisRepository = repositoryName ? getRepositoryData(thisAllRepositories, repositoryName) : undefined;
 
-    const targetRepositoryItems = thisAllRepositories.map(
-      mapRepositoryToSelectItem,
-    );
+    const targetRepositoryItems = thisAllRepositories.map(mapRepositoryToSelectItem);
     setRepository(thisRepository);
     setRepositorySelectItems(targetRepositoryItems);
   }, [api]);
 
-  const description = `${viewModel.repo ? `${viewModel.repo}/` : ''}${
-    viewModel.package ? `${viewModel.package}` : ''
-  }`;
+  const description = `${viewModel.repo ? `${viewModel.repo}/` : ''}${viewModel.package ? `${viewModel.package}` : ''}`;
 
   return (
-    <EditorAccordion
-      id={id}
-      state={state}
-      title={title}
-      description={description}
-    >
+    <EditorAccordion id={id} state={state} title={title} description={description}>
       <Fragment>
         <Select
           label="Downstream Repository"
           onChange={selectedRepositoryName => {
-            setRepository(
-              repositorySelectItems.find(
-                r => r.value === selectedRepositoryName,
-              )?.repository,
-            );
+            setRepository(repositorySelectItems.find(r => r.value === selectedRepositoryName)?.repository);
             viewModel.repo = selectedRepositoryName;
             keyValueObjectUpdated();
           }}

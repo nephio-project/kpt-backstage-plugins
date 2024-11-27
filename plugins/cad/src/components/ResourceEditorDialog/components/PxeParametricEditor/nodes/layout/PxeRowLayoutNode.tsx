@@ -16,10 +16,7 @@
 
 import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
-import {
-  PxeParametricEditorNode,
-  PxeParametricEditorNodeProps,
-} from '../../PxeParametricEditorNode';
+import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({

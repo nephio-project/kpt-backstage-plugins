@@ -23,10 +23,7 @@ export type PxeConfiguration = {
 
 // Entries
 
-export type PxeConfigurationEntry =
-  | PxeSectionEntry
-  | PxeRowLayoutEntry
-  | PxeWidgetEntry;
+export type PxeConfigurationEntry = PxeSectionEntry | PxeRowLayoutEntry | PxeWidgetEntry;
 
 export enum PxeConfigurationEntryType {
   Section = 'Section',
@@ -76,10 +73,7 @@ export interface PxeRowLayoutEntry {
 
 // Widgets
 
-export type PxeWidgetEntry =
-  | PxeRosterWidgetEntry
-  | PxeSingleLineTextWidgetEntry
-  | PxeSelectValueWidgetEntry;
+export type PxeWidgetEntry = PxeRosterWidgetEntry | PxeSingleLineTextWidgetEntry | PxeSelectValueWidgetEntry;
 
 type PxeWidgetEntryBase = {
   readonly type: PxeConfigurationEntryType;

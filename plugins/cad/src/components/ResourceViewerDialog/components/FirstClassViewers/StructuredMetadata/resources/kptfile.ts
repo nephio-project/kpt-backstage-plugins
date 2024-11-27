@@ -29,9 +29,7 @@ export const getKptFunctionDescription = (fn: KptfileFunction): string => {
   return functionNameAndTag;
 };
 
-export const getKptfileStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getKptfileStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const kptFile = resource as Kptfile;
   const readinessGates = kptFile.info.readinessGates;
 
@@ -39,9 +37,7 @@ export const getKptfileStructuredMetadata = (
     description: kptFile.info.description,
     keywords: kptFile.info.keywords,
     site: kptFile.info.site,
-    readinessGates: readinessGates
-      ? readinessGates.map(gate => gate.conditionType)
-      : undefined,
+    readinessGates: readinessGates ? readinessGates.map(gate => gate.conditionType) : undefined,
     upstream: kptFile.upstream?.git
       ? `${kptFile.upstream.git.repo}/${kptFile.upstream.git.directory}@${kptFile.upstream?.git?.ref}`
       : '',

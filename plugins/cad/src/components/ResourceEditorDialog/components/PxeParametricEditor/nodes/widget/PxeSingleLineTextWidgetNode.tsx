@@ -21,9 +21,11 @@ import { PxeSingleLineTextWidgetEntry } from '../../types/PxeConfiguration.types
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 
-export const PxeSingleLineTextWidgetNode: React.FC<
-  PxeParametricEditorNodeProps
-> = ({ configurationEntry, onResourceChangeRequest, resourceChunk }) => {
+export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
+  configurationEntry,
+  onResourceChangeRequest,
+  resourceChunk,
+}) => {
   const {
     textFilter,
     values: [valueDescriptor],

@@ -23,10 +23,7 @@ import { ContainerPort } from '../../../../../../../types/Pod';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
 import { getNumber, toLowerCase } from '../../../../../../../utils/string';
 import { Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (containerPort?: ContainerPort) => void;
@@ -40,8 +37,7 @@ type ContainerPortEditorAccordionProps = {
 
 const PORT_PROTOCOLS = ['SCTP', 'TCP', 'UDP'];
 
-const portProtocolSelectItems: SelectItem[] =
-  buildSelectItemsFromList(PORT_PROTOCOLS);
+const portProtocolSelectItems: SelectItem[] = buildSelectItemsFromList(PORT_PROTOCOLS);
 
 const getDescription = (containerPort: ContainerPort): string => {
   const portName = containerPort.name || '';
@@ -71,12 +67,7 @@ export const ContainerPortEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Container Port"
-      description={getDescription(containerPort)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Container Port" description={getDescription(containerPort)} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -113,11 +104,7 @@ export const ContainerPortEditorAccordion = ({
             />
           </div>
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

@@ -18,9 +18,7 @@ import { Ingress, IngressBackend } from '../../../../../../types/Ingress';
 import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 
-export const getIngressStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getIngressStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const ingress = resource as Ingress;
 
   const customMetadata: Metadata = {
@@ -30,10 +28,7 @@ export const getIngressStructuredMetadata = (
   if (ingress.spec.tls) {
     for (const [index, tls] of ingress.spec.tls.entries()) {
       const name = ingress.spec.tls.length > 1 ? `TLS ${index + 1}` : 'TLS';
-      customMetadata[name] = [
-        `${tls.hosts?.join(', ') ?? '*'}`,
-        `Secret Name: ${tls.secretName}`,
-      ];
+      customMetadata[name] = [`${tls.hosts?.join(', ') ?? '*'}`, `Secret Name: ${tls.secretName}`];
     }
   }
 
@@ -51,23 +46,15 @@ export const getIngressStructuredMetadata = (
   };
 
   if (ingress.spec.defaultBackend) {
-    customMetadata.defaultBackend = getBackendDescription(
-      ingress.spec.defaultBackend,
-    );
+    customMetadata.defaultBackend = getBackendDescription(ingress.spec.defaultBackend);
   }
 
   if (ingress.spec.rules) {
     for (const [index, rule] of ingress.spec.rules.entries()) {
-      const name =
-        ingress.spec.rules.length > 1
-          ? `Ingress Rule ${index + 1}`
-          : 'Ingress Rule';
+      const name = ingress.spec.rules.length > 1 ? `Ingress Rule ${index + 1}` : 'Ingress Rule';
       customMetadata[name] = [
         ...(rule.http?.paths ?? []).map(
-          path =>
-            `${path.pathType} Match: ${rule.host ?? ''}${
-              path.path
-            } → ${getBackendDescription(path.backend)}`,
+          path => `${path.pathType} Match: ${rule.host ?? ''}${path.path} → ${getBackendDescription(path.backend)}`,
         ),
       ];
     }

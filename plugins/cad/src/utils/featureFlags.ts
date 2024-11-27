@@ -30,9 +30,7 @@ export const loadFeatures = async (api: ConfigAsDataApi): Promise<void> => {
   if (features.gitOps === 'config-sync') {
     const { groups } = await api.listApiGroups();
 
-    const configManagementGroupExists = !!groups.find(
-      apiGroup => apiGroup.name === 'configmanagement.gke.io',
-    );
+    const configManagementGroupExists = !!groups.find(apiGroup => apiGroup.name === 'configmanagement.gke.io');
 
     if (configManagementGroupExists) {
       const { items: configManagements } = await api.listConfigManagements();

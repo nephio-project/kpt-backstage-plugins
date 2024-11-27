@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  KubernetesKeyValueObject,
-  KubernetesResource,
-} from '../../../../../../types/KubernetesResource';
+import { KubernetesKeyValueObject, KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Secret } from '../../../../../../types/Secret';
 import { Metadata } from '../StructuredMetadata';
 
@@ -44,9 +41,7 @@ const getSecrets = (
   return Object.keys(secretData).length > 0 ? secretData : undefined;
 };
 
-export const getSecretStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getSecretStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const secret = resource as Secret;
 
   return {

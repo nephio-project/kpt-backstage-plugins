@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  PxeConfigurationEntry,
-  PxeConfigurationEntryType,
-  PxeSectionEntry,
-} from '../types/PxeConfiguration.types';
+import { PxeConfigurationEntry, PxeConfigurationEntryType, PxeSectionEntry } from '../types/PxeConfiguration.types';
 
 export const sectionConfigurationEntry = (
   { name }: { name: string },

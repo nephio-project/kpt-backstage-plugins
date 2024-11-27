@@ -18,27 +18,14 @@ import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import {
-  Container,
-  PodSecurityContext,
-  Volume,
-} from '../../../../../types/Pod';
+import { Container, PodSecurityContext, Volume } from '../../../../../types/Pod';
 import { LabelSelector } from '../../../../../types/Selectors';
-import {
-  StatefulSet,
-  StatefulSetMetadata,
-  StatefulSetUpdateStrategy,
-} from '../../../../../types/StatefulSet';
+import { StatefulSet, StatefulSetMetadata, StatefulSetUpdateStrategy } from '../../../../../types/StatefulSet';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../util/deletable';
 import { ContainerEditorAccordion } from './components/ContainerEditorAccordion';
 import { PodDetailsEditorAccordion } from './components/PodDetailsEditorAccordion';
 import { StatefulSetDetailsEditorAccordion } from './components/StatefulSetDetailsEditorAccordion';
@@ -101,11 +88,7 @@ const getResourceState = (statefulSet: StatefulSet): State => {
   };
 };
 
-export const StatefulSetEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: StatefulSetEditorProps) => {
+export const StatefulSetEditor = ({ yaml, onUpdatedYaml, packageResources }: StatefulSetEditorProps) => {
   const resourceYaml = loadYaml(yaml) as StatefulSet;
 
   const classes = useEditorStyles();
@@ -135,8 +118,7 @@ export const StatefulSetEditor = ({
     templateSpec.serviceAccountName = state.serviceAccount;
     templateSpec.securityContext = state.securityContext;
     templateSpec.restartPolicy = state.restartPolicy;
-    templateSpec.terminationGracePeriodSeconds =
-      state.terminationGracePeriodSeconds;
+    templateSpec.terminationGracePeriodSeconds = state.terminationGracePeriodSeconds;
 
     onUpdatedYaml(dumpYaml(resourceYaml));
   }, [state, onUpdatedYaml, resourceYaml, containers]);
@@ -177,9 +159,7 @@ export const StatefulSetEditor = ({
               volumes={state.volumes}
               packageResources={packageResources}
               onUpdate={updatedContainer => {
-                setContainers(
-                  updateList(containers.slice(), updatedContainer, index),
-                );
+                setContainers(updateList(containers.slice(), updatedContainer, index));
               }}
             />
           ),

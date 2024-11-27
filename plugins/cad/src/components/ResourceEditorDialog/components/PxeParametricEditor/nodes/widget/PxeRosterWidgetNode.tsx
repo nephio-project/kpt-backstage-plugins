@@ -22,20 +22,11 @@ import React, { Fragment } from 'react';
 import { IconButton } from '../../../../../Controls';
 import { useEditorStyles } from '../../../FirstClassEditors/styles';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
-import {
-  PxeRosterWidgetEntry,
-  PxeValueType,
-} from '../../types/PxeConfiguration.types';
-import {
-  PxeResourceChangeRequest,
-  PxeValue,
-} from '../../types/PxeParametricEditor.types';
+import { PxeRosterWidgetEntry, PxeValueType } from '../../types/PxeConfiguration.types';
+import { PxeResourceChangeRequest, PxeValue } from '../../types/PxeParametricEditor.types';
 import { createResourceChunkAfterChangeRequest } from '../../utils/createResourceChunkAfterChangeRequest';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
-import {
-  arrayWithItemRemoved,
-  arrayWithItemReplaced,
-} from '../../utils/general/immutableArrays';
+import { arrayWithItemRemoved, arrayWithItemReplaced } from '../../utils/general/immutableArrays';
 import { PxeParametricEditorNodeList } from '../../PxeParametricEditorNodeList';
 
 type RosterItemResourceChunk = {
@@ -55,14 +46,9 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
   const valueDescriptor = values[0];
   const rosterValueType = valueDescriptor.type as RosterValueType;
 
-  const itemChunks = itemChunksFromValue(
-    get(resourceChunk, valueDescriptor.path),
-  );
+  const itemChunks = itemChunksFromValue(get(resourceChunk, valueDescriptor.path));
 
-  const handleResourceChangeRequestForItem = (
-    itemIndex: number,
-    changeRequest: PxeResourceChangeRequest,
-  ) => {
+  const handleResourceChangeRequestForItem = (itemIndex: number, changeRequest: PxeResourceChangeRequest) => {
     const newItemChunk = createResourceChunkAfterChangeRequest(
       itemChunks[itemIndex],
       changeRequest,
@@ -70,36 +56,26 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
 
     onResourceChangeRequest({
       valueDescriptor,
-      newValue: valueFromItemChunks(
-        arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk),
-        rosterValueType,
-      ),
+      newValue: valueFromItemChunks(arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk), rosterValueType),
     });
   };
 
   const handleItemAddition = () => {
     const newItemChunk: RosterItemResourceChunk = {
-      key:
-        rosterValueType === PxeValueType.Array ? String(itemChunks.length) : '',
+      key: rosterValueType === PxeValueType.Array ? String(itemChunks.length) : '',
       value: undefined,
     };
 
     onResourceChangeRequest({
       valueDescriptor,
-      newValue: valueFromItemChunks(
-        [...itemChunks, newItemChunk],
-        rosterValueType,
-      ),
+      newValue: valueFromItemChunks([...itemChunks, newItemChunk], rosterValueType),
     });
   };
 
   const handleItemDeletion = (itemIndex: number) => {
     onResourceChangeRequest({
       valueDescriptor,
-      newValue: valueFromItemChunks(
-        arrayWithItemRemoved(itemChunks, itemIndex),
-        rosterValueType,
-      ),
+      newValue: valueFromItemChunks(arrayWithItemRemoved(itemChunks, itemIndex), rosterValueType),
     });
   };
 
@@ -113,9 +89,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
             <PxeParametricEditorNodeList
               entries={itemEntries}
               resourceChunk={itemChunk}
-              onResourceChangeRequest={changeRequest =>
-                handleResourceChangeRequestForItem(itemIndex, changeRequest)
-              }
+              onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
             />
           </div>
           <div className={rosterClasses.itemActions}>
@@ -129,33 +103,22 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
           </div>
         </div>
       ))}
-      <Button
-        variant="outlined"
-        startIcon={<AddIcon />}
-        onClick={handleItemAddition}
-      >
+      <Button variant="outlined" startIcon={<AddIcon />} onClick={handleItemAddition}>
         Add {generateValueLabel(valueDescriptor)}
       </Button>
     </Fragment>
   );
 };
 
-const itemChunksFromValue = (
-  value: PxeValue,
-): readonly RosterItemResourceChunk[] =>
+const itemChunksFromValue = (value: PxeValue): readonly RosterItemResourceChunk[] =>
   Object.entries(value ?? {}).map(([itemKey, itemValue]) => ({
     key: itemKey,
     value: itemValue as PxeValue,
   }));
 
-const valueFromItemChunks = (
-  itemChunks: readonly RosterItemResourceChunk[],
-  rosterType: RosterValueType,
-): PxeValue =>
+const valueFromItemChunks = (itemChunks: readonly RosterItemResourceChunk[], rosterType: RosterValueType): PxeValue =>
   rosterType === PxeValueType.Object
-    ? Object.fromEntries(
-        itemChunks.map(itemChunk => [itemChunk.key, itemChunk.value]),
-      )
+    ? Object.fromEntries(itemChunks.map(itemChunk => [itemChunk.key, itemChunk.value]))
     : itemChunks.map(itemChunk => itemChunk.value);
 
 const useStyles = makeStyles(() => ({

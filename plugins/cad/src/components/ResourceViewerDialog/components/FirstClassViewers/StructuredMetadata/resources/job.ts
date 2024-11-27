@@ -19,14 +19,10 @@ import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 import { getPodTemplatedStructuredMetadata } from './podTemplate';
 
-export const getJobStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getJobStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const job = resource as Job;
 
-  const podMetadata: Metadata = getPodTemplatedStructuredMetadata(
-    job.spec.template,
-  );
+  const podMetadata: Metadata = getPodTemplatedStructuredMetadata(job.spec.template);
 
   return {
     completions: job.spec.completions,

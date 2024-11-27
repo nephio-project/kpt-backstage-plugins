@@ -18,10 +18,7 @@ import { SelectItem } from '@backstage/core-components';
 import { TextField } from '@material-ui/core';
 import React, { Fragment, useMemo, useRef } from 'react';
 import { Select } from '../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 
 type OnUpdate = (newValue?: string) => void;
 
@@ -68,12 +65,7 @@ export const CustomControllerEditorAccordion = ({
   }, [isCustomController, viewModel]);
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Custom Controller"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Custom Controller" description={description} state={state}>
       <Fragment>
         <Select
           label="Custom Controller"

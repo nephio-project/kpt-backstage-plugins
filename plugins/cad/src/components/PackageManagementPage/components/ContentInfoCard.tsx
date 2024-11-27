@@ -21,14 +21,8 @@ import { Alert } from '@material-ui/lab';
 import React, { Fragment } from 'react';
 import { packagesRouteRef } from '../../../routes';
 import { Repository } from '../../../types/Repository';
-import {
-  filterPackageSummaries,
-  PackageSummary,
-} from '../../../utils/packageSummary';
-import {
-  isRepositoryReady,
-  RepositoryContentDetails,
-} from '../../../utils/repository';
+import { filterPackageSummaries, PackageSummary } from '../../../utils/packageSummary';
+import { isRepositoryReady, RepositoryContentDetails } from '../../../utils/repository';
 import { toLowerCase } from '../../../utils/string';
 import { RegisterRepositoryLink, RepositoryLink } from '../../Links';
 
@@ -52,10 +46,7 @@ export const useStyles = makeStyles({
   },
 });
 
-const getActions = (
-  repositories: Repository[],
-  className: string,
-): JSX.Element => {
+const getActions = (repositories: Repository[], className: string): JSX.Element => {
   const anyRepositoriesRegistered = repositories.length > 0;
 
   return (
@@ -77,20 +68,14 @@ const getActions = (
   );
 };
 
-export const ContentInfoCard = ({
-  contentType,
-  repositories,
-  packages,
-}: ContentInfoCardProps) => {
+export const ContentInfoCard = ({ contentType, repositories, packages }: ContentInfoCardProps) => {
   const classes = useStyles();
   const packagesRef = useRouteRef(packagesRouteRef);
 
   const title = `${contentType}s`;
   const contentTypeLowerCase = toLowerCase(contentType);
 
-  const repositoriesNotReady = repositories.filter(
-    repository => !isRepositoryReady(repository),
-  );
+  const repositoriesNotReady = repositories.filter(repository => !isRepositoryReady(repository));
 
   const published = filterPackageSummaries(packages, { isPublished: true });
   const upgradesAvailable = filterPackageSummaries(packages, {
@@ -114,11 +99,7 @@ export const ContentInfoCard = ({
       }}
     >
       <div className={classes.summary}>
-        {repositories.length === 0 && (
-          <Alert severity="info">
-            no {contentTypeLowerCase} repositories registered
-          </Alert>
-        )}
+        {repositories.length === 0 && <Alert severity="info">no {contentTypeLowerCase} repositories registered</Alert>}
 
         {repositories.length > 0 && (
           <Alert severity="success">
@@ -134,21 +115,17 @@ export const ContentInfoCard = ({
 
         {upgradesAvailable.length > 0 && (
           <Alert severity="info">
-            {upgradesAvailable.length} {contentTypeLowerCase}s with upgrades
-            available
+            {upgradesAvailable.length} {contentTypeLowerCase}s with upgrades available
           </Alert>
         )}
 
         {pendingReview.length > 0 && (
           <Alert severity="info">
-            {pendingReview.length} {contentTypeLowerCase} revisions pending
-            review
+            {pendingReview.length} {contentTypeLowerCase} revisions pending review
           </Alert>
         )}
 
-        {drafts.length > 0 && (
-          <Alert severity="info">{drafts.length} draft revisions</Alert>
-        )}
+        {drafts.length > 0 && <Alert severity="info">{drafts.length} draft revisions</Alert>}
       </div>
     </InfoCard>
   );

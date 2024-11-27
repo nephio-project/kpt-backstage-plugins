@@ -49,8 +49,7 @@ export const cadPlugin = createPlugin({
 export const CadPage = cadPlugin.provide(
   createRoutableExtension({
     name: 'config-as-data',
-    component: () =>
-      import('./components/LandingPage').then(m => m.LandingPage),
+    component: () => import('./components/LandingPage').then(m => m.LandingPage),
     mountPoint: rootRouteRef,
   }),
 );

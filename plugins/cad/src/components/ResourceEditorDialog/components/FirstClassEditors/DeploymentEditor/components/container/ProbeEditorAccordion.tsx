@@ -20,15 +20,9 @@ import { clone } from 'lodash';
 import React, { Fragment, useRef } from 'react';
 import { Probe } from '../../../../../../../types/Pod';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
-import {
-  getNumber,
-  getNumberOrString,
-} from '../../../../../../../utils/string';
+import { getNumber, getNumberOrString } from '../../../../../../../utils/string';
 import { Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (newValue: Probe) => void;
@@ -76,21 +70,14 @@ const normalizeProbe = (probe: Probe, probeHandler: string): Probe => {
 const getDescription = (probe: Probe, probeHandler: string): string => {
   if (probeHandler === 'http') return `http get ${probe.httpGet?.path || '?'}`;
 
-  if (probeHandler === 'exec')
-    return `exec ${probe.exec?.command?.join(' ') || '?'}`;
+  if (probeHandler === 'exec') return `exec ${probe.exec?.command?.join(' ') || '?'}`;
 
   if (probeHandler === 'tcp') return `tcp ${probe.tcpSocket?.port || '?'}`;
 
   return 'unknown';
 };
 
-export const ProbeEditorAccordion = ({
-  id,
-  title,
-  state,
-  value: probe,
-  onUpdate,
-}: ProbeEditorAccordionProps) => {
+export const ProbeEditorAccordion = ({ id, title, state, value: probe, onUpdate }: ProbeEditorAccordionProps) => {
   const classes = useEditorStyles();
 
   const refViewModel = useRef<Probe>(probe);
@@ -100,21 +87,13 @@ export const ProbeEditorAccordion = ({
   const probeHandler = refProbeHandler.current;
 
   const valueUpdated = (): void => {
-    const updatedProbe = normalizeProbe(
-      clone(viewModel),
-      refProbeHandler.current,
-    );
+    const updatedProbe = normalizeProbe(clone(viewModel), refProbeHandler.current);
 
     onUpdate(updatedProbe);
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title={title}
-      description={getDescription(viewModel, probeHandler)}
-      state={state}
-    >
+    <EditorAccordion id={id} title={title} description={getDescription(viewModel, probeHandler)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <Select
@@ -153,8 +132,7 @@ export const ProbeEditorAccordion = ({
                     path: '',
                     port: '',
                   };
-                  viewModel.httpGet.port =
-                    getNumberOrString(e.target.value) ?? '';
+                  viewModel.httpGet.port = getNumberOrString(e.target.value) ?? '';
                   valueUpdated();
                 }}
                 fullWidth
@@ -186,8 +164,7 @@ export const ProbeEditorAccordion = ({
                 value={viewModel.tcpSocket?.port || ''}
                 onChange={e => {
                   viewModel.tcpSocket = viewModel.tcpSocket || { port: '' };
-                  viewModel.tcpSocket.port =
-                    getNumberOrString(e.target.value) ?? '';
+                  viewModel.tcpSocket.port = getNumberOrString(e.target.value) ?? '';
                   valueUpdated();
                 }}
                 fullWidth
@@ -264,12 +241,7 @@ export const ProbeEditorAccordion = ({
             fullWidth
           />
 
-          <TextField
-            label="Placeholder"
-            variant="outlined"
-            style={{ visibility: 'hidden' }}
-            fullWidth
-          />
+          <TextField label="Placeholder" variant="outlined" style={{ visibility: 'hidden' }} fullWidth />
         </div>
       </Fragment>
     </EditorAccordion>

@@ -17,24 +17,12 @@
 import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Ingress,
-  IngressBackend,
-  IngressMetadata,
-  IngressRule,
-  IngressTLS,
-} from '../../../../../types/Ingress';
+import { Ingress, IngressBackend, IngressMetadata, IngressRule, IngressTLS } from '../../../../../types/Ingress';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  undefinedIfEmpty,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, undefinedIfEmpty, updateList } from '../util/deletable';
 import { CustomControllerEditorAccordion } from './components/CustomControllerEditorAccordion';
 import { DefaultBackendEditorAccordion } from './components/DefaultBackendEditorAccordion';
 import { IngressRuleEditorAccordion } from './components/IngressRuleEditorAccordion';
@@ -56,11 +44,7 @@ type State = {
   rules: Deletable<IngressRule>[];
 };
 
-export const IngressEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: IngressEditorProps) => {
+export const IngressEditor = ({ yaml, onUpdatedYaml, packageResources }: IngressEditorProps) => {
   const resourceYaml = loadYaml(yaml) as Ingress;
   resourceYaml.spec = resourceYaml.spec ?? {};
 

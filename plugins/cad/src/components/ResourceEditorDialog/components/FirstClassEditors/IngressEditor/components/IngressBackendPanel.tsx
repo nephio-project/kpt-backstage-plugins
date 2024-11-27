@@ -57,9 +57,7 @@ export const IngressBackendPanel = ({
       (thisService.spec.ports ?? []).forEach(port => {
         if ((port.protocol ?? 'TCP') === 'TCP') {
           selectItems.push({
-            label: `${thisService.metadata.name}:${port.name || port.port} ${
-              port.name ? `(port ${port.port})` : ''
-            }`,
+            label: `${thisService.metadata.name}:${port.name || port.port} ${port.name ? `(port ${port.port})` : ''}`,
             value: `${thisService.metadata.name}:${port.port}`,
             servicePort: port,
             serviceName: serviceResource.name,
@@ -75,27 +73,20 @@ export const IngressBackendPanel = ({
     let thisServicePort = '';
 
     if (ingressBackend.service) {
-      const selectedService = serviceResources.find(
-        r => r.name === ingressBackend.service?.name,
-      );
+      const selectedService = serviceResources.find(r => r.name === ingressBackend.service?.name);
 
       if (selectedService) {
         const backendPortName = ingressBackend.service?.port.name;
         const backendPortNumber = ingressBackend.service?.port.number;
 
-        const selectedServicePorts: ServicePort[] =
-          (loadYaml(selectedService.yaml) as Service).spec.ports ?? [];
+        const selectedServicePorts: ServicePort[] = (loadYaml(selectedService.yaml) as Service).spec.ports ?? [];
         let selectedPort;
 
         if (backendPortName) {
-          selectedPort = selectedServicePorts.find(
-            p => p.name === backendPortName,
-          );
+          selectedPort = selectedServicePorts.find(p => p.name === backendPortName);
         }
         if (backendPortNumber) {
-          selectedPort = selectedServicePorts.find(
-            p => p.port === backendPortNumber,
-          );
+          selectedPort = selectedServicePorts.find(p => p.port === backendPortNumber);
         }
 
         if (selectedPort) {
@@ -108,9 +99,7 @@ export const IngressBackendPanel = ({
   }, [ingressBackend.service, serviceResources]);
 
   const valueUpdated = (): void => {
-    const selected = servicePortSelectItems.find(
-      i => i.value === selectedServicePort,
-    );
+    const selected = servicePortSelectItems.find(i => i.value === selectedServicePort);
 
     if (selected && selected.serviceName) {
       const portName = selected.servicePort?.name || undefined;

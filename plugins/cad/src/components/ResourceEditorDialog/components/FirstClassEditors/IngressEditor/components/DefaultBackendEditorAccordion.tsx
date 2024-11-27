@@ -20,10 +20,7 @@ import React, { Fragment, useMemo, useRef } from 'react';
 import { IngressBackend } from '../../../../../../types/Ingress';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { Select } from '../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { IngressBackendPanel } from './IngressBackendPanel';
 
 type OnUpdate = (newValue?: IngressBackend) => void;
@@ -61,9 +58,7 @@ export const DefaultBackendEditorAccordion = ({
   let useDefaultBackendSelection = isDefaultBackend ? 'true' : 'false';
 
   const valueUpdated = (): void => {
-    onUpdate(
-      useDefaultBackendSelection === 'true' ? refViewModel.current : undefined,
-    );
+    onUpdate(useDefaultBackendSelection === 'true' ? refViewModel.current : undefined);
   };
 
   const description = useMemo(() => {
@@ -71,18 +66,11 @@ export const DefaultBackendEditorAccordion = ({
 
     if (!viewModel.service) return 'default backend not yet configured';
 
-    return `${viewModel.service.name}:${
-      viewModel.service.port.name || viewModel.service.port.number
-    }`;
+    return `${viewModel.service.name}:${viewModel.service.port.name || viewModel.service.port.number}`;
   }, [isDefaultBackend, viewModel]);
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Default Backend"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Default Backend" description={description} state={state}>
       <Fragment>
         <Select
           label="Default Backend"

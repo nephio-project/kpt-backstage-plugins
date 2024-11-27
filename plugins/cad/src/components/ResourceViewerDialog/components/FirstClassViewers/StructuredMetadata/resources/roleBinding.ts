@@ -15,21 +15,14 @@
  */
 
 import { KubernetesResource } from '../../../../../../types/KubernetesResource';
-import {
-  RoleBinding,
-  RoleBindingSubject,
-} from '../../../../../../types/RoleBinding';
+import { RoleBinding, RoleBindingSubject } from '../../../../../../types/RoleBinding';
 import { Metadata } from '../StructuredMetadata';
 
-export const getRoleBindingStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getRoleBindingStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const roleBinding = resource as RoleBinding;
 
   const getSubjectDescription = (subject: RoleBindingSubject): string =>
-    `→ ${subject.kind} ${subject.namespace ? `${subject.namespace}/` : ''}${
-      subject.name
-    }`;
+    `→ ${subject.kind} ${subject.namespace ? `${subject.namespace}/` : ''}${subject.name}`;
 
   return {
     binding: [

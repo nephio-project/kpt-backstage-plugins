@@ -18,15 +18,9 @@ import { TextField } from '@material-ui/core';
 import { clone } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
 import { KubernetesKeyValueObject } from '../../../../../../../types/KubernetesResource';
-import {
-  ConfigMapExpr,
-  PackageVariantSetPackageContext,
-} from '../../../../../../../types/PackageVariantSet';
+import { ConfigMapExpr, PackageVariantSetPackageContext } from '../../../../../../../types/PackageVariantSet';
 import { KeyValueEditorAccordion } from '../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 import { ExprEditorAccordion } from './ExprEditorAccordion';
 
@@ -72,9 +66,7 @@ export const PackageContextEditorAccordion = ({
             value={(viewModel.removeKeys ?? []).join(', ')}
             onChange={e => {
               const removeKey = e.target.value;
-              viewModel.removeKeys = removeKey
-                ? removeKey.split(',').map(v => v.trim())
-                : undefined;
+              viewModel.removeKeys = removeKey ? removeKey.split(',').map(v => v.trim()) : undefined;
               valueUpdated();
             }}
             fullWidth
@@ -110,9 +102,7 @@ export const PackageContextEditorAccordion = ({
             value={(viewModel.removeKeyExprs ?? []).join(', ')}
             onChange={e => {
               const removeKeyExpr = e.target.value;
-              viewModel.removeKeyExprs = removeKeyExpr
-                ? removeKeyExpr.split(',').map(v => v.trim())
-                : undefined;
+              viewModel.removeKeyExprs = removeKeyExpr ? removeKeyExpr.split(',').map(v => v.trim()) : undefined;
               valueUpdated();
             }}
             fullWidth

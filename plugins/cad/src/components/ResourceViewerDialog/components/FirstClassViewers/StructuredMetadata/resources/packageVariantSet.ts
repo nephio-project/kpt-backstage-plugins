@@ -26,11 +26,7 @@ const getValue = (fieldValue: any): string => {
   return fieldValue;
 };
 
-const setContextdata = (
-  contextdata: Metadata,
-  resourceField: any,
-  fieldName: string,
-): void => {
+const setContextdata = (contextdata: Metadata, resourceField: any, fieldName: string): void => {
   if (Array.isArray(resourceField)) {
     const isArrayFieldObject = typeof resourceField[0] === 'object';
 
@@ -56,9 +52,7 @@ const setContextdata = (
   }
 };
 
-export const getPackageVariantSetStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getPackageVariantSetStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const packageVariantSet = resource as PackageVariantSet;
   const contextdata: Metadata = {};
   setContextdata(contextdata, packageVariantSet.spec.targets, 'target');
@@ -71,18 +65,14 @@ export const getPackageVariantSetStructuredMetadata = (
 
   for (const thisKey of Object.keys(contextdata)) {
     const isPrefix = thisKey.includes('/');
-    const thisKeyName = isPrefix
-      ? thisKey.slice(0, thisKey.indexOf('/'))
-      : thisKey;
+    const thisKeyName = isPrefix ? thisKey.slice(0, thisKey.indexOf('/')) : thisKey;
 
     if (!customMetadata[thisKeyName]) {
       customMetadata[thisKeyName] = [];
     }
 
     const fieldKey = thisKey.slice(thisKeyName.length + 1);
-    customMetadata[thisKeyName].push(
-      isPrefix ? `${fieldKey}: ${contextdata[thisKey]}` : contextdata[thisKey],
-    );
+    customMetadata[thisKeyName].push(isPrefix ? `${fieldKey}: ${contextdata[thisKey]}` : contextdata[thisKey]);
   }
   return customMetadata;
 };

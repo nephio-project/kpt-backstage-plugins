@@ -18,17 +18,13 @@ import { APIService } from '../../../../../../types/APIService';
 import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 
-export const getAPIServiceStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getAPIServiceStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const apiService = resource as APIService;
 
   const serviceSpec = apiService.spec.service;
 
   const groupVersion = `${apiService.spec.group}/${apiService.spec.version}`;
-  const service = `${serviceSpec.namespace}/${serviceSpec.name}:${
-    serviceSpec.port ?? 443
-  }`;
+  const service = `${serviceSpec.namespace}/${serviceSpec.name}:${serviceSpec.port ?? 443}`;
 
   return {
     apiService: `${groupVersion} → ${service}`,

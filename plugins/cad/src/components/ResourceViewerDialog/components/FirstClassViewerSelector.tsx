@@ -37,10 +37,7 @@ import { getServiceStructuredMetadata } from './FirstClassViewers/StructuredMeta
 import { getSetLabelsStructuredMetadata } from './FirstClassViewers/StructuredMetadata/resources/setLabels';
 import { getStarlarkRunStructuredMetadata } from './FirstClassViewers/StructuredMetadata/resources/starlarkRun';
 import { getStatefulSetStructuredMetadata } from './FirstClassViewers/StructuredMetadata/resources/statefulSet';
-import {
-  CustomMetadataFn,
-  StructuredMetadata,
-} from './FirstClassViewers/StructuredMetadata/StructuredMetadata';
+import { CustomMetadataFn, StructuredMetadata } from './FirstClassViewers/StructuredMetadata/StructuredMetadata';
 
 type FirstClassViewerSelectorProps = {
   groupVersionKind: string;
@@ -49,9 +46,7 @@ type FirstClassViewerSelectorProps = {
   showDiff?: boolean;
 };
 
-const getCustomMetadataFn = (
-  groupVersionKind: string,
-): CustomMetadataFn | undefined => {
+const getCustomMetadataFn = (groupVersionKind: string): CustomMetadataFn | undefined => {
   switch (groupVersionKind) {
     case 'apiextensions.k8s.io/v1/CustomResourceDefinition':
       return getCustomResourceDefinitionStructuredMetadata;

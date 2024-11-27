@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export const isEmptyPxeValue = (value: any): boolean =>
-  ['', null, undefined].includes(value);
+export const isEmptyPxeValue = (value: any): boolean => ['', null, undefined].includes(value);

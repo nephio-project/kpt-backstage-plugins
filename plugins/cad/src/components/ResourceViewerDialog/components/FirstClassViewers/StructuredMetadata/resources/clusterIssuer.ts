@@ -18,9 +18,7 @@ import { ClusterIssuer } from '../../../../../../types/ClusterIssuer';
 import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 
-export const getClusterIssuerStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getClusterIssuerStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const clusterIssuer = resource as ClusterIssuer;
 
   return {

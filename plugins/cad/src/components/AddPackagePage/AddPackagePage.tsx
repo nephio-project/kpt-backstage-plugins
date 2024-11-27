@@ -31,10 +31,7 @@ import useAsync from 'react-use/lib/useAsync';
 import { ConfigAsDataApi, configAsDataApiRef } from '../../apis';
 import { packageRouteRef } from '../../routes';
 import { Kptfile } from '../../types/Kptfile';
-import {
-  PackageRevision,
-  PackageRevisionLifecycle,
-} from '../../types/PackageRevision';
+import { PackageRevision, PackageRevisionLifecycle } from '../../types/PackageRevision';
 import { PackageRevisionResourcesMap } from '../../types/PackageRevisionResource';
 import { Repository } from '../../types/Repository';
 import { groupFunctionsByName } from '../../utils/function';
@@ -65,12 +62,7 @@ import { sortByLabel } from '../../utils/selectItem';
 import { emptyIfUndefined, toLowerCase } from '../../utils/string';
 import { dumpYaml, loadYaml } from '../../utils/yaml';
 import { Checkbox, Select } from '../Controls';
-import {
-  LandingPageLink,
-  PackageLink,
-  PackagesLink,
-  RepositoryLink,
-} from '../Links';
+import { LandingPageLink, PackageLink, PackagesLink, RepositoryLink } from '../Links';
 import {
   applyNamespaceState,
   getNamespaceDefaultState,
@@ -129,17 +121,13 @@ type KptfileState = {
   site: string;
 };
 
-const mapPackageRevisionToSelectItem = (
-  packageRevision: PackageRevision,
-): PackageRevisionSelectItem => ({
+const mapPackageRevisionToSelectItem = (packageRevision: PackageRevision): PackageRevisionSelectItem => ({
   label: packageRevision.spec.packageName,
   value: packageRevision.metadata.name,
   packageRevision: packageRevision,
 });
 
-const mapRepositoryToSelectItem = (
-  repository: Repository,
-): RepositorySelectItem => ({
+const mapRepositoryToSelectItem = (repository: Repository): RepositorySelectItem => ({
   label: repository.metadata.name,
   value: repository.metadata.name,
   repository: repository,
@@ -149,13 +137,10 @@ const getPackageResources = async (
   api: ConfigAsDataApi,
   packageName: string,
 ): Promise<[PackageResource[], PackageRevisionResourcesMap, string]> => {
-  const packageResourcesResponse = await api.getPackageRevisionResources(
-    packageName,
-  );
+  const packageResourcesResponse = await api.getPackageRevisionResources(packageName);
   const resourcesMap = packageResourcesResponse.spec.resources;
   const resources = getPackageResourcesFromResourcesMap(resourcesMap);
-  const resourceVersion =
-    packageResourcesResponse.metadata.resourceVersion || '';
+  const resourceVersion = packageResourcesResponse.metadata.resourceVersion || '';
 
   return [resources, resourcesMap, resourceVersion];
 };
@@ -175,18 +160,14 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
   const newPackageRevision = 'v1';
 
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [addPackageAction, setAddPackageAction] =
-    useState<AddPackageSelectItem>();
-  const [addPackageSelectItems, setAddPackageSelectItems] = useState<
-    AddPackageSelectItem[]
-  >([]);
+  const [addPackageAction, setAddPackageAction] = useState<AddPackageSelectItem>();
+  const [addPackageSelectItems, setAddPackageSelectItems] = useState<AddPackageSelectItem[]>([]);
 
   const allRepositories = useRef<Repository[]>([]);
   const allClonablePackageRevisions = useRef<PackageRevision[]>([]);
 
   const [targetRepository, setTargetRepository] = useState<Repository>();
-  const [sourcePackageRevision, setSourcePackageRevision] =
-    useState<PackageRevision>();
+  const [sourcePackageRevision, setSourcePackageRevision] = useState<PackageRevision>();
   const [sourceRepository, setSourceRepository] = useState<Repository>();
 
   const [kptfileState, setKptfileState] = useState<KptfileState>({
@@ -196,39 +177,27 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     site: '',
   });
 
-  const [namespaceState, setNamespaceState] = useState<NamespaceState>(
-    getNamespaceDefaultState(),
-  );
+  const [namespaceState, setNamespaceState] = useState<NamespaceState>(getNamespaceDefaultState());
 
-  const [validateResourcesState, setValidateResourcesState] =
-    useState<ValidateResourcesState>(getValidateResourcesDefaultState());
+  const [validateResourcesState, setValidateResourcesState] = useState<ValidateResourcesState>(
+    getValidateResourcesDefaultState(),
+  );
 
   const [isCreatingPackage, setIsCreatingPackage] = useState<boolean>(false);
 
-  const [
-    sourcePackageRevisionSelectItems,
-    setSourcePackageRevisionSelectItems,
-  ] = useState<PackageRevisionSelectItem[]>([]);
-  const [targetRepositorySelectItems, setTargetRepositorySelectItems] =
-    useState<RepositorySelectItem[]>([]);
-  const [sourceRepositorySelectItems, setSourceRepositorySelectItems] =
-    useState<RepositorySelectItem[]>([]);
+  const [sourcePackageRevisionSelectItems, setSourcePackageRevisionSelectItems] = useState<PackageRevisionSelectItem[]>(
+    [],
+  );
+  const [targetRepositorySelectItems, setTargetRepositorySelectItems] = useState<RepositorySelectItem[]>([]);
+  const [sourceRepositorySelectItems, setSourceRepositorySelectItems] = useState<RepositorySelectItem[]>([]);
 
-  const targetRepositoryPackageDescriptor = targetRepository
-    ? getPackageDescriptor(targetRepository)
-    : 'Package';
-  const sourceRepositoryPackageDescriptor = sourceRepository
-    ? getPackageDescriptor(sourceRepository)
-    : 'Package';
+  const targetRepositoryPackageDescriptor = targetRepository ? getPackageDescriptor(targetRepository) : 'Package';
+  const sourceRepositoryPackageDescriptor = sourceRepository ? getPackageDescriptor(sourceRepository) : 'Package';
 
   const packageRef = useRouteRef(packageRouteRef);
 
-  const targetRepositoryPackageDescriptorLowercase = toLowerCase(
-    targetRepositoryPackageDescriptor,
-  );
-  const sourceRepositoryPackageDescriptorLowercase = toLowerCase(
-    sourceRepositoryPackageDescriptor,
-  );
+  const targetRepositoryPackageDescriptorLowercase = toLowerCase(targetRepositoryPackageDescriptor);
+  const sourceRepositoryPackageDescriptorLowercase = toLowerCase(sourceRepositoryPackageDescriptor);
 
   const { loading, error } = useAsync(async (): Promise<void> => {
     const [{ items: thisAllRepositories }, allPackages] = await Promise.all([
@@ -239,9 +208,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     allRepositories.current = thisAllRepositories;
     allClonablePackageRevisions.current = allPackages.filter(canCloneRevision);
 
-    const thisRepository = repositoryName
-      ? getRepository(thisAllRepositories, repositoryName)
-      : undefined;
+    const thisRepository = repositoryName ? getRepository(thisAllRepositories, repositoryName) : undefined;
 
     const getAddPackageDescriptor = (): string => {
       if (thisRepository) {
@@ -259,13 +226,8 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     const actionSelectItems: AddPackageSelectItem[] = [];
 
     if (isAddPackageAction) {
-      const contentRepositories = filterRepositories(
-        thisAllRepositories,
-        packageDescriptor,
-      );
-      const targetRepositoryItems = contentRepositories.map(
-        mapRepositoryToSelectItem,
-      );
+      const contentRepositories = filterRepositories(thisAllRepositories, packageDescriptor);
+      const targetRepositoryItems = contentRepositories.map(mapRepositoryToSelectItem);
 
       setTargetRepositorySelectItems(targetRepositoryItems);
       setTargetRepository(thisRepository ?? contentRepositories[0]);
@@ -282,9 +244,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
         const cloneTo = RepositoryContentDetails[contentType].cloneTo;
         const contentTypeLowerCase = toLowerCase(contentType);
 
-        const cloneToDetails = cloneTo.find(
-          clone => clone.content === packageDescriptor,
-        );
+        const cloneToDetails = cloneTo.find(clone => clone.content === packageDescriptor);
 
         if (cloneToDetails) {
           actionSelectItems.push({
@@ -300,12 +260,9 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     if (isCloneNamedPackageAction) {
       const thisPackageRevision = getPackageRevision(allPackages, packageName);
 
-      for (const contentType of RepositoryContentDetails[packageDescriptor]
-        .cloneTo) {
+      for (const contentType of RepositoryContentDetails[packageDescriptor].cloneTo) {
         actionSelectItems.push({
-          label: `Create a new ${toLowerCase(
-            contentType.content,
-          )} by cloning the ${
+          label: `Create a new ${toLowerCase(contentType.content)} by cloning the ${
             thisPackageRevision.spec.packageName
           } ${toLowerCase(packageDescriptor)}`,
           value: contentType.content,
@@ -326,8 +283,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     const repositoryFilter = (repository: Repository): boolean =>
       getPackageDescriptor(repository) === addPackageAction?.value;
 
-    const filteredRepositories =
-      allRepositories.current.filter(repositoryFilter);
+    const filteredRepositories = allRepositories.current.filter(repositoryFilter);
 
     const repositorySelectItems: RepositorySelectItem[] = sortByLabel(
       filteredRepositories.map(mapRepositoryToSelectItem),
@@ -347,11 +303,9 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
 
   useEffect(() => {
     if (sourceRepository && isAddPackageAction) {
-      const repositoryClonablePackages =
-        allClonablePackageRevisions.current.filter(
-          packageRevision =>
-            packageRevision.spec.repository === sourceRepository.metadata.name,
-        );
+      const repositoryClonablePackages = allClonablePackageRevisions.current.filter(
+        packageRevision => packageRevision.spec.repository === sourceRepository.metadata.name,
+      );
 
       const allowPackageRevisions = sortByLabel<PackageRevisionSelectItem>(
         repositoryClonablePackages.map(mapPackageRevisionToSelectItem),
@@ -405,11 +359,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
 
     const baseTask = sourcePackageRevision
       ? getCloneTask(sourcePackageRevision.metadata.name)
-      : getInitTask(
-          kptfileState.description,
-          kptfileState.keywords,
-          kptfileState.site,
-        );
+      : getInitTask(kptfileState.description, kptfileState.keywords, kptfileState.site);
 
     const tasks = [baseTask];
 
@@ -428,9 +378,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     return thisPackage?.spec.packageName || packageName;
   };
 
-  const updateKptfileInfo = (
-    resourcesMap: PackageRevisionResourcesMap,
-  ): PackageRevisionResourcesMap => {
+  const updateKptfileInfo = (resourcesMap: PackageRevisionResourcesMap): PackageRevisionResourcesMap => {
     const isClonePackageAction = !!sourcePackageRevision;
 
     if (!isClonePackageAction) {
@@ -451,38 +399,21 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
 
     const updatedKptfileYaml = dumpYaml(thisKptfile);
 
-    const updatedResourceMap = updateResourceInResourcesMap(
-      resourcesMap,
-      kptfileResource,
-      updatedKptfileYaml,
-    );
+    const updatedResourceMap = updateResourceInResourcesMap(resourcesMap, kptfileResource, updatedKptfileYaml);
 
     return updatedResourceMap;
   };
 
-  const updatePackageResources = async (
-    newPackageName: string,
-  ): Promise<void> => {
+  const updatePackageResources = async (newPackageName: string): Promise<void> => {
     const allKptFunctions = await api.listCatalogFunctions();
     const kptFunctions = groupFunctionsByName(allKptFunctions);
 
-    const [_, resourcesMap, resourceVersion] = await getPackageResources(
-      api,
-      newPackageName,
-    );
+    const [_, resourcesMap, resourceVersion] = await getPackageResources(api, newPackageName);
 
     let updatedResourcesMap = resourcesMap;
 
-    updatedResourcesMap = await applyValidateResourcesState(
-      validateResourcesState,
-      updatedResourcesMap,
-      kptFunctions,
-    );
-    updatedResourcesMap = await applyNamespaceState(
-      namespaceState,
-      updatedResourcesMap,
-      kptFunctions,
-    );
+    updatedResourcesMap = await applyValidateResourcesState(validateResourcesState, updatedResourcesMap, kptFunctions);
+    updatedResourcesMap = await applyNamespaceState(namespaceState, updatedResourcesMap, kptFunctions);
     updatedResourcesMap = updateKptfileInfo(updatedResourcesMap);
 
     if (updatedResourcesMap !== resourcesMap) {
@@ -502,9 +433,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     setIsCreatingPackage(true);
 
     try {
-      const newPackageRevisionResource = await api.createPackageRevision(
-        resourceJson,
-      );
+      const newPackageRevisionResource = await api.createPackageRevision(resourceJson);
       const newPackageRevisionName = newPackageRevisionResource.metadata.name;
 
       try {
@@ -539,20 +468,12 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
         <Fragment>
           <Breadcrumbs>
             <LandingPageLink breadcrumb />
-            <RepositoryLink
-              repository={sourceRepository as Repository}
-              breadcrumb
-            />
-            <PackageLink
-              packageRevision={sourcePackageRevision as PackageRevision}
-              breadcrumb
-            />
+            <RepositoryLink repository={sourceRepository as Repository} breadcrumb />
+            <PackageLink packageRevision={sourcePackageRevision as PackageRevision} breadcrumb />
             <Typography>clone</Typography>
           </Breadcrumbs>
 
-          <ContentHeader
-            title={`Clone ${getDisplayPackageName(sourcePackageRevision)}`}
-          />
+          <ContentHeader title={`Clone ${getDisplayPackageName(sourcePackageRevision)}`} />
         </Fragment>
       )}
 
@@ -560,18 +481,8 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
         <Fragment>
           <Breadcrumbs>
             <LandingPageLink breadcrumb />
-            {repositoryName && (
-              <RepositoryLink
-                repository={targetRepository as Repository}
-                breadcrumb
-              />
-            )}
-            {packageContent && (
-              <PackagesLink
-                contentDetails={getContentDetailsByLink(packageContent)}
-                breadcrumb
-              />
-            )}
+            {repositoryName && <RepositoryLink repository={targetRepository as Repository} breadcrumb />}
+            {packageContent && <PackagesLink contentDetails={getContentDetailsByLink(packageContent)} breadcrumb />}
             <Typography>add</Typography>
           </Breadcrumbs>
 
@@ -579,10 +490,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
         </Fragment>
       )}
 
-      <SimpleStepper
-        activeStep={activeStep}
-        onStepChange={(_, next) => setActiveStep(next)}
-      >
+      <SimpleStepper activeStep={activeStep} onStepChange={(_, next) => setActiveStep(next)}>
         <SimpleStepperStep title="Action">
           <div className={classes.stepContent}>
             {isCloneNamedPackageAction && (
@@ -590,11 +498,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                 <Select
                   label="Action"
                   onChange={value =>
-                    setAddPackageAction(
-                      addPackageSelectItems.find(
-                        packageAction => packageAction.value === value,
-                      ),
-                    )
+                    setAddPackageAction(addPackageSelectItems.find(packageAction => packageAction.value === value))
                   }
                   selected={emptyIfUndefined(addPackageAction?.value as string)}
                   items={addPackageSelectItems}
@@ -605,9 +509,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                   label={`Destination ${targetRepositoryPackageDescriptor} Repository`}
                   onChange={selectedRepositoryName =>
                     setTargetRepository(
-                      targetRepositorySelectItems.find(
-                        r => r.value === selectedRepositoryName,
-                      )?.repository,
+                      targetRepositorySelectItems.find(r => r.value === selectedRepositoryName)?.repository,
                     )
                   }
                   selected={emptyIfUndefined(targetRepository?.metadata.name)}
@@ -622,11 +524,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                 <Select
                   label="Action"
                   onChange={value =>
-                    setAddPackageAction(
-                      addPackageSelectItems.find(
-                        packageAction => packageAction.value === value,
-                      ),
-                    )
+                    setAddPackageAction(addPackageSelectItems.find(packageAction => packageAction.value === value))
                   }
                   selected={emptyIfUndefined(addPackageAction?.value as string)}
                   items={addPackageSelectItems}
@@ -639,14 +537,10 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                       label={`Source ${sourceRepositoryPackageDescriptor} Repository`}
                       onChange={selectedRepositoryName =>
                         setSourceRepository(
-                          sourceRepositorySelectItems.find(
-                            r => r.value === selectedRepositoryName,
-                          )?.repository,
+                          sourceRepositorySelectItems.find(r => r.value === selectedRepositoryName)?.repository,
                         )
                       }
-                      selected={emptyIfUndefined(
-                        sourceRepository?.metadata.name,
-                      )}
+                      selected={emptyIfUndefined(sourceRepository?.metadata.name)}
                       items={sourceRepositorySelectItems}
                       helperText={`The repository that contains the ${sourceRepositoryPackageDescriptorLowercase} you want to clone.`}
                     />
@@ -655,14 +549,10 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                       label={`${sourceRepositoryPackageDescriptor} to Clone`}
                       onChange={value =>
                         setSourcePackageRevision(
-                          sourcePackageRevisionSelectItems.find(
-                            p => p.value === value,
-                          )?.packageRevision,
+                          sourcePackageRevisionSelectItems.find(p => p.value === value)?.packageRevision,
                         )
                       }
-                      selected={emptyIfUndefined(
-                        sourcePackageRevision?.metadata.name,
-                      )}
+                      selected={emptyIfUndefined(sourcePackageRevision?.metadata.name)}
                       items={sourcePackageRevisionSelectItems}
                       helperText={`The ${sourceRepositoryPackageDescriptorLowercase} to clone.`}
                     />
@@ -674,9 +564,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                     label={`Destination ${targetRepositoryPackageDescriptor} Repository`}
                     onChange={selectedRepositoryName =>
                       setTargetRepository(
-                        targetRepositorySelectItems.find(
-                          r => r.value === selectedRepositoryName,
-                        )?.repository,
+                        targetRepositorySelectItems.find(r => r.value === selectedRepositoryName)?.repository,
                       )
                     }
                     selected={emptyIfUndefined(targetRepository?.metadata.name)}
@@ -689,10 +577,9 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
 
             {!!targetRepository && isReadOnlyRepository(targetRepository) && (
               <Alert severity="error" icon={false}>
-                A new {targetRepositoryPackageDescriptorLowercase} cannot be
-                created in the {targetRepository.metadata.name} repository since
-                the repository is read-only. Another destination repository will
-                need to be selected.
+                A new {targetRepositoryPackageDescriptorLowercase} cannot be created in the{' '}
+                {targetRepository.metadata.name} repository since the repository is read-only. Another destination
+                repository will need to be selected.
               </Alert>
             )}
 
@@ -748,9 +635,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
               label="Keywords"
               variant="outlined"
               value={kptfileState.keywords}
-              onChange={e =>
-                setKptfileState(s => ({ ...s, keywords: e.target.value }))
-              }
+              onChange={e => setKptfileState(s => ({ ...s, keywords: e.target.value }))}
               fullWidth
               helperText="Optional. Comma separated list of keywords."
             />
@@ -759,9 +644,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
               label="Site"
               variant="outlined"
               value={kptfileState.site}
-              onChange={e =>
-                setKptfileState(s => ({ ...s, site: e.target.value }))
-              }
+              onChange={e => setKptfileState(s => ({ ...s, site: e.target.value }))}
               fullWidth
               helperText={`Optional. The URL for the ${targetRepositoryPackageDescriptorLowercase}'s web page.`}
             />
@@ -772,11 +655,9 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
           <div className={classes.stepContent}>
             {namespaceState.advancedConfiguration && (
               <Alert severity="info" icon={false}>
-                The namespace is configured using advanced settings on the{' '}
-                {sourcePackageRevision?.spec.packageName}{' '}
-                {sourceRepositoryPackageDescriptorLowercase} and can only be
-                updated after the {targetRepositoryPackageDescriptorLowercase}{' '}
-                is created.
+                The namespace is configured using advanced settings on the {sourcePackageRevision?.spec.packageName}{' '}
+                {sourceRepositoryPackageDescriptorLowercase} and can only be updated after the{' '}
+                {targetRepositoryPackageDescriptorLowercase} is created.
               </Alert>
             )}
 
@@ -826,8 +707,7 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
                           value: 'user-defined',
                         },
                         {
-                          label:
-                            'Set namespace to the name of the deployment instance',
+                          label: 'Set namespace to the name of the deployment instance',
                           value: 'deployment',
                         },
                       ]}

@@ -45,16 +45,9 @@ export const InjectorEditorAccordion = ({
 
   const description = `${viewModel.group ? `${viewModel.group}/` : ''}${
     viewModel.version ? `${viewModel.version}/` : ''
-  }${viewModel.kind ? `${viewModel.kind}@` : ''}${
-    viewModel.name ? `${viewModel.name}` : ''
-  }`;
+  }${viewModel.kind ? `${viewModel.kind}@` : ''}${viewModel.name ? `${viewModel.name}` : ''}`;
   return (
-    <EditorAccordion
-      id={id}
-      state={state}
-      title={title}
-      description={description}
-    >
+    <EditorAccordion id={id} state={state} title={title} description={description}>
       <TextField
         key="group"
         label="Group"

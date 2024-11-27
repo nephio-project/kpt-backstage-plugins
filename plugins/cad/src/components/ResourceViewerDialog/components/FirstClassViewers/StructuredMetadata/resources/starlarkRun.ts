@@ -18,9 +18,7 @@ import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { StarlarkRun } from '../../../../../../types/StarlarkRun';
 import { Metadata } from '../StructuredMetadata';
 
-export const getStarlarkRunStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getStarlarkRunStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const starlarkRun = resource as StarlarkRun;
 
   return {

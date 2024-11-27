@@ -23,12 +23,7 @@ import { useEditorStyles } from '../../styles';
 import { RepositoriesEditorAccordion } from './RepositoriesEditorAccordion';
 import { ObjectSelectorEditorAccordion } from './ObjectSelectorEditorAccordion';
 import { RepositorySelectorEditorAccordion } from './RepositorySelectorEditorAccordion';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../../util/deletable';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 
 type OnUpdate = (value: any) => void;

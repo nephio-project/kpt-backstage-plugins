@@ -34,13 +34,9 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
   const { name, entries: childEntries } = configurationEntry;
 
   const sectionIdRef = useRef(`section-${nanoid()}`);
-  const [expandedSection, setExpandedSection] =
-    useState<PxeExpandedSectionState>(undefined);
+  const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
 
-  const description = generateSectionDescription(
-    configurationEntry,
-    resourceChunk,
-  );
+  const description = generateSectionDescription(configurationEntry, resourceChunk);
 
   return (
     <EditorAccordion

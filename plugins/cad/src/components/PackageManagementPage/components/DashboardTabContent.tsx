@@ -18,10 +18,7 @@ import { makeStyles } from '@material-ui/core';
 import { flatten, groupBy } from 'lodash';
 import React from 'react';
 import { RepositorySummary } from '../../../types/RepositorySummary';
-import {
-  getPackageDescriptor,
-  PackageContentSummaryOrder,
-} from '../../../utils/repository';
+import { getPackageDescriptor, PackageContentSummaryOrder } from '../../../utils/repository';
 import { ContentInfoCard } from './ContentInfoCard';
 
 type DashboardTabContentProps = {
@@ -47,12 +44,9 @@ export const useStyles = makeStyles({
   },
 });
 
-const getDescriptor = (summary: RepositorySummary): string =>
-  getPackageDescriptor(summary.repository);
+const getDescriptor = (summary: RepositorySummary): string => getPackageDescriptor(summary.repository);
 
-export const DashboardTabContent = ({
-  summaries,
-}: DashboardTabContentProps) => {
+export const DashboardTabContent = ({ summaries }: DashboardTabContentProps) => {
   const classes = useStyles();
 
   const repositoriesByContentType = groupBy(summaries, getDescriptor);
@@ -60,14 +54,9 @@ export const DashboardTabContent = ({
   return (
     <div className={classes.cards}>
       {PackageContentSummaryOrder.map(contentType => {
-        const contentRepositories =
-          repositoriesByContentType[contentType] || [];
-        const packageSummaries = flatten(
-          contentRepositories.map(r => r.packageSummaries || []),
-        );
-        const repositories = contentRepositories.map(
-          repository => repository.repository,
-        );
+        const contentRepositories = repositoriesByContentType[contentType] || [];
+        const packageSummaries = flatten(contentRepositories.map(r => r.packageSummaries || []));
+        const repositories = contentRepositories.map(repository => repository.repository);
 
         return (
           <ContentInfoCard

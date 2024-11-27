@@ -18,10 +18,7 @@ import React, { useRef, useState } from 'react';
 import { clone } from 'lodash';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button } from '@material-ui/core';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import {
   PackageVariantSetRepositorySelector,
   PackageVariantSetTempleate,
@@ -95,11 +92,7 @@ export const RepositorySelectorEditorAccordion = ({
         }}
       />
       <div className={classes.multiControlRow}>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete Repository Selector
         </Button>
       </div>

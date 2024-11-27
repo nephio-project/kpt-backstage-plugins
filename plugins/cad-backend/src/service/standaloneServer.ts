@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  createServiceBuilder,
-  loadBackendConfig,
-} from '@backstage/backend-common';
+import { createServiceBuilder, loadBackendConfig } from '@backstage/backend-common';
 import { Server } from 'http';
 import { Logger } from 'winston';
 import { createRouter } from './router';
@@ -28,9 +25,7 @@ export interface ServerOptions {
   logger: Logger;
 }
 
-export async function startStandaloneServer(
-  options: ServerOptions,
-): Promise<Server> {
+export async function startStandaloneServer(options: ServerOptions): Promise<Server> {
   const logger = options.logger.child({ service: 'cad-backend-backend' });
   const config = await loadBackendConfig({ logger, argv: process.argv });
 
@@ -40,9 +35,7 @@ export async function startStandaloneServer(
     logger,
   });
 
-  let service = createServiceBuilder(module)
-    .setPort(options.port)
-    .addRouter('/cad-backend', router);
+  let service = createServiceBuilder(module).setPort(options.port).addRouter('/cad-backend', router);
   if (options.enableCors) {
     service = service.enableCors({ origin: 'http://localhost:3000' });
   }

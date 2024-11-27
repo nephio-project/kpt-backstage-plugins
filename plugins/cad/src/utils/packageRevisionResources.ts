@@ -17,17 +17,9 @@
 import { diffLines } from 'diff';
 import { cloneDeep, kebabCase, sum } from 'lodash';
 import { KubernetesResource } from '../types/KubernetesResource';
-import {
-  PackageRevisionResources,
-  PackageRevisionResourcesMap,
-} from '../types/PackageRevisionResource';
+import { PackageRevisionResources, PackageRevisionResourcesMap } from '../types/PackageRevisionResource';
 import { removeInternalKptAnnotations } from './kubernetesResource';
-import {
-  createMultiResourceYaml,
-  dumpYaml,
-  getResourcesFromMultiResourceYaml,
-  loadYaml,
-} from './yaml';
+import { createMultiResourceYaml, dumpYaml, getResourcesFromMultiResourceYaml, loadYaml } from './yaml';
 
 export type PackageResource = {
   id: string;
@@ -92,9 +84,7 @@ export const getPackageRevisionResources = (
   packageRevisionResources: PackageRevisionResources[],
   packageRevisionName: string,
 ): PackageRevisionResources => {
-  return packageRevisionResources.find(
-    r => r.metadata.name === packageRevisionName,
-  ) as PackageRevisionResources;
+  return packageRevisionResources.find(r => r.metadata.name === packageRevisionName) as PackageRevisionResources;
 };
 
 export const getPackageRevisionResourcesResource = (
@@ -117,14 +107,9 @@ export const getPackageRevisionResourcesResource = (
   return packageRevisionResources;
 };
 
-export const getPackageResourcesFromResourcesMap = (
-  resourcesMap: PackageRevisionResourcesMap,
-): PackageResource[] => {
+export const getPackageResourcesFromResourcesMap = (resourcesMap: PackageRevisionResourcesMap): PackageResource[] => {
   const yamlFileEntries = Object.entries(resourcesMap).filter(
-    file =>
-      file[0].endsWith('.yaml') ||
-      file[0] === 'Kptfile' ||
-      file[0].endsWith('/Kptfile'),
+    file => file[0].endsWith('.yaml') || file[0] === 'Kptfile' || file[0].endsWith('/Kptfile'),
   );
 
   const resources = yamlFileEntries.map(([filename, multiResourceYaml]) => {
@@ -133,9 +118,7 @@ export const getPackageResourcesFromResourcesMap = (
     return resourcesYaml.map((resourceYaml, index) => {
       const k8sResource = loadYaml(resourceYaml) as KubernetesResource;
 
-      const uniqueId = `${k8sResource.kind}:${
-        filename ?? k8sResource.metadata.name
-      }:${index}`;
+      const uniqueId = `${k8sResource.kind}:${filename ?? k8sResource.metadata.name}:${index}`;
 
       return {
         id: uniqueId,
@@ -146,10 +129,7 @@ export const getPackageResourcesFromResourcesMap = (
         namespace: k8sResource.metadata.namespace,
         yaml: resourceYaml,
         resourceIndex: index,
-        isLocalConfigResource:
-          !!k8sResource.metadata.annotations?.[
-            'config.kubernetes.io/local-config'
-          ],
+        isLocalConfigResource: !!k8sResource.metadata.annotations?.['config.kubernetes.io/local-config'],
       };
     });
   });
@@ -157,10 +137,7 @@ export const getPackageResourcesFromResourcesMap = (
   return resources.flat();
 };
 
-const getResourcesForFile = (
-  resourcesMap: PackageRevisionResourcesMap,
-  filename: string,
-): string[] => {
+const getResourcesForFile = (resourcesMap: PackageRevisionResourcesMap, filename: string): string[] => {
   const allResources = getPackageResourcesFromResourcesMap(resourcesMap);
 
   return allResources.filter(f => f.filename === filename).map(r => r.yaml);
@@ -174,9 +151,7 @@ const getNewResourceFilename = (
   const resourceYaml = loadYaml(packageResource.yaml) as KubernetesResource;
 
   const getFilenameProposal = (iteration: number): string => {
-    let proposedFilename = `${kebabCase(resourceYaml.kind)}${
-      iteration > 0 ? `.${iteration}` : ''
-    }.yaml`;
+    let proposedFilename = `${kebabCase(resourceYaml.kind)}${iteration > 0 ? `.${iteration}` : ''}.yaml`;
 
     if (packageResource.component) {
       proposedFilename = `${packageResource.component}/${proposedFilename}`;
@@ -200,10 +175,7 @@ export const addResourceToResourcesMap = (
   packageResource: PackageResource,
 ): PackageRevisionResourcesMap => {
   if (!packageResource.filename) {
-    packageResource.filename = getNewResourceFilename(
-      resourcesMap,
-      packageResource,
-    );
+    packageResource.filename = getNewResourceFilename(resourcesMap, packageResource);
   }
 
   const filename = packageResource.filename;
@@ -270,25 +242,15 @@ export const updateResourcesMap = (
   let newResourcesMap = resourcesMap;
 
   for (const packageResource of resourcesToAdd) {
-    newResourcesMap = addResourceToResourcesMap(
-      newResourcesMap,
-      packageResource,
-    );
+    newResourcesMap = addResourceToResourcesMap(newResourcesMap, packageResource);
   }
 
   for (const packageResource of resourcesToUpdate) {
-    newResourcesMap = updateResourceInResourcesMap(
-      newResourcesMap,
-      packageResource,
-      packageResource.yaml,
-    );
+    newResourcesMap = updateResourceInResourcesMap(newResourcesMap, packageResource, packageResource.yaml);
   }
 
   for (const packageResource of resourcesToRemove) {
-    newResourcesMap = removeResourceFromResourcesMap(
-      newResourcesMap,
-      packageResource,
-    );
+    newResourcesMap = removeResourceFromResourcesMap(newResourcesMap, packageResource);
   }
 
   return newResourcesMap;
@@ -317,15 +279,10 @@ export const diffPackageResource = (
       };
     }
 
-    const thisDiff = diffLines(
-      normalizeYamlForDiff(originalResource.yaml),
-      normalizeYamlForDiff(currentResource.yaml),
-    );
+    const thisDiff = diffLines(normalizeYamlForDiff(originalResource.yaml), normalizeYamlForDiff(currentResource.yaml));
 
     const linesAdded = sum(thisDiff.filter(d => !!d.added).map(d => d.count));
-    const linesRemoved = sum(
-      thisDiff.filter(d => !!d.removed).map(d => d.count),
-    );
+    const linesRemoved = sum(thisDiff.filter(d => !!d.removed).map(d => d.count));
 
     if (linesAdded === 0 && linesRemoved === 0) {
       return {
@@ -344,9 +301,7 @@ export const diffPackageResource = (
     };
   }
 
-  throw new Error(
-    'Invalid resource comparison, both the original and current resource are not defined',
-  );
+  throw new Error('Invalid resource comparison, both the original and current resource are not defined');
 };
 
 export const diffPackageResources = (
@@ -356,18 +311,14 @@ export const diffPackageResources = (
   const diffSummary: PackageResourceDiff[] = [];
 
   for (const currentResource of currentResources) {
-    const originalResource = originalResources.find(
-      resource => resource.id === currentResource.id,
-    );
+    const originalResource = originalResources.find(resource => resource.id === currentResource.id);
 
     const diff = diffPackageResource(originalResource, currentResource);
     diffSummary.push(diff);
   }
 
   for (const originalResource of originalResources) {
-    const currentResource = currentResources.find(
-      resource => resource.id === originalResource.id,
-    );
+    const currentResource = currentResources.find(resource => resource.id === originalResource.id);
 
     if (!currentResource) {
       const diff = diffPackageResource(originalResource, currentResource);
@@ -378,9 +329,7 @@ export const diffPackageResources = (
   return diffSummary;
 };
 
-export const getRootKptfile = (
-  resources: PackageResource[],
-): PackageResource => {
+export const getRootKptfile = (resources: PackageResource[]): PackageResource => {
   const kptfileResource = resources.find(r => r.filename === 'Kptfile');
 
   if (!kptfileResource) throw new Error('Kptfile not found');
@@ -388,11 +337,6 @@ export const getRootKptfile = (
   return kptfileResource;
 };
 
-export const getDeployableResources = (
-  resources: PackageResource[],
-  kind: string,
-): PackageResource[] => {
-  return resources.filter(
-    resource => resource.kind === kind && !resource.isLocalConfigResource,
-  );
+export const getDeployableResources = (resources: PackageResource[], kind: string): PackageResource[] => {
+  return resources.filter(resource => resource.kind === kind && !resource.isLocalConfigResource);
 };

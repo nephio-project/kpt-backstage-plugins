@@ -31,10 +31,7 @@ export const processUpdatedResourcesMap = async (
   originalMap: PackageRevisionResourcesMap,
   currentMap: PackageRevisionResourcesMap,
 ): Promise<PackageRevisionResourcesMap> => {
-  const processMapFns: ProcessMapFn[] = [
-    processApplyReplacementsUpdates,
-    processSetLabelsUpdates,
-  ];
+  const processMapFns: ProcessMapFn[] = [processApplyReplacementsUpdates, processSetLabelsUpdates];
 
   let resourcesMap = cloneDeep(currentMap);
 

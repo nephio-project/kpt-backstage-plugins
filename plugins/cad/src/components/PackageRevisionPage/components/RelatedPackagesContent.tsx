@@ -38,10 +38,7 @@ type DownstreamPackageContentProps = {
   downstreamPackages: PackageSummary[];
 };
 
-const UpstreamPackageContent = ({
-  upstreamRepository,
-  upstreamPackageRevision,
-}: UpstreamPackageContentProps) => {
+const UpstreamPackageContent = ({ upstreamRepository, upstreamPackageRevision }: UpstreamPackageContentProps) => {
   const packageDescriptor = getPackageDescriptor(upstreamRepository);
 
   return (
@@ -54,13 +51,8 @@ const UpstreamPackageContent = ({
   );
 };
 
-const DownstreamPackageContent = ({
-  downstreamPackages,
-}: DownstreamPackageContentProps) => {
-  const packagesByDescriptor = groupBy(
-    downstreamPackages,
-    packageSummary => packageSummary.packageDescriptor,
-  );
+const DownstreamPackageContent = ({ downstreamPackages }: DownstreamPackageContentProps) => {
+  const packagesByDescriptor = groupBy(downstreamPackages, packageSummary => packageSummary.packageDescriptor);
   const packageDescriptors = uniq(Object.keys(packagesByDescriptor));
   if (packageDescriptors.length === 0) {
     packageDescriptors.push('Package');
@@ -92,9 +84,7 @@ export const RelatedPackagesContent = ({
           upstreamPackageRevision={upstreamPackageRevision}
         />
       )}
-      {showDownstream && (
-        <DownstreamPackageContent downstreamPackages={downstreamPackages} />
-      )}
+      {showDownstream && <DownstreamPackageContent downstreamPackages={downstreamPackages} />}
     </Fragment>
   );
 };

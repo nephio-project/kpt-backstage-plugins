@@ -20,14 +20,8 @@ import React, { Fragment, useState } from 'react';
 import { Function } from '../../../types/Function';
 import { Repository, RepositoryContent } from '../../../types/Repository';
 import { isConfigSyncEnabled } from '../../../utils/featureFlags';
-import {
-  filterPackageSummaries,
-  PackageSummary,
-} from '../../../utils/packageSummary';
-import {
-  isReadOnlyRepository,
-  RepositoryContentDetails,
-} from '../../../utils/repository';
+import { filterPackageSummaries, PackageSummary } from '../../../utils/packageSummary';
+import { isReadOnlyRepository, RepositoryContentDetails } from '../../../utils/repository';
 import { toLowerCase } from '../../../utils/string';
 import { Chip } from '../../Controls';
 import { PackagesTable } from '../../PackagesTable';
@@ -58,10 +52,7 @@ const useStyles = makeStyles({
   },
 });
 
-const getDisplapyPackages = (
-  packages: PackageSummary[],
-  display: string,
-): PackageSummary[] => {
+const getDisplapyPackages = (packages: PackageSummary[], display: string): PackageSummary[] => {
   switch (display) {
     case Display.PUBLISHED:
       return filterPackageSummaries(packages, { isPublished: true });
@@ -89,18 +80,13 @@ export const PackagesTabContent = ({
   const [display, setDisplay] = useState<string>(Display.ALL);
 
   const getChip = (label: string, value: string): JSX.Element => (
-    <Chip
-      label={label}
-      selected={display === value}
-      onClick={() => setDisplay(value)}
-    />
+    <Chip label={label} selected={display === value} onClick={() => setDisplay(value)} />
   );
 
   const pluralPackageDescriptor = `${packageDescriptor}s`;
   const pluralPackageDescriptorLowerCase = toLowerCase(pluralPackageDescriptor);
 
-  const isReadOnly =
-    repositories.length > 0 && repositories.every(isReadOnlyRepository);
+  const isReadOnly = repositories.length > 0 && repositories.every(isReadOnlyRepository);
 
   const contentDetails = RepositoryContentDetails[packageDescriptor];
   const repositoryContent = contentDetails.repositoryContent;
@@ -119,17 +105,14 @@ export const PackagesTabContent = ({
         <Alert severity="info">
           {oneRepositoryFocus && (
             <Fragment>
-              This repository is read-only. You will not be able to add or make
-              any changes to the {pluralPackageDescriptorLowerCase} in this
-              repository.
+              This repository is read-only. You will not be able to add or make any changes to the{' '}
+              {pluralPackageDescriptorLowerCase} in this repository.
             </Fragment>
           )}
           {!oneRepositoryFocus && (
             <Fragment>
-              You will not be able to add or make any changes to the{' '}
-              {pluralPackageDescriptorLowerCase} since the{' '}
-              {pluralPackageDescriptorLowerCase} exist in read-only
-              repositories.
+              You will not be able to add or make any changes to the {pluralPackageDescriptorLowerCase} since the{' '}
+              {pluralPackageDescriptorLowerCase} exist in read-only repositories.
             </Fragment>
           )}
         </Alert>
@@ -153,18 +136,12 @@ export const PackagesTabContent = ({
             title={pluralPackageDescriptor}
             packages={displayPackages}
             showRepositoryColumn={!oneRepositoryFocus}
-            showSyncStatusColumn={
-              isConfigSyncEnabled() && !!contentDetails.isDeployment
-            }
+            showSyncStatusColumn={isConfigSyncEnabled() && !!contentDetails.isDeployment}
           />
         </Fragment>
       )}
       {showFunctionsTable && (
-        <FunctionsTable
-          title={pluralPackageDescriptor}
-          functions={functions}
-          showLatestVersionOnly
-        />
+        <FunctionsTable title={pluralPackageDescriptor} functions={functions} showLatestVersionOnly />
       )}
     </div>
   );

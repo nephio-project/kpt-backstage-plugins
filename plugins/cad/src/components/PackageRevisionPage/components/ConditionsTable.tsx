@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  StatusError,
-  StatusOK,
-  StatusPending,
-  Table,
-  TableColumn,
-} from '@backstage/core-components';
+import { StatusError, StatusOK, StatusPending, Table, TableColumn } from '@backstage/core-components';
 import React from 'react';
 import { Condition, ConditionStatus } from '../../../types/PackageRevision';
 import { toLowerCase } from '../../../utils/string';
@@ -34,9 +28,7 @@ type ConditionRow = Condition & {
 };
 
 const renderStatusColumn = (row: ConditionRow): JSX.Element => {
-  const status = (
-    <span style={{ fontWeight: 'normal' }}>{toLowerCase(row.status)}</span>
-  );
+  const status = <span style={{ fontWeight: 'normal' }}>{toLowerCase(row.status)}</span>;
 
   switch (row.status) {
     case ConditionStatus.TRUE:
@@ -74,12 +66,5 @@ export const ConditionsTable = ({ conditions }: ConditionsTableProps) => {
   const columns = getTableColumns();
   const data = conditions.map(mapToConditionRow);
 
-  return (
-    <Table
-      title="Conditions"
-      options={{ search: false, paging: false }}
-      columns={columns}
-      data={data}
-    />
-  );
+  return <Table title="Conditions" options={{ search: false, paging: false }} columns={columns} data={data} />;
 };

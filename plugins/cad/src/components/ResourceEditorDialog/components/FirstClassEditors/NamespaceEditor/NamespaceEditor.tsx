@@ -31,10 +31,7 @@ type State = {
   metadata: NamespaceMetadata;
 };
 
-export const NamespaceEditor = ({
-  yaml,
-  onUpdatedYaml,
-}: ResourceEditorProps) => {
+export const NamespaceEditor = ({ yaml, onUpdatedYaml }: ResourceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as Namespace;
 
   const createResourceState = (): State => ({

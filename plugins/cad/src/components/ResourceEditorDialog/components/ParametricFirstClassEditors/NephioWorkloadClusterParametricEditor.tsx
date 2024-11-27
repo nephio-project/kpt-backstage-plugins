@@ -20,22 +20,18 @@ import { metadataEditorSection } from './partial/metadataEditorSection';
 
 const { section, arrayTypeRoster, singleLineText } = PxeConfigurationFactory;
 
-export const NephioWorkloadClusterParametricEditor =
-  createEditorFromConfiguration({
-    topLevelProperties: ['metadata', 'spec'],
-    entries: [
-      metadataEditorSection({ isNamespacedResource: true }),
+export const NephioWorkloadClusterParametricEditor = createEditorFromConfiguration({
+  topLevelProperties: ['metadata', 'spec'],
+  entries: [
+    metadataEditorSection({ isNamespacedResource: true }),
+    section(
+      { name: 'Configuration' },
+      singleLineText({ path: 'spec.clusterName', isRequired: true }),
+      singleLineText({ path: 'spec.masterInterface' }),
       section(
-        { name: 'Configuration' },
-        singleLineText({ path: 'spec.clusterName', isRequired: true }),
-        singleLineText({ path: 'spec.masterInterface' }),
-        section(
-          { name: 'CNIs' },
-          arrayTypeRoster(
-            { path: 'spec.cnis', isRequired: false, name: 'CNIs' },
-            singleLineText({ path: 'value' }),
-          ),
-        ),
+        { name: 'CNIs' },
+        arrayTypeRoster({ path: 'spec.cnis', isRequired: false, name: 'CNIs' }, singleLineText({ path: 'value' })),
       ),
-    ],
-  });
+    ),
+  ],
+});

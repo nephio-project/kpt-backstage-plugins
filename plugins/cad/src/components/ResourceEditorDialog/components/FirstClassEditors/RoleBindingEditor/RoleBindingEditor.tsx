@@ -18,23 +18,14 @@ import { SelectItem } from '@backstage/core-components';
 import { Button, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
-import {
-  RoleBinding,
-  RoleBindingMetadata,
-  RoleBindingSubject,
-} from '../../../../../types/RoleBinding';
+import { RoleBinding, RoleBindingMetadata, RoleBindingSubject } from '../../../../../types/RoleBinding';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { sortByLabel } from '../../../../../utils/selectItem';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { Select } from '../../../../Controls/Select';
 import { EditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../util/deletable';
 import { SubjectEditorAccordion } from './components/SubjectEditorAccordion';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
@@ -53,11 +44,7 @@ type State = {
   subjects: Deletable<RoleBindingSubject>[];
 };
 
-export const RoleBindingEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: RoleBindingEditorProps) => {
+export const RoleBindingEditor = ({ yaml, onUpdatedYaml, packageResources }: RoleBindingEditorProps) => {
   const resourceYaml = loadYaml(yaml) as RoleBinding;
 
   const roleResources = useMemo(
@@ -110,9 +97,7 @@ export const RoleBindingEditor = ({
   }, [state, onUpdatedYaml, resourceYaml]);
 
   const getRoleRefDescription = (): string => {
-    return state.roleRefKind
-      ? `${state.roleRefKind} ${state.roleRefName}`
-      : 'new';
+    return state.roleRefKind ? `${state.roleRefKind} ${state.roleRefName}` : 'new';
   };
 
   return (
@@ -149,9 +134,7 @@ export const RoleBindingEditor = ({
               label="Name"
               variant="outlined"
               value={state.roleRefName}
-              onChange={e =>
-                setState(s => ({ ...s, roleRefName: e.target.value }))
-              }
+              onChange={e => setState(s => ({ ...s, roleRefName: e.target.value }))}
               fullWidth
             />
           )}
@@ -161,9 +144,7 @@ export const RoleBindingEditor = ({
               label="Name"
               selected={state.roleRefName}
               items={roleSelectItems}
-              onChange={roleName =>
-                setState(s => ({ ...s, roleRefName: roleName }))
-              }
+              onChange={roleName => setState(s => ({ ...s, roleRefName: roleName }))}
             />
           )}
         </Fragment>
@@ -180,11 +161,7 @@ export const RoleBindingEditor = ({
               onUpdate={updatedSubject =>
                 setState(s => ({
                   ...s,
-                  subjects: updateList(
-                    s.subjects.slice(),
-                    updatedSubject,
-                    index,
-                  ),
+                  subjects: updateList(s.subjects.slice(), updatedSubject, index),
                 }))
               }
               packageResources={packageResources}

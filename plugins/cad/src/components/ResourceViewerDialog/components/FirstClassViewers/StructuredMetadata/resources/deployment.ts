@@ -19,14 +19,10 @@ import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 import { getPodTemplatedStructuredMetadata } from './podTemplate';
 
-export const getDeploymentStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getDeploymentStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const deployment = resource as Deployment;
 
-  const podMetadata: Metadata = getPodTemplatedStructuredMetadata(
-    deployment.spec.template,
-  );
+  const podMetadata: Metadata = getPodTemplatedStructuredMetadata(deployment.spec.template);
 
   return {
     replicas: deployment.spec.replicas,

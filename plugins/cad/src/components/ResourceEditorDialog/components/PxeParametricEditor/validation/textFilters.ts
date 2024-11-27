@@ -20,5 +20,4 @@ export type TextFilter = (text: string) => string;
 
 export const identityTextFilter: TextFilter = identity;
 
-export const naturalNumberTextFilter: TextFilter = text =>
-  text.replaceAll(/[^\d]/g, '');
+export const naturalNumberTextFilter: TextFilter = text => text.replaceAll(/[^\d]/g, '');

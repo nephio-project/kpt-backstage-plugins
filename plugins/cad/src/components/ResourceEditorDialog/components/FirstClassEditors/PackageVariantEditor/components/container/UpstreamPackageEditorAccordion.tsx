@@ -51,17 +51,13 @@ type PackageRevisionSelectItem = SelectItem & {
   packageRevision?: PackageRevision;
 };
 
-const mapRepositoryToSelectItem = (
-  repository: Repository,
-): RepositorySelectItem => ({
+const mapRepositoryToSelectItem = (repository: Repository): RepositorySelectItem => ({
   label: repository.metadata.name,
   value: repository.metadata.name,
   repository: repository,
 });
 
-const mapPackageRevisionToSelectItem = (
-  packageRevision: PackageRevision,
-): PackageRevisionSelectItem => ({
+const mapPackageRevisionToSelectItem = (packageRevision: PackageRevision): PackageRevisionSelectItem => ({
   label: packageRevision.spec.packageName,
   value: packageRevision.metadata.name,
   packageRevision: packageRevision,
@@ -72,13 +68,8 @@ export const getRepositoryData = (allRepo: any[], name: string): Repository => {
   return repository;
 };
 
-export const getPackageData = (
-  allPackage: any[],
-  name: string,
-): PackageRevision => {
-  const packages = allPackage.find(
-    packageData => packageData.spec.packageName === name,
-  );
+export const getPackageData = (allPackage: any[], name: string): PackageRevision => {
+  const packages = allPackage.find(packageData => packageData.spec.packageName === name);
   return packages;
 };
 
@@ -97,12 +88,8 @@ export const UpstreamPackageEditorAccordion = ({
 
   const [repository, setRepository] = useState<Repository>();
   const [packageRevision, setPackageRevision] = useState<PackageRevision>();
-  const [repositorySelectItems, setRepositorySelectItems] = useState<
-    RepositorySelectItem[]
-  >([]);
-  const [packageRevisionSelectItems, setPackageRevisionSelectItems] = useState<
-    PackageRevisionSelectItem[]
-  >([]);
+  const [repositorySelectItems, setRepositorySelectItems] = useState<RepositorySelectItem[]>([]);
+  const [packageRevisionSelectItems, setPackageRevisionSelectItems] = useState<PackageRevisionSelectItem[]>([]);
   const allPackageRevisions = useRef<PackageRevision[]>([]);
 
   const keyValueObjectUpdated = (): void => {
@@ -115,13 +102,9 @@ export const UpstreamPackageEditorAccordion = ({
       api.listPackageRevisions(),
     ]);
     allPackageRevisions.current = allPackages;
-    const thisRepository = repositoryName
-      ? getRepositoryData(thisAllRepositories, repositoryName)
-      : undefined;
+    const thisRepository = repositoryName ? getRepositoryData(thisAllRepositories, repositoryName) : undefined;
 
-    const targetRepositoryItems = thisAllRepositories.map(
-      mapRepositoryToSelectItem,
-    );
+    const targetRepositoryItems = thisAllRepositories.map(mapRepositoryToSelectItem);
     setRepository(thisRepository);
     setRepositorySelectItems(targetRepositoryItems);
   }, [api]);
@@ -138,35 +121,24 @@ export const UpstreamPackageEditorAccordion = ({
         repositoryPackages.map(mapPackageRevisionToSelectItem),
       );
 
-      const thisPackage = packageName
-        ? getPackageData(allPackageRevisions.current, packageName)
-        : undefined;
+      const thisPackage = packageName ? getPackageData(allPackageRevisions.current, packageName) : undefined;
 
       setPackageRevision(thisPackage);
       setPackageRevisionSelectItems(allowPackageRevisions);
     }
   }, [repository, packageName]);
 
-  const description = `${viewModel.repo ? `${viewModel.repo}/` : ''}${
-    viewModel.package ? `${viewModel.package}` : ''
-  }${viewModel.revision ? `@${viewModel.revision}` : ''}`;
+  const description = `${viewModel.repo ? `${viewModel.repo}/` : ''}${viewModel.package ? `${viewModel.package}` : ''}${
+    viewModel.revision ? `@${viewModel.revision}` : ''
+  }`;
 
   return (
-    <EditorAccordion
-      id={id}
-      state={state}
-      title={title}
-      description={description}
-    >
+    <EditorAccordion id={id} state={state} title={title} description={description}>
       <Fragment>
         <Select
           label="Upstream Repository"
           onChange={selectedRepositoryName => {
-            setRepository(
-              repositorySelectItems.find(
-                r => r.value === selectedRepositoryName,
-              )?.repository,
-            );
+            setRepository(repositorySelectItems.find(r => r.value === selectedRepositoryName)?.repository);
             viewModel.repo = selectedRepositoryName;
             keyValueObjectUpdated();
           }}
@@ -177,9 +149,7 @@ export const UpstreamPackageEditorAccordion = ({
         <Select
           label="Upstream Package"
           onChange={value => {
-            const selectedPackage = packageRevisionSelectItems.find(
-              r => r.value === value,
-            );
+            const selectedPackage = packageRevisionSelectItems.find(r => r.value === value);
             setPackageRevision(selectedPackage?.packageRevision);
             viewModel.package = selectedPackage ? selectedPackage.label : '';
             keyValueObjectUpdated();

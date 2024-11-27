@@ -21,12 +21,7 @@ import { PolicyRule, Role, RoleMetadata } from '../../../../../types/Role';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../util/deletable';
 import { RoleRuleEditorAccordion } from './components/RoleRuleEditorAccordion';
 
 type OnUpdatedYamlFn = (yaml: string) => void;

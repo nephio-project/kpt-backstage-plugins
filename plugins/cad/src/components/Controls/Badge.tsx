@@ -33,12 +33,7 @@ export const Badge = ({ badgeContent, children }: BadgeProps) => {
   const classes = useStyles();
 
   return (
-    <MaterialBadge
-      badgeContent={badgeContent}
-      className={classes.badge}
-      color="primary"
-      overlap="rectangular"
-    >
+    <MaterialBadge badgeContent={badgeContent} className={classes.badge} color="primary" overlap="rectangular">
       {children}
     </MaterialBadge>
   );

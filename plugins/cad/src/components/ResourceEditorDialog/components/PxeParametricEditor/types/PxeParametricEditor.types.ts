@@ -23,16 +23,11 @@ export type PxeValue = undefined | string | object | readonly any[];
 // TODO Semantically "null" should be used instead of "undefined".
 // Consider project-wide refactoring alongside the update of prettier settings.
 export type PxeExpandedSectionState = string | undefined;
-export type PxeExpandedSectionStateTuple = [
-  PxeExpandedSectionState,
-  Dispatch<SetStateAction<PxeExpandedSectionState>>,
-];
+export type PxeExpandedSectionStateTuple = [PxeExpandedSectionState, Dispatch<SetStateAction<PxeExpandedSectionState>>];
 
 export type PxeResourceChangeRequest = {
   readonly valueDescriptor: PxeValueDescriptor;
   readonly newValue: PxeValue;
 };
 
-export type PxeResourceChangeRequestHandler = (
-  changeRequest: PxeResourceChangeRequest,
-) => void;
+export type PxeResourceChangeRequestHandler = (changeRequest: PxeResourceChangeRequest) => void;

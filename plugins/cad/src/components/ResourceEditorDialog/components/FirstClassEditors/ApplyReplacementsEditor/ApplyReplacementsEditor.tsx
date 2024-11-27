@@ -25,10 +25,7 @@ import {
   ReplacementSource,
   ReplacementTarget,
 } from '../../../../../types/ApplyReplacement';
-import {
-  KubernetesKeyValueObject,
-  KubernetesResource,
-} from '../../../../../types/KubernetesResource';
+import { KubernetesKeyValueObject, KubernetesResource } from '../../../../../types/KubernetesResource';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { sortByLabel } from '../../../../../utils/selectItem';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
@@ -88,13 +85,8 @@ const flattenResource = (resource: KubernetesResource): FlattenResource => {
   return keyValue;
 };
 
-const getPathSelectItems = (
-  packageResources: PackageResource[],
-  resourceId: string,
-): SelectItem[] => {
-  const resource = packageResources.find(
-    thisResource => thisResource.id === resourceId,
-  );
+const getPathSelectItems = (packageResources: PackageResource[], resourceId: string): SelectItem[] => {
+  const resource = packageResources.find(thisResource => thisResource.id === resourceId);
 
   if (resource) {
     const k8Resource = loadYaml(resource.yaml) as KubernetesResource;
@@ -111,17 +103,9 @@ const getPathSelectItems = (
   return [];
 };
 
-const getIndexSelectItems = (
-  packageResources: PackageResource[],
-  replacementState: ReplacementState,
-): SelectItem[] => {
-  if (
-    replacementState.replaceValueOption === ReplaceFieldValueOption.PARTIAL &&
-    replacementState.delimiter
-  ) {
-    const resource = packageResources.find(
-      thisResource => thisResource.id === replacementState.resourceId,
-    );
+const getIndexSelectItems = (packageResources: PackageResource[], replacementState: ReplacementState): SelectItem[] => {
+  if (replacementState.replaceValueOption === ReplaceFieldValueOption.PARTIAL && replacementState.delimiter) {
+    const resource = packageResources.find(thisResource => thisResource.id === replacementState.resourceId);
 
     if (resource) {
       const k8Resource = loadYaml(resource.yaml) as KubernetesResource;
@@ -132,12 +116,10 @@ const getIndexSelectItems = (
       if (value) {
         const potentialValues = value.split(replacementState.delimiter);
 
-        const selectItems: SelectItem[] = potentialValues.map(
-          (stringValue, index) => ({
-            label: stringValue,
-            value: index,
-          }),
-        );
+        const selectItems: SelectItem[] = potentialValues.map((stringValue, index) => ({
+          label: stringValue,
+          value: index,
+        }));
 
         return selectItems;
       }
@@ -147,9 +129,7 @@ const getIndexSelectItems = (
   return [];
 };
 
-const getPackageSelectItems = (
-  packageResources: PackageResource[],
-): SelectItem[] => {
+const getPackageSelectItems = (packageResources: PackageResource[]): SelectItem[] => {
   return sortByLabel(
     packageResources
       .filter(resource => resource.kind !== 'ApplyReplacements')
@@ -182,24 +162,15 @@ const delimiterOptionsSelectItems: SelectItem[] = [
   },
 ];
 
-export const ApplyReplacementsEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: ApplyReplacementsEditorProps) => {
+export const ApplyReplacementsEditor = ({ yaml, onUpdatedYaml, packageResources }: ApplyReplacementsEditorProps) => {
   const resourceYaml = loadYaml(yaml) as ApplyReplacement;
 
-  const packageResourcesSelectItems: SelectItem[] =
-    getPackageSelectItems(packageResources);
+  const packageResourcesSelectItems: SelectItem[] = getPackageSelectItems(packageResources);
 
-  const findResource = (
-    selector?: ReplacementResourceSelector,
-  ): PackageResource | undefined => {
+  const findResource = (selector?: ReplacementResourceSelector): PackageResource | undefined => {
     if (selector && selector.kind && selector.name) {
       return packageResources.find(
-        thisResource =>
-          thisResource.kind === selector.kind &&
-          thisResource.name === selector.name,
+        thisResource => thisResource.kind === selector.kind && thisResource.name === selector.name,
       );
     }
 
@@ -219,9 +190,7 @@ export const ApplyReplacementsEditor = ({
     resourceKind: resourceSelector?.kind ?? '',
     resourceName: resourceSelector?.name ?? '',
     fieldPath: fieldPath ?? '',
-    replaceValueOption: replacementOptions?.delimiter
-      ? ReplaceFieldValueOption.PARTIAL
-      : ReplaceFieldValueOption.FULL,
+    replaceValueOption: replacementOptions?.delimiter ? ReplaceFieldValueOption.PARTIAL : ReplaceFieldValueOption.FULL,
     delimiter: replacementOptions?.delimiter ?? '',
     index: (replacementOptions?.index ?? '').toString(),
   });
@@ -231,11 +200,7 @@ export const ApplyReplacementsEditor = ({
 
   const [state, setState] = useState<State>(createResourceState());
   const [sourceState, setSourceState] = useState<ReplacementState>(
-    createReplacementState(
-      firstReplacement?.source,
-      firstReplacement?.source?.fieldPath,
-      undefined,
-    ),
+    createReplacementState(firstReplacement?.source, firstReplacement?.source?.fieldPath, undefined),
   );
   const [targetState, setTargetState] = useState<ReplacementState>(
     createReplacementState(
@@ -249,18 +214,9 @@ export const ApplyReplacementsEditor = ({
 
   const classes = useEditorStyles();
 
-  const sourcePathSelectItems: SelectItem[] = getPathSelectItems(
-    packageResources,
-    sourceState.resourceId,
-  );
-  const targetPathSelectItems: SelectItem[] = getPathSelectItems(
-    packageResources,
-    targetState.resourceId,
-  );
-  const targetIndexSelectItems: SelectItem[] = getIndexSelectItems(
-    packageResources,
-    targetState,
-  );
+  const sourcePathSelectItems: SelectItem[] = getPathSelectItems(packageResources, sourceState.resourceId);
+  const targetPathSelectItems: SelectItem[] = getPathSelectItems(packageResources, targetState.resourceId);
+  const targetIndexSelectItems: SelectItem[] = getIndexSelectItems(packageResources, targetState);
 
   useEffect(() => {
     const replacementSource: ReplacementSource = {
@@ -277,10 +233,7 @@ export const ApplyReplacementsEditor = ({
       fieldPaths: [targetState.fieldPath],
     };
 
-    if (
-      targetState.replaceValueOption === ReplaceFieldValueOption.PARTIAL &&
-      targetState.delimiter
-    ) {
+    if (targetState.replaceValueOption === ReplaceFieldValueOption.PARTIAL && targetState.delimiter) {
       replacementTarget.options = {
         delimiter: targetState.delimiter,
         index: parseInt(targetState.index, 10),
@@ -397,8 +350,7 @@ export const ApplyReplacementsEditor = ({
               }
             />
 
-            {targetState.replaceValueOption ===
-            ReplaceFieldValueOption.PARTIAL ? (
+            {targetState.replaceValueOption === ReplaceFieldValueOption.PARTIAL ? (
               <Fragment>
                 <Select
                   label="Delimiter"
@@ -426,21 +378,9 @@ export const ApplyReplacementsEditor = ({
               </Fragment>
             ) : (
               <Fragment>
-                <TextField
-                  label="Delimiter"
-                  variant="outlined"
-                  disabled
-                  fullWidth
-                  value="Not applicable"
-                />
+                <TextField label="Delimiter" variant="outlined" disabled fullWidth value="Not applicable" />
 
-                <TextField
-                  label="Replace"
-                  variant="outlined"
-                  disabled
-                  fullWidth
-                  value="Not applicable"
-                />
+                <TextField label="Replace" variant="outlined" disabled fullWidth value="Not applicable" />
               </Fragment>
             )}
           </div>

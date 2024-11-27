@@ -18,42 +18,29 @@ import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Role } from '../../../../../../types/Role';
 import { Metadata } from '../StructuredMetadata';
 
-export const getRoleStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getRoleStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const role = resource as Role;
 
   const customMetadata: Metadata = {};
 
   for (const [index, rule] of role.rules.entries()) {
-    const name =
-      role.rules.length > 1 ? `permissions${index + 1}` : 'permissions';
+    const name = role.rules.length > 1 ? `permissions${index + 1}` : 'permissions';
 
     const mapAsterix =
       (description: string) =>
       (value: string): string =>
         value === '*' ? description : value;
 
-    const groups = (rule.apiGroups ?? ['*'])
-      .map(mapAsterix('all groups'))
-      .map(apiGroup => apiGroup || 'core');
-    const resources = (rule.resources ?? ['*']).map(
-      mapAsterix('all resources'),
-    );
+    const groups = (rule.apiGroups ?? ['*']).map(mapAsterix('all groups')).map(apiGroup => apiGroup || 'core');
+    const resources = (rule.resources ?? ['*']).map(mapAsterix('all resources'));
     const verbs = (rule.verbs ?? ['*']).map(mapAsterix('all verbs'));
 
     const groupsList = groups.join(', ');
     const resourcesList = resources.join(', ');
     const verbsList = verbs.join(', ');
-    const resoureNamesList =
-      (rule.resourceNames ?? []).length > 0
-        ? `- ${rule.resourceNames?.join(', ')}`
-        : ``;
+    const resoureNamesList = (rule.resourceNames ?? []).length > 0 ? `- ${rule.resourceNames?.join(', ')}` : ``;
 
-    customMetadata[name] = [
-      `${groupsList} ${resourcesList} ${resoureNamesList}`,
-      `→ ${verbsList}`,
-    ];
+    customMetadata[name] = [`${groupsList} ${resourcesList} ${resoureNamesList}`, `→ ${verbsList}`];
   }
 
   return customMetadata;

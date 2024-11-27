@@ -23,11 +23,7 @@
  * @param newItem Item to replace on original item.
  * @returns A new array with item replaced.
  */
-export const arrayWithItemReplaced = <T>(
-  array: readonly T[],
-  replaceAt: number,
-  newItem: T,
-): readonly T[] => [
+export const arrayWithItemReplaced = <T>(array: readonly T[], replaceAt: number, newItem: T): readonly T[] => [
   ...array.slice(0, replaceAt),
   newItem,
   ...array.slice(replaceAt + 1),
@@ -42,11 +38,7 @@ export const arrayWithItemReplaced = <T>(
  * @param newItem Item to insert.
  * @returns A new array with item inserted.
  */
-export const arrayWithItemInserted = <T>(
-  array: readonly T[],
-  insertAt: number,
-  newItem: T,
-): readonly T[] => [
+export const arrayWithItemInserted = <T>(array: readonly T[], insertAt: number, newItem: T): readonly T[] => [
   ...array.slice(0, insertAt),
   newItem,
   ...array.slice(insertAt),
@@ -59,7 +51,7 @@ export const arrayWithItemInserted = <T>(
  * @param removeAt Index at which array item is to be removed.
  * @returns A new array with item removed.
  */
-export const arrayWithItemRemoved = <T>(
-  array: readonly T[],
-  removeAt: number,
-): readonly T[] => [...array.slice(0, removeAt), ...array.slice(removeAt + 1)];
+export const arrayWithItemRemoved = <T>(array: readonly T[], removeAt: number): readonly T[] => [
+  ...array.slice(0, removeAt),
+  ...array.slice(removeAt + 1),
+];

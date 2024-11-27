@@ -18,11 +18,7 @@ import { Kptfile, KptfileFunction } from '../../../types/Kptfile';
 import { Namespace } from '../../../types/Namespace';
 import { PackageRevisionResourcesMap } from '../../../types/PackageRevisionResource';
 import { SetNamespace } from '../../../types/SetNamespace';
-import {
-  findKptfileFunction,
-  getLatestFunction,
-  GroupFunctionsByName,
-} from '../../../utils/function';
+import { findKptfileFunction, getLatestFunction, GroupFunctionsByName } from '../../../utils/function';
 import {
   getPackageResourcesFromResourcesMap,
   getRootKptfile,
@@ -30,16 +26,8 @@ import {
   updateResourcesMap,
 } from '../../../utils/packageRevisionResources';
 import { loadYaml } from '../../../utils/yaml';
-import {
-  findKptfileFunctionConfig,
-  isFunctionConfigDeletable,
-  removeKptfileFunction,
-} from './kptfile';
-import {
-  addNewPackageResource,
-  addUpdatedPackageResource,
-  createResource,
-} from './resource';
+import { findKptfileFunctionConfig, isFunctionConfigDeletable, removeKptfileFunction } from './kptfile';
+import { addNewPackageResource, addUpdatedPackageResource, createResource } from './resource';
 
 const createNamespaceResource = (name: string): Namespace => {
   return createResource('v1', 'Namespace', name, false);
@@ -97,30 +85,18 @@ export const getNamespaceDefaultState = (): NamespaceState => ({
   advancedConfiguration: false,
 });
 
-export const getNamespaceState = (
-  kptfile: Kptfile,
-  resources: PackageResource[],
-): NamespaceState => {
-  const setNamespaceFn = findKptfileFunction(
-    kptfile.pipeline?.mutators || [],
-    'set-namespace',
-  );
+export const getNamespaceState = (kptfile: Kptfile, resources: PackageResource[]): NamespaceState => {
+  const setNamespaceFn = findKptfileFunction(kptfile.pipeline?.mutators || [], 'set-namespace');
 
   const setNamespace = !!setNamespaceFn;
   let advancedConfiguration = false;
   let namespaceOption = '';
   let namespace = '';
   if (setNamespace) {
-    namespaceOption =
-      setNamespaceFn.configPath === 'package-context.yaml'
-        ? 'deployment'
-        : 'user-defined';
+    namespaceOption = setNamespaceFn.configPath === 'package-context.yaml' ? 'deployment' : 'user-defined';
 
     if (namespaceOption === 'user-defined') {
-      const setNamespaceConfig = findKptfileFunctionConfig(
-        resources,
-        setNamespaceFn,
-      );
+      const setNamespaceConfig = findKptfileFunctionConfig(resources, setNamespaceFn);
 
       if (setNamespaceConfig && setNamespaceConfig.kind === 'SetNamespace') {
         const namespaceYaml: SetNamespace = loadYaml(setNamespaceConfig.yaml);
@@ -171,10 +147,7 @@ export const applyNamespaceState = async (
     let namespaceConfigPath = 'package-context.yaml';
 
     if (state.namespaceOption === 'user-defined') {
-      const setNamespacePackageResource = createSetNamespacePackageResource(
-        newPackageResources,
-        state.namespace,
-      );
+      const setNamespacePackageResource = createSetNamespacePackageResource(newPackageResources, state.namespace);
 
       namespaceConfigPath = setNamespacePackageResource.filename;
     }
@@ -184,95 +157,49 @@ export const applyNamespaceState = async (
       configPath: namespaceConfigPath,
     });
 
-    addUpdatedPackageResource(
-      updatedPackageResources,
-      kptfileResource,
-      kptfile,
-    );
+    addUpdatedPackageResource(updatedPackageResources, kptfileResource, kptfile);
 
     if (state.createNamespace) {
-      const namespaceResource: Namespace = createNamespaceResource(
-        state.namespace,
-      );
+      const namespaceResource: Namespace = createNamespaceResource(state.namespace);
 
-      addNewPackageResource(
-        newPackageResources,
-        namespaceResource,
-        'namespace.yaml',
-      );
+      addNewPackageResource(newPackageResources, namespaceResource, 'namespace.yaml');
     }
   } else if (deleteFnAction) {
-    deleteConfigResourceReference(
-      deletedPackageResources,
-      resources,
-      setNamespaceFn,
-    );
+    deleteConfigResourceReference(deletedPackageResources, resources, setNamespaceFn);
 
     removeKptfileFunction(kptfile, 'mutator', setNamespaceFn);
 
-    addUpdatedPackageResource(
-      updatedPackageResources,
-      kptfileResource,
-      kptfile,
-    );
+    addUpdatedPackageResource(updatedPackageResources, kptfileResource, kptfile);
   } else if (possibleUpdateFnAction) {
     const previousState = getNamespaceState(kptfile, resources);
 
-    const namespaceOptionUpdated =
-      previousState.namespaceOption !== state.namespaceOption;
+    const namespaceOptionUpdated = previousState.namespaceOption !== state.namespaceOption;
     const specificNamespaceUpdated =
-      state.namespaceOption === 'user-defined' &&
-      previousState.namespace !== state.namespace;
+      state.namespaceOption === 'user-defined' && previousState.namespace !== state.namespace;
 
     if (namespaceOptionUpdated) {
       if (state.namespaceOption === 'user-defined') {
-        const setNamespacePackageResource = createSetNamespacePackageResource(
-          newPackageResources,
-          state.namespace,
-        );
+        const setNamespacePackageResource = createSetNamespacePackageResource(newPackageResources, state.namespace);
 
         setNamespaceFn.configPath = setNamespacePackageResource.filename;
       } else {
-        deleteConfigResourceReference(
-          deletedPackageResources,
-          resources,
-          setNamespaceFn,
-        );
+        deleteConfigResourceReference(deletedPackageResources, resources, setNamespaceFn);
 
         setNamespaceFn.configPath = 'package-context.yaml';
       }
 
-      addUpdatedPackageResource(
-        updatedPackageResources,
-        kptfileResource,
-        kptfile,
-      );
+      addUpdatedPackageResource(updatedPackageResources, kptfileResource, kptfile);
     } else if (specificNamespaceUpdated) {
-      const setNamespaceResource = findKptfileFunctionConfig(
-        resources,
-        setNamespaceFn,
-      );
+      const setNamespaceResource = findKptfileFunctionConfig(resources, setNamespaceFn);
 
-      if (
-        setNamespaceResource &&
-        setNamespaceResource.kind === 'SetNamespace'
-      ) {
+      if (setNamespaceResource && setNamespaceResource.kind === 'SetNamespace') {
         const setNamespace: SetNamespace = loadYaml(setNamespaceResource.yaml);
         setNamespace.namespace = state.namespace;
 
-        addUpdatedPackageResource(
-          updatedPackageResources,
-          setNamespaceResource,
-          setNamespace,
-        );
+        addUpdatedPackageResource(updatedPackageResources, setNamespaceResource, setNamespace);
       }
     }
   }
 
-  return updateResourcesMap(
-    resourcesMap,
-    newPackageResources,
-    updatedPackageResources,
-    deletedPackageResources,
-  );
+  return updateResourcesMap(resourcesMap, newPackageResources, updatedPackageResources, deletedPackageResources);
 };

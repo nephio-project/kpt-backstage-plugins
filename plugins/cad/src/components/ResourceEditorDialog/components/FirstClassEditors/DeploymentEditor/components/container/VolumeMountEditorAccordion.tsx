@@ -19,15 +19,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { clone } from 'lodash';
 import React, { Fragment, useMemo, useRef } from 'react';
 import { Volume, VolumeMount } from '../../../../../../../types/Pod';
-import {
-  buildSelectItemsFromList,
-  sortByLabel,
-} from '../../../../../../../utils/selectItem';
+import { buildSelectItemsFromList, sortByLabel } from '../../../../../../../utils/selectItem';
 import { Checkbox, Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (volumeMount?: VolumeMount) => void;
@@ -79,12 +73,7 @@ export const VolumeMountEditorAccordion = ({
   );
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Volume Mount"
-      description={getDescription(volumeMount)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Volume Mount" description={getDescription(volumeMount)} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -94,8 +83,7 @@ export const VolumeMountEditorAccordion = ({
               selected={viewModel.name}
               onChange={volumeName => {
                 viewModel.name = volumeName;
-                viewModel.mountPath =
-                  viewModel.mountPath || `/${viewModel.name}`;
+                viewModel.mountPath = viewModel.mountPath || `/${viewModel.name}`;
                 valueUpdated();
               }}
             />
@@ -121,11 +109,7 @@ export const VolumeMountEditorAccordion = ({
             }}
           />
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

@@ -55,20 +55,13 @@ const useStyles = makeStyles({
 
 const normalizeMetadata = (metadata: Metadata): void => {
   Object.keys(metadata).forEach(key => {
-    if (
-      metadata[key] === undefined ||
-      metadata[key] === null ||
-      metadata[key] === ''
-    ) {
+    if (metadata[key] === undefined || metadata[key] === null || metadata[key] === '') {
       delete metadata[key];
     }
 
-    const isObject =
-      !Array.isArray(metadata[key]) && typeof metadata[key] === 'object';
+    const isObject = !Array.isArray(metadata[key]) && typeof metadata[key] === 'object';
     if (isObject) {
-      metadata[key] = Object.entries(metadata[key]).map(
-        ([thisKey, value]) => `${thisKey} = ${value}`,
-      );
+      metadata[key] = Object.entries(metadata[key]).map(([thisKey, value]) => `${thisKey} = ${value}`);
     }
   });
 };
@@ -191,33 +184,18 @@ export const getDiffMetadata = (
   return diffMetadata;
 };
 
-export const StructuredMetadata = ({
-  yaml,
-  originalYaml,
-  getCustomMetadata,
-  showDiff,
-}: StructuredMetadataProps) => {
+export const StructuredMetadata = ({ yaml, originalYaml, getCustomMetadata, showDiff }: StructuredMetadataProps) => {
   const classes = useStyles();
 
   if (!showDiff) {
-    const metadata = getMetadataForResource(
-      yaml || originalYaml,
-      getCustomMetadata,
-    );
+    const metadata = getMetadataForResource(yaml || originalYaml, getCustomMetadata);
     return <StructuredMetadataTable metadata={metadata} />;
   }
 
   const currentMetadata = getMetadataForResource(yaml, getCustomMetadata);
-  const originalMetadata = getMetadataForResource(
-    originalYaml,
-    getCustomMetadata,
-  );
+  const originalMetadata = getMetadataForResource(originalYaml, getCustomMetadata);
 
-  const diffMetadata = getDiffMetadata(
-    classes,
-    currentMetadata,
-    originalMetadata,
-  );
+  const diffMetadata = getDiffMetadata(classes, currentMetadata, originalMetadata);
 
   return <StructuredMetadataTable metadata={diffMetadata} />;
 };

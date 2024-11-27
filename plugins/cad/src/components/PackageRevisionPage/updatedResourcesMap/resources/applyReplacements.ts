@@ -17,10 +17,7 @@
 import { ConfigAsDataApi } from '../../../../apis';
 import { Kptfile, KptfileFunction } from '../../../../types/Kptfile';
 import { PackageRevisionResourcesMap } from '../../../../types/PackageRevisionResource';
-import {
-  getFunctionNameFromImage,
-  groupFunctionsByName,
-} from '../../../../utils/function';
+import { getFunctionNameFromImage, groupFunctionsByName } from '../../../../utils/function';
 import {
   diffPackageResources,
   getPackageResourcesFromResourcesMap,
@@ -34,22 +31,15 @@ export const processApplyReplacementsUpdates = async (
   originalResourcesMap: PackageRevisionResourcesMap,
   currentResourcesMap: PackageRevisionResourcesMap,
 ): Promise<PackageRevisionResourcesMap> => {
-  const originalResources =
-    getPackageResourcesFromResourcesMap(originalResourcesMap);
-  const currentResources =
-    getPackageResourcesFromResourcesMap(currentResourcesMap);
+  const originalResources = getPackageResourcesFromResourcesMap(originalResourcesMap);
+  const currentResources = getPackageResourcesFromResourcesMap(currentResourcesMap);
 
-  const changedResources = diffPackageResources(
-    originalResources,
-    currentResources,
-  );
+  const changedResources = diffPackageResources(originalResources, currentResources);
 
   const applyReplacementsResourceDiffs = changedResources.filter(
     resource =>
-      (resource.originalResource ?? resource.currentResource).kind ===
-        'ApplyReplacements' &&
-      (resource.diffStatus === ResourceDiffStatus.ADDED ||
-        resource.diffStatus === ResourceDiffStatus.REMOVED),
+      (resource.originalResource ?? resource.currentResource).kind === 'ApplyReplacements' &&
+      (resource.diffStatus === ResourceDiffStatus.ADDED || resource.diffStatus === ResourceDiffStatus.REMOVED),
   );
 
   if (applyReplacementsResourceDiffs.length > 0) {
@@ -61,13 +51,10 @@ export const processApplyReplacementsUpdates = async (
       let mutatorsUpdated = false;
       let mutators = kptfileYaml.pipeline?.mutators ?? [];
 
-      const findApplyReplacementsMutator = (
-        configPath: string,
-      ): KptfileFunction | undefined =>
+      const findApplyReplacementsMutator = (configPath: string): KptfileFunction | undefined =>
         mutators.find(
           mutator =>
-            getFunctionNameFromImage(mutator.image) === 'apply-replacements' &&
-            mutator.configPath === configPath,
+            getFunctionNameFromImage(mutator.image) === 'apply-replacements' && mutator.configPath === configPath,
         );
 
       for (const applyReplacementsResourceDiff of applyReplacementsResourceDiffs) {
@@ -99,15 +86,11 @@ export const processApplyReplacementsUpdates = async (
 
           if (applyReplacementsMutator) {
             const anotherApplyReplacementsResource = currentResources.find(
-              resource =>
-                resource.filename === path &&
-                resource.kind === 'ApplyReplacements',
+              resource => resource.filename === path && resource.kind === 'ApplyReplacements',
             );
 
             if (!anotherApplyReplacementsResource) {
-              mutators = mutators.filter(
-                mutator => mutator !== applyReplacementsMutator,
-              );
+              mutators = mutators.filter(mutator => mutator !== applyReplacementsMutator);
 
               mutatorsUpdated = true;
             }

@@ -19,10 +19,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { clone } from 'lodash';
 import React, { Fragment, useRef } from 'react';
 import { IngressTLS } from '../../../../../../types/Ingress';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 
 type OnUpdate = (newValue?: IngressTLS) => void;
 
@@ -33,12 +30,7 @@ type TLSEditorAccordionProps = {
   onUpdate: OnUpdate;
 };
 
-export const TLSEditorAccordion = ({
-  id,
-  state,
-  value: ingressTls,
-  onUpdate,
-}: TLSEditorAccordionProps) => {
+export const TLSEditorAccordion = ({ id, state, value: ingressTls, onUpdate }: TLSEditorAccordionProps) => {
   const refViewModel = useRef<IngressTLS>(clone(ingressTls));
   const viewModel = refViewModel.current;
 
@@ -49,12 +41,7 @@ export const TLSEditorAccordion = ({
   const description = `${viewModel.hosts?.join(', ') || 'new tls'}`;
 
   return (
-    <EditorAccordion
-      id={id}
-      title="TLS"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="TLS" description={description} state={state}>
       <Fragment>
         <Fragment>
           <Fragment>
@@ -63,8 +50,7 @@ export const TLSEditorAccordion = ({
               variant="outlined"
               value={(viewModel?.hosts ?? []).join(', ')}
               onChange={e => {
-                viewModel.hosts =
-                  e.target.value.split(',').map(s => s.trim()) || undefined;
+                viewModel.hosts = e.target.value.split(',').map(s => s.trim()) || undefined;
                 valueUpdated();
               }}
               fullWidth

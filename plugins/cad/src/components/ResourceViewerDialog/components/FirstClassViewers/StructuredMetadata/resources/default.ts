@@ -25,11 +25,7 @@ const getValue = (fieldValue: any): string => {
   return fieldValue;
 };
 
-const setMetadata = (
-  metadata: Metadata,
-  resourceField: any,
-  fieldName: string,
-): void => {
+const setMetadata = (metadata: Metadata, resourceField: any, fieldName: string): void => {
   if (Array.isArray(resourceField)) {
     const isArrayFieldObject = typeof resourceField[0] === 'object';
 
@@ -55,16 +51,10 @@ const setMetadata = (
   }
 };
 
-const populateMetadata = (
-  metadata: Metadata,
-  object: any,
-  depth: number,
-): void => {
+const populateMetadata = (metadata: Metadata, object: any, depth: number): void => {
   const STANDARD_K8S_FIELDS = ['apiVersion', 'kind', 'metadata'];
 
-  const firstLevelFields = Object.keys(object || {}).filter(
-    key => !STANDARD_K8S_FIELDS.includes(key) || depth !== 1,
-  );
+  const firstLevelFields = Object.keys(object || {}).filter(key => !STANDARD_K8S_FIELDS.includes(key) || depth !== 1);
 
   for (const fieldName of firstLevelFields) {
     const newMetadata: Metadata = {};
@@ -78,27 +68,19 @@ const populateMetadata = (
 
     for (const thisKey of Object.keys(newMetadata)) {
       const isPrefix = thisKey.includes('.');
-      const thisKeyName = isPrefix
-        ? thisKey.slice(0, thisKey.indexOf('.'))
-        : thisKey;
+      const thisKeyName = isPrefix ? thisKey.slice(0, thisKey.indexOf('.')) : thisKey;
 
       if (!metadata[thisKeyName]) {
         metadata[thisKeyName] = [];
       }
 
       const fieldKey = thisKey.slice(thisKeyName.length + 1);
-      metadata[thisKeyName].push(
-        isPrefix
-          ? `${fieldKey}: ${newMetadata[thisKey]}`
-          : newMetadata[thisKey],
-      );
+      metadata[thisKeyName].push(isPrefix ? `${fieldKey}: ${newMetadata[thisKey]}` : newMetadata[thisKey]);
     }
   }
 };
 
-export const getDefaultStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getDefaultStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const anyResource = resource as unknown as any;
 
   const metadata: Metadata = {};

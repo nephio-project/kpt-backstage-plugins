@@ -18,10 +18,7 @@ import { cloneDeep } from 'lodash';
 import React, { useRef, useState } from 'react';
 import { Probe } from '../../../../../../../types/Pod';
 import { Checkbox } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 import { ProbeEditorAccordion } from './ProbeEditorAccordion';
 
@@ -54,10 +51,7 @@ const getUseHealthState = (healthState: HealthState): UseHealthState => {
   };
 };
 
-const nomralizeHealthState = (
-  healthState: HealthState,
-  state: UseHealthState,
-): HealthState => {
+const nomralizeHealthState = (healthState: HealthState, state: UseHealthState): HealthState => {
   if (!state.useStartupProbe) {
     healthState.startupProbe = undefined;
   }
@@ -83,38 +77,23 @@ const getDescription = (state: UseHealthState): string => {
   return probesEnabled.length > 0 ? probesEnabled.join(', ') : 'no probes';
 };
 
-export const HealthEditorAccordion = ({
-  id,
-  state,
-  value: healthState,
-  onUpdate,
-}: HealthEditorAccordionProps) => {
+export const HealthEditorAccordion = ({ id, state, value: healthState, onUpdate }: HealthEditorAccordionProps) => {
   const classes = useEditorStyles();
 
   const [sectionExpanded, setSectionExpanded] = useState<string>();
-  const [useHealthState, setUseHealthState] = useState<UseHealthState>(
-    getUseHealthState(healthState),
-  );
+  const [useHealthState, setUseHealthState] = useState<UseHealthState>(getUseHealthState(healthState));
 
   const refViewModel = useRef<HealthState>(cloneDeep(healthState));
   const viewModel = refViewModel.current;
 
   const valueUpdated = (): void => {
-    const thisHealthState = nomralizeHealthState(
-      cloneDeep(refViewModel.current),
-      useHealthState,
-    );
+    const thisHealthState = nomralizeHealthState(cloneDeep(refViewModel.current), useHealthState);
 
     onUpdate(thisHealthState);
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Health"
-      description={getDescription(useHealthState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Health" description={getDescription(useHealthState)} state={state}>
       <div className={classes.multiControlRow}>
         <Checkbox
           label="Startup probe"

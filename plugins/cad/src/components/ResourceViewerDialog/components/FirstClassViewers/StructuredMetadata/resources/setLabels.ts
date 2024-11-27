@@ -18,9 +18,7 @@ import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { SetLabels } from '../../../../../../types/SetLabels';
 import { Metadata } from '../StructuredMetadata';
 
-export const getSetLabelsStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getSetLabelsStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const setLabels = resource as SetLabels;
 
   return {

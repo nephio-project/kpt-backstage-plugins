@@ -55,9 +55,7 @@ const getClientAuthentication = (
           return 'oidc.okta';
 
         default:
-          throw new Error(
-            `Client authenticaiton cannot be determined for OIDC token provider ${oidcTokenProvider}`,
-          );
+          throw new Error(`Client authenticaiton cannot be determined for OIDC token provider ${oidcTokenProvider}`);
       }
 
     case ClusterLocatorAuthProvider.SERVICE_ACCOUNT:
@@ -66,16 +64,11 @@ const getClientAuthentication = (
       return 'none';
 
     default:
-      throw new Error(
-        `Client authenticaiton cannot be determined for auth provider ${authProvider}`,
-      );
+      throw new Error(`Client authenticaiton cannot be determined for auth provider ${authProvider}`);
   }
 };
 
-export async function createRouter({
-  config,
-  logger,
-}: RouterOptions): Promise<express.Router> {
+export async function createRouter({ config, logger }: RouterOptions): Promise<express.Router> {
   const cadConfig = config.getConfig('configAsData');
 
   const namespace = getResourcesNamespace(cadConfig);
@@ -83,8 +76,7 @@ export async function createRouter({
   const maxRequestSize = getMaxRequestSize(cadConfig);
 
   const clusterLocatorMethodType = getClusterLocatorMethodType(cadConfig);
-  const clusterLocatorMethodAuthProvider =
-    getClusterLocatorMethodAuthProvider(cadConfig);
+  const clusterLocatorMethodAuthProvider = getClusterLocatorMethodAuthProvider(cadConfig);
   const oidcTokenProvider = getClusterLocatorMethodOIDCTokenProvider(cadConfig);
 
   const kubeConfig = getKubernetesConfig(clusterLocatorMethodType);
@@ -94,30 +86,20 @@ export async function createRouter({
     throw new Error(`Current cluster is not set`);
   }
 
-  const serviceAccountToken =
-    getClusterLocatorMethodServiceAccountToken(cadConfig);
+  const serviceAccountToken = getClusterLocatorMethodServiceAccountToken(cadConfig);
 
-  const clientAuthentication = getClientAuthentication(
-    clusterLocatorMethodAuthProvider,
-    oidcTokenProvider,
-  );
+  const clientAuthentication = getClientAuthentication(clusterLocatorMethodAuthProvider, oidcTokenProvider);
 
   logger.info(`Using '${clientAuthentication}' for client authentication`);
   logger.info(`Using '${namespace}' as the resources namespace`);
 
   const k8sApiServerUrl = currentCluster.server;
 
-  const healthCheck = (
-    _: express.Request,
-    response: express.Response,
-  ): void => {
+  const healthCheck = (_: express.Request, response: express.Response): void => {
     response.send({ status: 'ok' });
   };
 
-  const getFeatures = (
-    _: express.Request,
-    response: express.Response,
-  ): void => {
+  const getFeatures = (_: express.Request, response: express.Response): void => {
     response.send({
       authentication: clientAuthentication,
       namespace: namespace,
@@ -125,37 +107,25 @@ export async function createRouter({
     });
   };
 
-  const getFunctionCatalog = (
-    _: express.Request,
-    response: express.Response,
-  ): void => {
-    requestLibrary(
-      'https://catalog.kpt.dev/catalog-v2.json',
-      (error, catalogResponse, catalogBody) => {
-        if (error) {
-          response.status(500);
-        } else {
-          response.status(catalogResponse.statusCode);
-          response.send(catalogBody);
-        }
-      },
-    );
+  const getFunctionCatalog = (_: express.Request, response: express.Response): void => {
+    requestLibrary('https://catalog.kpt.dev/catalog-v2.json', (error, catalogResponse, catalogBody) => {
+      if (error) {
+        response.status(500);
+      } else {
+        response.status(catalogResponse.statusCode);
+        response.send(catalogBody);
+      }
+    });
   };
 
-  const proxyKubernetesRequest = (
-    request: express.Request,
-    response: express.Response,
-  ): void => {
+  const proxyKubernetesRequest = (request: express.Request, response: express.Response): void => {
     logger.info(`${request.method} ${request.url}`);
 
     const requestOptions: requestLibrary.Options = {
       baseUrl: k8sApiServerUrl,
       url: request.url,
       method: request.method,
-      body:
-        Object.keys(request.body).length === 0
-          ? undefined
-          : JSON.stringify(request.body),
+      body: Object.keys(request.body).length === 0 ? undefined : JSON.stringify(request.body),
     };
 
     kubeConfig.applyToRequest(requestOptions);
@@ -166,9 +136,7 @@ export async function createRouter({
       requestOptions.headers.authorization = request.headers.authorization;
     }
 
-    const useServiceAccount =
-      clusterLocatorMethodAuthProvider ===
-      ClusterLocatorAuthProvider.SERVICE_ACCOUNT;
+    const useServiceAccount = clusterLocatorMethodAuthProvider === ClusterLocatorAuthProvider.SERVICE_ACCOUNT;
     if (useServiceAccount) {
       requestOptions.headers = requestOptions.headers ?? {};
       requestOptions.headers.authorization = `Bearer ${serviceAccountToken}`;

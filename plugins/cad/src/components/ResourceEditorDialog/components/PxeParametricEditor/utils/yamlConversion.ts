@@ -16,9 +16,7 @@
 
 import { dump, load } from 'js-yaml';
 
-export const parseYaml = <T extends object>(
-  yamlText: string,
-): { yamlObject: T } => ({
+export const parseYaml = <T extends object>(yamlText: string): { yamlObject: T } => ({
   yamlObject: load(yamlText) as T,
 });
 

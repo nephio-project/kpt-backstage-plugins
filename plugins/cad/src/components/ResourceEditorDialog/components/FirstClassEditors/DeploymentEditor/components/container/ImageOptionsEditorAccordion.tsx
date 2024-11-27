@@ -21,16 +21,12 @@ import React, { Fragment, useRef } from 'react';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
 import { toLowerCase } from '../../../../../../../utils/string';
 import { Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 const IMAGE_PULL_POLICY = ['Always', 'Never', 'IfNotPresent'];
 
-const pullPolicySelectItems: SelectItem[] =
-  buildSelectItemsFromList(IMAGE_PULL_POLICY);
+const pullPolicySelectItems: SelectItem[] = buildSelectItemsFromList(IMAGE_PULL_POLICY);
 
 type OnUpdate = (imageOptions: ImageOptions) => void;
 
@@ -53,9 +49,7 @@ const getDescription = (imageOptions: ImageOptions): string => {
     statements.push(`${startCase(imageOptions.imagePullPolicy)} pull image`);
   }
   if (imageOptions.imagePullSecrets) {
-    statements.push(
-      `${imageOptions.imagePullSecrets.length} image pull secrets`,
-    );
+    statements.push(`${imageOptions.imagePullSecrets.length} image pull secrets`);
   }
 
   if (statements.length === 0) {
@@ -82,12 +76,7 @@ export const ImageOptionsEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Image Options"
-      description={getDescription(viewModel)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Image Options" description={getDescription(viewModel)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <Select
@@ -106,9 +95,7 @@ export const ImageOptionsEditorAccordion = ({
             value={viewModel.imagePullSecrets?.join(', ') ?? ''}
             onChange={e => {
               const value = e.target.value;
-              viewModel.imagePullSecrets = value
-                ? value.split(',').map(v => v.trim())
-                : undefined;
+              viewModel.imagePullSecrets = value ? value.split(',').map(v => v.trim()) : undefined;
 
               valueUpdated();
             }}

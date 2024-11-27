@@ -20,10 +20,7 @@ import { ListConfigManagements } from '../types/ConfigManagement';
 import { GetFeaturesResponse } from '../types/Features';
 import { Function } from '../types/Function';
 import { PackageRevision } from '../types/PackageRevision';
-import {
-  ListPackageRevisionResources,
-  PackageRevisionResources,
-} from '../types/PackageRevisionResource';
+import { ListPackageRevisionResources, PackageRevisionResources } from '../types/PackageRevisionResource';
 import { ListRepositories, Repository } from '../types/Repository';
 import { ListRootSyncs, RootSync } from '../types/RootSync';
 import { ListSecrets, Secret } from '../types/Secret';
@@ -51,21 +48,15 @@ export type ConfigAsDataApi = {
 
   unregisterRepository(repositoryName: string): Promise<void>;
 
-  createPackageRevision(
-    packageRevision: PackageRevision,
-  ): Promise<PackageRevision>;
+  createPackageRevision(packageRevision: PackageRevision): Promise<PackageRevision>;
 
   listPackageRevisions(repositoryName?: string): Promise<PackageRevision[]>;
 
   getPackageRevision(fullPackageName: string): Promise<PackageRevision>;
 
-  replacePackageRevision(
-    packageRevision: PackageRevision,
-  ): Promise<PackageRevision>;
+  replacePackageRevision(packageRevision: PackageRevision): Promise<PackageRevision>;
 
-  approvePackageRevision(
-    packageRevision: PackageRevision,
-  ): Promise<PackageRevision>;
+  approvePackageRevision(packageRevision: PackageRevision): Promise<PackageRevision>;
 
   deletePackageRevision(fullPackageName: string): Promise<void>;
 
@@ -73,9 +64,7 @@ export type ConfigAsDataApi = {
     packageRevisionResources: PackageRevisionResources,
   ): Promise<PackageRevisionResources>;
 
-  getPackageRevisionResources(
-    packageName: string,
-  ): Promise<PackageRevisionResources>;
+  getPackageRevisionResources(packageName: string): Promise<PackageRevisionResources>;
 
   listPackageRevisionResources(): Promise<ListPackageRevisionResources>;
 

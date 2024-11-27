@@ -18,27 +18,14 @@ import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import {
-  Deployment,
-  DeploymentMetadata,
-  DeploymentStrategy,
-} from '../../../../../types/Deployment';
-import {
-  Container,
-  PodSecurityContext,
-  Volume,
-} from '../../../../../types/Pod';
+import { Deployment, DeploymentMetadata, DeploymentStrategy } from '../../../../../types/Deployment';
+import { Container, PodSecurityContext, Volume } from '../../../../../types/Pod';
 import { LabelSelector } from '../../../../../types/Selectors';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../util/deletable';
 import { ContainerEditorAccordion } from './components/ContainerEditorAccordion';
 import { DeploymentDetailsEditorAccordion } from './components/DeploymentDetailsEditorAccordion';
 import { PodDetailsEditorAccordion } from './components/PodDetailsEditorAccordion';
@@ -98,11 +85,7 @@ const getResourceState = (deployment: Deployment): State => {
   };
 };
 
-export const DeploymentEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: DeploymentEditorProps) => {
+export const DeploymentEditor = ({ yaml, onUpdatedYaml, packageResources }: DeploymentEditorProps) => {
   const resourceYaml = loadYaml(yaml) as Deployment;
 
   const classes = useEditorStyles();
@@ -131,8 +114,7 @@ export const DeploymentEditor = ({
     templateSpec.serviceAccountName = state.serviceAccount;
     templateSpec.securityContext = state.securityContext;
     templateSpec.restartPolicy = state.restartPolicy;
-    templateSpec.terminationGracePeriodSeconds =
-      state.terminationGracePeriodSeconds;
+    templateSpec.terminationGracePeriodSeconds = state.terminationGracePeriodSeconds;
 
     onUpdatedYaml(dumpYaml(resourceYaml));
   }, [state, onUpdatedYaml, resourceYaml, containers]);
@@ -172,9 +154,7 @@ export const DeploymentEditor = ({
               volumes={state.volumes}
               packageResources={packageResources}
               onUpdate={updatedContainer => {
-                setContainers(
-                  updateList(containers.slice(), updatedContainer, index),
-                );
+                setContainers(updateList(containers.slice(), updatedContainer, index));
               }}
             />
           ),

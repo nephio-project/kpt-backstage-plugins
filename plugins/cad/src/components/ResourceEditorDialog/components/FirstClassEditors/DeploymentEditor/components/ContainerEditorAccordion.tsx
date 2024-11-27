@@ -18,19 +18,9 @@ import { Button, TextField } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { clone } from 'lodash';
 import React, { Fragment, useRef, useState } from 'react';
-import {
-  Container,
-  ContainerPort,
-  EnvFromSource,
-  EnvVar,
-  Volume,
-  VolumeMount,
-} from '../../../../../../types/Pod';
+import { Container, ContainerPort, EnvFromSource, EnvVar, Volume, VolumeMount } from '../../../../../../types/Pod';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
 import { CommandArgsEditorAccordion } from './container/CommandArgsEditorAccordion';
 import { EnvironmentEditorAccordion } from './container/EnvironmentEditorAccordion';
@@ -68,18 +58,12 @@ export const ContainerEditorAccordion = ({
   const refViewModel = useRef<Container>(clone(container));
   const viewModel = refViewModel.current;
 
-  const refContainerPorts = useRef<ContainerPort[] | undefined>(
-    viewModel.ports,
-  );
+  const refContainerPorts = useRef<ContainerPort[] | undefined>(viewModel.ports);
 
   const refEnvVars = useRef<EnvVar[] | undefined>(viewModel.env);
-  const refEnvFromSource = useRef<EnvFromSource[] | undefined>(
-    viewModel.envFrom,
-  );
+  const refEnvFromSource = useRef<EnvFromSource[] | undefined>(viewModel.envFrom);
 
-  const refVolumeMounts = useRef<VolumeMount[] | undefined>(
-    viewModel.volumeMounts,
-  );
+  const refVolumeMounts = useRef<VolumeMount[] | undefined>(viewModel.volumeMounts);
 
   const classes = useEditorStyles();
 
@@ -96,12 +80,7 @@ export const ContainerEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Container"
-      description={getDescription(container)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Container" description={getDescription(container)} state={state}>
       <Fragment>
         <Fragment>
           <TextField
@@ -238,11 +217,7 @@ export const ContainerEditorAccordion = ({
           </div>
         </Fragment>
 
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete Container
         </Button>
       </Fragment>

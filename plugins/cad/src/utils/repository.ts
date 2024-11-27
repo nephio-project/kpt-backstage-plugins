@@ -105,10 +105,7 @@ export const RepositoryContentDetails: ContentDetailsLookup = {
     contentLink: 'team-blueprints',
     description:
       'Team Blueprints are packages that a team in your organization owns. Deployment Packages can be created from packages in this repository.',
-    notContent: [
-      ContentSummary.ORGANIZATIONAL_BLUEPRINT,
-      ContentSummary.EXTERNAL_BLUEPRINT,
-    ],
+    notContent: [ContentSummary.ORGANIZATIONAL_BLUEPRINT, ContentSummary.EXTERNAL_BLUEPRINT],
     cloneTo: [
       { content: ContentSummary.DEPLOYMENT, preferred: true },
       { content: ContentSummary.TEAM_BLUEPRINT, preferred: true },
@@ -155,43 +152,28 @@ export const RepositoryContentDetails: ContentDetailsLookup = {
     contentSummary: ContentSummary.FUNCTION,
     repositoryContent: RepositoryContent.FUNCTION,
     contentLink: 'functions',
-    description:
-      'Functions are containerized programs that can perform CRUD operations on KRM resources.',
+    description: 'Functions are containerized programs that can perform CRUD operations on KRM resources.',
     cloneTo: [],
   },
 };
 
-const isRepositoryContent = (
-  repository: Repository,
-  contentType: ContentSummary,
-): boolean => {
+const isRepositoryContent = (repository: Repository, contentType: ContentSummary): boolean => {
   const repositoryDetails = RepositoryContentDetails[contentType];
 
-  const isContentTypeMatch =
-    repository.spec.content === repositoryDetails.repositoryContent;
-  const isDeploymentMatch =
-    !!repository.spec.deployment === !!repositoryDetails.isDeployment;
+  const isContentTypeMatch = repository.spec.content === repositoryDetails.repositoryContent;
+  const isDeploymentMatch = !!repository.spec.deployment === !!repositoryDetails.isDeployment;
   const isLabelMatch =
     !repositoryDetails.repositoryContentLabelValue ||
-    repository.metadata.labels?.[REPOSITORY_CONTENT_LABEL] ===
-      repositoryDetails.repositoryContentLabelValue;
+    repository.metadata.labels?.[REPOSITORY_CONTENT_LABEL] === repositoryDetails.repositoryContentLabelValue;
 
   const notContent = repositoryDetails.notContent ?? [];
-  const noDisqualifiers = !notContent
-    .map(content => isRepositoryContent(repository, content))
-    .includes(true);
+  const noDisqualifiers = !notContent.map(content => isRepositoryContent(repository, content)).includes(true);
 
-  return (
-    isContentTypeMatch && isDeploymentMatch && isLabelMatch && noDisqualifiers
-  );
+  return isContentTypeMatch && isDeploymentMatch && isLabelMatch && noDisqualifiers;
 };
 
-export const getContentDetailsByLink = (
-  contentLink: string,
-): ContentDetails => {
-  const contentDetails = Object.values(RepositoryContentDetails).find(
-    details => details.contentLink === contentLink,
-  );
+export const getContentDetailsByLink = (contentLink: string): ContentDetails => {
+  const contentDetails = Object.values(RepositoryContentDetails).find(details => details.contentLink === contentLink);
 
   if (!contentDetails) {
     throw new Error('Unknown package content type');
@@ -201,10 +183,8 @@ export const getContentDetailsByLink = (
 };
 
 const normalizeRepositoryUrl = (repositoryUrl?: string): string => {
-  const normalizeHTTPS = (url: string): string =>
-    url.replace('https://', '').replace('.git', '');
-  const normalizeSSH = (url: string): string =>
-    url.replace('git@', '').replace(':', '/');
+  const normalizeHTTPS = (url: string): string => url.replace('https://', '').replace('.git', '');
+  const normalizeSSH = (url: string): string => url.replace('git@', '').replace(':', '/');
 
   const thisRepositoryUrl = toLowerCase(repositoryUrl ?? '');
 
@@ -220,9 +200,7 @@ const normalizeRepositoryUrl = (repositoryUrl?: string): string => {
 };
 
 export const isReadOnlyRepository = (repository: Repository): boolean => {
-  const isReadOnly =
-    repository.metadata.labels?.[REPOSITORY_ACCESS_LABEL] ===
-    RepositoryAccess.READ_ONLY;
+  const isReadOnly = repository.metadata.labels?.[REPOSITORY_ACCESS_LABEL] === RepositoryAccess.READ_ONLY;
 
   return isReadOnly;
 };
@@ -237,13 +215,8 @@ export const getPackageDescriptor = (repository: Repository): string => {
   return 'Unknown';
 };
 
-export const getRepository = (
-  allRepositories: Repository[],
-  repositoryName: string,
-): Repository => {
-  const repository = allRepositories.find(
-    thisRepository => thisRepository.metadata.name === repositoryName,
-  );
+export const getRepository = (allRepositories: Repository[], repositoryName: string): Repository => {
+  const repository = allRepositories.find(thisRepository => thisRepository.metadata.name === repositoryName);
 
   if (!repository) {
     throw new Error(`Repository ${repositoryName} does not exist`);
@@ -263,22 +236,14 @@ export const findRepository = (
   if (repositoryUrl) {
     const normalizedUrl = normalizeRepositoryUrl(repositoryUrl);
 
-    return allRepositories.find(
-      repository =>
-        normalizeRepositoryUrl(repository.spec.git?.repo) === normalizedUrl,
-    );
+    return allRepositories.find(repository => normalizeRepositoryUrl(repository.spec.git?.repo) === normalizedUrl);
   }
 
   throw new Error('No repository find criteria specified');
 };
 
-export const filterRepositories = (
-  allRepositories: Repository[],
-  packageDescriptor: string,
-): Repository[] => {
-  return allRepositories.filter(
-    repository => getPackageDescriptor(repository) === packageDescriptor,
-  );
+export const filterRepositories = (allRepositories: Repository[], packageDescriptor: string): Repository[] => {
+  return allRepositories.filter(repository => getPackageDescriptor(repository) === packageDescriptor);
 };
 
 export const getRepositoryResource = (
@@ -299,8 +264,7 @@ export const getRepositoryResource = (
   const labels: KubernetesKeyValueObject = {};
 
   if (contentDetails.repositoryContentLabelValue) {
-    labels[REPOSITORY_CONTENT_LABEL] =
-      contentDetails.repositoryContentLabelValue;
+    labels[REPOSITORY_CONTENT_LABEL] = contentDetails.repositoryContentLabelValue;
   }
 
   if (repositoryAccess === RepositoryAccess.READ_ONLY) {

@@ -18,10 +18,7 @@ import React, { useEffect, useState } from 'react';
 import { ConfigMap, ConfigMapMetadata } from '../../../../../types/ConfigMap';
 import { KubernetesKeyValueObject } from '../../../../../types/KubernetesResource';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
-import {
-  KeyValueEditorAccordion,
-  ResourceMetadataAccordion,
-} from '../Controls';
+import { KeyValueEditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
@@ -36,10 +33,7 @@ type State = {
   data: KubernetesKeyValueObject;
 };
 
-export const ConfigMapEditor = ({
-  yaml,
-  onUpdatedYaml,
-}: ResourceEditorProps) => {
+export const ConfigMapEditor = ({ yaml, onUpdatedYaml }: ResourceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as ConfigMap;
 
   const createResourceState = (): State => ({

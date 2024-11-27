@@ -30,8 +30,6 @@ export const getNumber = (value: string): number | undefined => {
   return isNumber(value) ? parseInt(value, 10) : undefined;
 };
 
-export const getNumberOrString = (
-  value: string,
-): string | number | undefined => {
+export const getNumberOrString = (value: string): string | number | undefined => {
   return isNumber(value) ? parseInt(value, 10) : value || undefined;
 };

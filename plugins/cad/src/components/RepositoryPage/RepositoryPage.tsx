@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Breadcrumbs,
-  ContentHeader,
-  LinkButton,
-  Progress,
-} from '@backstage/core-components';
+import { Breadcrumbs, ContentHeader, LinkButton, Progress } from '@backstage/core-components';
 import { useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
@@ -33,11 +28,7 @@ import { Repository } from '../../types/Repository';
 import { RepositorySummary } from '../../types/RepositorySummary';
 import { RootSync } from '../../types/RootSync';
 import { isConfigSyncEnabled } from '../../utils/featureFlags';
-import {
-  getPackageSummaries,
-  PackageSummary,
-  updatePackageSummariesSyncStatus,
-} from '../../utils/packageSummary';
+import { getPackageSummaries, PackageSummary, updatePackageSummariesSyncStatus } from '../../utils/packageSummary';
 import {
   getPackageDescriptor,
   getRepositoryTitle,
@@ -46,10 +37,7 @@ import {
   isPackageRepository,
   isReadOnlyRepository,
 } from '../../utils/repository';
-import {
-  getRepositorySummaries,
-  getRepositorySummary,
-} from '../../utils/repositorySummary';
+import { getRepositorySummaries, getRepositorySummary } from '../../utils/repositorySummary';
 import { Tabs } from '../Controls';
 import { LandingPageLink } from '../Links';
 import { AdvancedRepositoryOptions } from './components/AdvancedRepositoryOptions';
@@ -62,70 +50,55 @@ export const RepositoryPage = () => {
   const addPackageRef = useRouteRef(addPackageToRepoRouteRef);
 
   const allRepositories = useRef<Repository[]>([]);
-  const [repositorySummary, setRepositorySummary] =
-    useState<RepositorySummary>();
-  const [packageSummaries, setPackageSummaries] = useState<PackageSummary[]>(
-    [],
-  );
+  const [repositorySummary, setRepositorySummary] = useState<RepositorySummary>();
+  const [packageSummaries, setPackageSummaries] = useState<PackageSummary[]>([]);
   const [functions, setFunctions] = useState<Function[]>([]);
 
   const configSyncEnabled = isConfigSyncEnabled();
 
-  const { loading: repositoryLoading, error: repositoryError } =
-    useAsync(async (): Promise<void> => {
-      const { items: thisAllRepositories } = await api.listRepositories();
-      const repositorySummaries = getRepositorySummaries(thisAllRepositories);
+  const { loading: repositoryLoading, error: repositoryError } = useAsync(async (): Promise<void> => {
+    const { items: thisAllRepositories } = await api.listRepositories();
+    const repositorySummaries = getRepositorySummaries(thisAllRepositories);
 
-      const thisRepositorySummary = await getRepositorySummary(
-        repositorySummaries,
-        repositoryName,
-      );
+    const thisRepositorySummary = await getRepositorySummary(repositorySummaries, repositoryName);
 
-      allRepositories.current = thisAllRepositories;
-      setRepositorySummary(thisRepositorySummary);
-    }, [repositoryName]);
+    allRepositories.current = thisAllRepositories;
+    setRepositorySummary(thisRepositorySummary);
+  }, [repositoryName]);
 
-  const { loading: packagesLoading, error: packagesError } =
-    useAsync(async (): Promise<void> => {
-      if (repositorySummary) {
-        const thisRepository = repositorySummary.repository;
-        if (isFunctionRepository(thisRepository)) {
-          const thisFunctions = await api.listFunctions(repositoryName);
-          setFunctions(thisFunctions);
-        }
+  const { loading: packagesLoading, error: packagesError } = useAsync(async (): Promise<void> => {
+    if (repositorySummary) {
+      const thisRepository = repositorySummary.repository;
+      if (isFunctionRepository(thisRepository)) {
+        const thisFunctions = await api.listFunctions(repositoryName);
+        setFunctions(thisFunctions);
+      }
 
-        if (isPackageRepository(thisRepository)) {
-          const getRootSyncs = async (): Promise<RootSync[]> => {
-            if (!configSyncEnabled || !isDeploymentRepository(thisRepository))
-              return [];
+      if (isPackageRepository(thisRepository)) {
+        const getRootSyncs = async (): Promise<RootSync[]> => {
+          if (!configSyncEnabled || !isDeploymentRepository(thisRepository)) return [];
 
-            const { items: rootSyncs } = await api.listRootSyncs();
-            return rootSyncs;
-          };
+          const { items: rootSyncs } = await api.listRootSyncs();
+          return rootSyncs;
+        };
 
-          const [allPackageRevisions, syncs] = await Promise.all([
-            api.listPackageRevisions(),
-            getRootSyncs(),
-          ]);
+        const [allPackageRevisions, syncs] = await Promise.all([api.listPackageRevisions(), getRootSyncs()]);
 
-          const thisPackageSummaries = getPackageSummaries(
-            allPackageRevisions,
-            [repositorySummary],
-            allRepositories.current,
-          );
+        const thisPackageSummaries = getPackageSummaries(
+          allPackageRevisions,
+          [repositorySummary],
+          allRepositories.current,
+        );
 
-          if (isDeploymentRepository(thisRepository)) {
-            const updatedPackageSummaries = updatePackageSummariesSyncStatus(
-              thisPackageSummaries,
-              syncs,
-            );
-            setPackageSummaries(updatedPackageSummaries);
-          } else {
-            setPackageSummaries(thisPackageSummaries);
-          }
+        if (isDeploymentRepository(thisRepository)) {
+          const updatedPackageSummaries = updatePackageSummariesSyncStatus(thisPackageSummaries, syncs);
+          setPackageSummaries(updatedPackageSummaries);
+        } else {
+          setPackageSummaries(thisPackageSummaries);
         }
       }
-    }, [repositorySummary]);
+    }
+  }, [repositorySummary]);
 
   useEffect(() => {
     if (
@@ -137,16 +110,11 @@ export const RepositoryPage = () => {
       const refreshRootSync = async (): Promise<void> => {
         const { items: syncs } = await api.listRootSyncs();
 
-        setPackageSummaries(thisPackageSummaries =>
-          updatePackageSummariesSyncStatus(thisPackageSummaries, syncs),
-        );
+        setPackageSummaries(thisPackageSummaries => updatePackageSummariesSyncStatus(thisPackageSummaries, syncs));
       };
 
       const refreshSeconds = 10;
-      const refreshTimeout = setTimeout(
-        () => refreshRootSync(),
-        refreshSeconds * 1000,
-      );
+      const refreshTimeout = setTimeout(() => refreshRootSync(), refreshSeconds * 1000);
 
       return () => {
         clearTimeout(refreshTimeout);
@@ -181,11 +149,7 @@ export const RepositoryPage = () => {
 
       <ContentHeader title={repoTitle}>
         {!isReadOnly && (
-          <LinkButton
-            to={addPackageRef({ repositoryName: repositoryName })}
-            color="primary"
-            variant="contained"
-          >
+          <LinkButton to={addPackageRef({ repositoryName: repositoryName })} color="primary" variant="contained">
             Add {packageDescriptor}
           </LinkButton>
         )}
@@ -208,11 +172,7 @@ export const RepositoryPage = () => {
           },
           {
             label: 'Advanced',
-            content: (
-              <AdvancedRepositoryOptions
-                repositorySummary={repositorySummary}
-              />
-            ),
+            content: <AdvancedRepositoryOptions repositorySummary={repositorySummary} />,
           },
         ]}
       />

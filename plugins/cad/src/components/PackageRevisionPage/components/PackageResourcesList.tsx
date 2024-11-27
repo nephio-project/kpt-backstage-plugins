@@ -30,10 +30,7 @@ import {
 } from '../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../utils/yaml';
 import { PackageRevisionPageMode } from '../PackageRevisionPage';
-import {
-  PackageRevisionResourcesTable,
-  ResourcesTableMode,
-} from './PackageRevisionResourcesTable';
+import { PackageRevisionResourcesTable, ResourcesTableMode } from './PackageRevisionResourcesTable';
 
 type PackageResourcesListProps = {
   resourcesMap: PackageRevisionResourcesMap;
@@ -50,9 +47,7 @@ export type ResourceRow = PackageResource & {
   currentResource?: PackageResource;
 };
 
-export type PackageResourceFilter = (
-  packageResource: PackageResource,
-) => boolean;
+export type PackageResourceFilter = (packageResource: PackageResource) => boolean;
 
 const sortResources = (allResources: ResourceRow[]): void => {
   allResources.sort((resource1, resource2) => {
@@ -71,25 +66,18 @@ const sortResources = (allResources: ResourceRow[]): void => {
       (resource.namespace || ' ') + resource.kind + resource.name;
 
     if (resourceComponent(resource1) !== resourceComponent(resource2)) {
-      return resourceComponent(resource1) > resourceComponent(resource2)
-        ? 1
-        : -1;
+      return resourceComponent(resource1) > resourceComponent(resource2) ? 1 : -1;
     }
 
     if (resourceScore(resource1) === resourceScore(resource2)) {
-      return resourceQualifiedName(resource1) > resourceQualifiedName(resource2)
-        ? 1
-        : -1;
+      return resourceQualifiedName(resource1) > resourceQualifiedName(resource2) ? 1 : -1;
     }
 
     return resourceScore(resource1) < resourceScore(resource2) ? 1 : -1;
   });
 };
 
-const addDiffDetails = (
-  allResources: ResourceRow[],
-  baseResources: PackageResource[],
-): void => {
+const addDiffDetails = (allResources: ResourceRow[], baseResources: PackageResource[]): void => {
   const resourcesDiff = diffPackageResources(baseResources, allResources);
 
   for (const resourceDiff of resourcesDiff) {
@@ -103,16 +91,11 @@ const addDiffDetails = (
       });
     }
 
-    const diffResource =
-      resourceDiff.currentResource ?? resourceDiff.originalResource;
-    const thisResource = allResources.find(
-      resource => resource.id === diffResource.id,
-    );
+    const diffResource = resourceDiff.currentResource ?? resourceDiff.originalResource;
+    const thisResource = allResources.find(resource => resource.id === diffResource.id);
 
     if (!thisResource) {
-      throw new Error(
-        'Resource exists within diff, however the resource is not found in allResources',
-      );
+      throw new Error('Resource exists within diff, however the resource is not found in allResources');
     }
 
     thisResource.originalResource = resourceDiff.originalResource;
@@ -153,9 +136,7 @@ export const PackageResourcesList = ({
 }: PackageResourcesListProps) => {
   const classes = useStyles();
 
-  const getPackageResources = (
-    map: PackageRevisionResourcesMap,
-  ): PackageResource[] =>
+  const getPackageResources = (map: PackageRevisionResourcesMap): PackageResource[] =>
     getPackageResourcesFromResourcesMap(map).filter(resourceFilter);
 
   const packageResources = getPackageResources(resourcesMap) as ResourceRow[];
@@ -173,10 +154,7 @@ export const PackageResourcesList = ({
     addDiffDetails(allResources, baseResources);
   }
 
-  const onUpdatedResource = (
-    originalResource?: PackageResource,
-    resource?: PackageResource,
-  ): void => {
+  const onUpdatedResource = (originalResource?: PackageResource, resource?: PackageResource): void => {
     let updatedResourcesMap = cloneDeep(resourcesMap);
 
     if (resource) {
@@ -185,8 +163,7 @@ export const PackageResourcesList = ({
       if (resourceYaml.metadata.annotations) {
         const PATH_ANNOTATION = 'internal.config.kubernetes.io/path';
 
-        const newFilename =
-          resourceYaml.metadata.annotations?.[PATH_ANNOTATION];
+        const newFilename = resourceYaml.metadata.annotations?.[PATH_ANNOTATION];
 
         if (newFilename) {
           if (!newFilename.endsWith('.yaml')) {
@@ -205,54 +182,32 @@ export const PackageResourcesList = ({
       }
     }
 
-    const deleteResource =
-      originalResource &&
-      (!resource || resource.filename !== originalResource.filename);
-    const updateResource =
-      originalResource &&
-      resource &&
-      resource.filename === originalResource.filename;
-    const addResource =
-      resource &&
-      (!originalResource || resource.filename !== originalResource?.filename);
+    const deleteResource = originalResource && (!resource || resource.filename !== originalResource.filename);
+    const updateResource = originalResource && resource && resource.filename === originalResource.filename;
+    const addResource = resource && (!originalResource || resource.filename !== originalResource?.filename);
 
     if (!(deleteResource || updateResource || addResource)) {
       throw new Error('No action is set to occur on resources map');
     }
 
     if (deleteResource) {
-      updatedResourcesMap = removeResourceFromResourcesMap(
-        updatedResourcesMap,
-        originalResource,
-      );
+      updatedResourcesMap = removeResourceFromResourcesMap(updatedResourcesMap, originalResource);
     }
 
     if (updateResource) {
-      updatedResourcesMap = updateResourceInResourcesMap(
-        updatedResourcesMap,
-        originalResource,
-        resource.yaml,
-      );
+      updatedResourcesMap = updateResourceInResourcesMap(updatedResourcesMap, originalResource, resource.yaml);
     }
 
     if (addResource) {
-      updatedResourcesMap = addResourceToResourcesMap(
-        updatedResourcesMap,
-        resource,
-      );
+      updatedResourcesMap = addResourceToResourcesMap(updatedResourcesMap, resource);
     }
 
     onUpdatedResourcesMap(updatedResourcesMap);
   };
 
-  const uniqueComponents = uniq(
-    allResources.map(resource => resource.component),
-  );
+  const uniqueComponents = uniq(allResources.map(resource => resource.component));
 
-  const resourcesTableMode =
-    mode === PackageRevisionPageMode.EDIT
-      ? ResourcesTableMode.EDIT
-      : ResourcesTableMode.VIEW;
+  const resourcesTableMode = mode === PackageRevisionPageMode.EDIT ? ResourcesTableMode.EDIT : ResourcesTableMode.VIEW;
 
   return (
     <Fragment>

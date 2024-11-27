@@ -35,9 +35,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const AdvancedRepositoryOptions = ({
-  repositorySummary,
-}: AdvancedRepositoryOptionsProps) => {
+export const AdvancedRepositoryOptions = ({ repositorySummary }: AdvancedRepositoryOptionsProps) => {
   const classes = useStyles();
 
   const { repositoryName } = useParams();
@@ -58,27 +56,20 @@ export const AdvancedRepositoryOptions = ({
   };
 
   const executeUnregisterRepository = async (): Promise<void> => {
-    const checkUsedByOtherRepository = async (
-      secretName: string,
-    ): Promise<boolean> => {
+    const checkUsedByOtherRepository = async (secretName: string): Promise<boolean> => {
       const { items: repositories } = await api.listRepositories();
       const isSecretShared = repositories.some(
         repository =>
-          repository.metadata.name !== repositoryName &&
-          repository.spec.git?.secretRef?.name === secretName,
+          repository.metadata.name !== repositoryName && repository.spec.git?.secretRef?.name === secretName,
       );
       return isSecretShared;
     };
 
-    const repoSecretName =
-      repositorySummary.repository.spec.git?.secretRef?.name;
+    const repoSecretName = repositorySummary.repository.spec.git?.secretRef?.name;
     const repoNamespace = repositorySummary.repository.metadata.namespace;
 
     if (repoSecretName && !(await checkUsedByOtherRepository(repoSecretName))) {
-      await Promise.all([
-        api.unregisterRepository(repositoryName),
-        api.deleteSecret(repoSecretName, repoNamespace),
-      ]);
+      await Promise.all([api.unregisterRepository(repositoryName), api.deleteSecret(repoSecretName, repoNamespace)]);
     } else {
       await api.unregisterRepository(repositoryName);
     }
@@ -100,11 +91,7 @@ export const AdvancedRepositoryOptions = ({
         <RepositoryDetails repositorySummary={repositorySummary} />
       </div>
 
-      <Button
-        color="secondary"
-        variant="contained"
-        onClick={openUnregisterRepositoryDialog}
-      >
+      <Button color="secondary" variant="contained" onClick={openUnregisterRepositoryDialog}>
         Unregister Repository
       </Button>
     </Fragment>

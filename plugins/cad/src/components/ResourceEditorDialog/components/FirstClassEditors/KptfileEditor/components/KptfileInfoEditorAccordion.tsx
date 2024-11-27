@@ -46,12 +46,7 @@ export const KptfileInfoEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Info"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Info" description={description} state={state}>
       <Fragment>
         <TextField
           label="Description"
@@ -71,9 +66,7 @@ export const KptfileInfoEditorAccordion = ({
           onChange={e => {
             const value = e.target.value;
 
-            viewModel.keywords = value
-              ? value.split(',').map(v => v.trim())
-              : undefined;
+            viewModel.keywords = value ? value.split(',').map(v => v.trim()) : undefined;
             valueUpdated();
           }}
           fullWidth
@@ -93,15 +86,11 @@ export const KptfileInfoEditorAccordion = ({
         <TextField
           label="Readiness Gates"
           variant="outlined"
-          value={(viewModel.readinessGates ?? [])
-            .map(r => r.conditionType)
-            .join(', ')}
+          value={(viewModel.readinessGates ?? []).map(r => r.conditionType).join(', ')}
           onChange={e => {
             const value = e.target.value;
 
-            viewModel.readinessGates = value
-              ? value.split(',').map(v => ({ conditionType: v.trim() }))
-              : undefined;
+            viewModel.readinessGates = value ? value.split(',').map(v => ({ conditionType: v.trim() })) : undefined;
             valueUpdated();
           }}
           fullWidth

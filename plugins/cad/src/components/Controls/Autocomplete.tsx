@@ -26,13 +26,7 @@ type AutocompleteProps = {
   allowArbitraryValues?: boolean;
 };
 
-export const Autocomplete = ({
-  label,
-  options,
-  value,
-  onInputChange,
-  allowArbitraryValues,
-}: AutocompleteProps) => {
+export const Autocomplete = ({ label, options, value, onInputChange, allowArbitraryValues }: AutocompleteProps) => {
   const thisValue = useRef<string>(value);
   const inputValue = useRef<string>(value);
 
@@ -43,17 +37,11 @@ export const Autocomplete = ({
     }
   }, [value]);
 
-  const onAutocompleteChange = (
-    _: ChangeEvent<{}>,
-    newValue: string | null,
-  ): void => {
+  const onAutocompleteChange = (_: ChangeEvent<{}>, newValue: string | null): void => {
     thisValue.current = newValue as string;
   };
 
-  const onAutocompleteInputChange = (
-    _: ChangeEvent<{}>,
-    newValue: string,
-  ): void => {
+  const onAutocompleteInputChange = (_: ChangeEvent<{}>, newValue: string): void => {
     inputValue.current = newValue;
     onInputChange(inputValue.current);
   };
@@ -63,9 +51,7 @@ export const Autocomplete = ({
       fullWidth
       freeSolo={allowArbitraryValues ?? false}
       options={options}
-      renderInput={params => (
-        <TextField {...params} label={label} variant="outlined" fullWidth />
-      )}
+      renderInput={params => <TextField {...params} label={label} variant="outlined" fullWidth />}
       onChange={onAutocompleteChange}
       onInputChange={onAutocompleteInputChange}
       value={thisValue.current}

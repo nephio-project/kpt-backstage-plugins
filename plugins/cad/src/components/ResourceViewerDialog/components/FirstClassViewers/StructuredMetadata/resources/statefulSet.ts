@@ -20,26 +20,18 @@ import { Metadata } from '../StructuredMetadata';
 import { getPersistentVolumeClaimStructuredMetadata } from './persistentVolumeClaim';
 import { getPodTemplatedStructuredMetadata } from './podTemplate';
 
-export const getStatefulSetStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getStatefulSetStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const statefulSet = resource as StatefulSet;
 
-  const podMetadata: Metadata = getPodTemplatedStructuredMetadata(
-    statefulSet.spec.template,
-  );
+  const podMetadata: Metadata = getPodTemplatedStructuredMetadata(statefulSet.spec.template);
 
   const volumeClaimMetadata: Metadata = {};
 
   const volumeClaimTemplates = statefulSet.spec.volumeClaimTemplates ?? [];
   for (const [index, volumeClaim] of volumeClaimTemplates.entries()) {
-    const name =
-      volumeClaimTemplates.length > 1
-        ? `volumeClaim${index + 1}`
-        : `volumeClaim`;
+    const name = volumeClaimTemplates.length > 1 ? `volumeClaim${index + 1}` : `volumeClaim`;
 
-    volumeClaimMetadata[name] =
-      getPersistentVolumeClaimStructuredMetadata(volumeClaim).volumeClaim;
+    volumeClaimMetadata[name] = getPersistentVolumeClaimStructuredMetadata(volumeClaim).volumeClaim;
   }
 
   return {

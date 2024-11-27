@@ -16,10 +16,7 @@
 
 import { sectionConfigurationEntry } from './sectionConfigurationEntry';
 import { rowLayoutConfigurationEntry } from './rowLayoutConfigurationEntry';
-import {
-  arrayTypeRosterConfigurationEntry,
-  objectTypeRosterConfigurationEntry,
-} from './rosterConfigurationEntry';
+import { arrayTypeRosterConfigurationEntry, objectTypeRosterConfigurationEntry } from './rosterConfigurationEntry';
 import {
   naturalNumberTextWidgetConfigurationEntry,
   singleLineTextWidgetConfigurationEntry,

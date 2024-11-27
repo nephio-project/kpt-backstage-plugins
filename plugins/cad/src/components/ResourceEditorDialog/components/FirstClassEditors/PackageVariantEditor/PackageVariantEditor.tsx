@@ -16,10 +16,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import {
-  PackageVariant,
-  PackageVariantSpec,
-} from '../../../../../types/PackageVariant';
+import { PackageVariant, PackageVariantSpec } from '../../../../../types/PackageVariant';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { ResourceMetadataAccordion } from '../Controls';
@@ -71,19 +68,13 @@ const getResourceState = (packageVariant: PackageVariant): State => {
     spec: specData,
   };
 };
-export const PackageVariantEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: ResourceEditorProps) => {
+export const PackageVariantEditor = ({ yaml, onUpdatedYaml, packageResources }: ResourceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as PackageVariant;
 
   const classes = useEditorStyles();
 
   const [state, setState] = useState<PackageVariant>(resourceYaml);
-  const [specState, setSpecState] = useState<State>(
-    getResourceState(resourceYaml),
-  );
+  const [specState, setSpecState] = useState<State>(getResourceState(resourceYaml));
   const [expanded, setExpanded] = useState<string>();
 
   useEffect(() => {

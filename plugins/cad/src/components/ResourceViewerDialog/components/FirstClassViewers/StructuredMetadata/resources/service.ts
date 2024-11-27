@@ -18,9 +18,7 @@ import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Service, ServicePort } from '../../../../../../types/Service';
 import { Metadata } from '../StructuredMetadata';
 
-export const getServiceStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getServiceStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const service = resource as Service;
 
   const getExposedPortsDescription = (ports: ServicePort[]) => {

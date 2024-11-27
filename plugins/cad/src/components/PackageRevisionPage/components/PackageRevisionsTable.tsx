@@ -19,10 +19,7 @@ import { useRouteRef } from '@backstage/core-plugin-api';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { packageRouteRef } from '../../../routes';
-import {
-  PackageRevision,
-  PackageRevisionLifecycle,
-} from '../../../types/PackageRevision';
+import { PackageRevision, PackageRevisionLifecycle } from '../../../types/PackageRevision';
 import { Repository } from '../../../types/Repository';
 import { formatCreationTimestamp } from '../../../utils/formatDate';
 import { getPackageRevisionRevision } from '../../../utils/packageRevision';
@@ -54,8 +51,7 @@ type PackageRevisionRow = {
 };
 
 const renderStatusColumn = (row: PackageRevisionRow): JSX.Element => {
-  const isUnpublishedRevision =
-    row.lifecycle !== PackageRevisionLifecycle.PUBLISHED;
+  const isUnpublishedRevision = row.lifecycle !== PackageRevisionLifecycle.PUBLISHED;
 
   return (
     <div style={{ position: 'absolute', transform: 'translateY(-50%)' }}>
@@ -74,8 +70,7 @@ const renderStatusColumn = (row: PackageRevisionRow): JSX.Element => {
 };
 
 const getTableColumns = (): TableColumn<PackageRevisionRow>[] => {
-  const renderStatus = (row: PackageRevisionRow): JSX.Element =>
-    renderStatusColumn(row);
+  const renderStatus = (row: PackageRevisionRow): JSX.Element => renderStatusColumn(row);
 
   const columns: TableColumn<PackageRevisionRow>[] = [
     {
@@ -93,10 +88,7 @@ const getTableColumns = (): TableColumn<PackageRevisionRow>[] => {
   return columns;
 };
 
-const getResourcesChangesSummary = (
-  summary: RevisionSummary,
-  prevSummary?: RevisionSummary,
-): string => {
+const getResourcesChangesSummary = (summary: RevisionSummary, prevSummary?: RevisionSummary): string => {
   const getResourcesChangeText = (count: number, change: string): string => {
     return `${count} ${change}`;
   };
@@ -128,8 +120,7 @@ const getResourcesChangesSummary = (
     allChanges.push(getResourcesChangeText(removed, 'Removed'));
   }
 
-  const changeSummary =
-    allChanges.length > 0 ? allChanges.join(', ') : 'no changes';
+  const changeSummary = allChanges.length > 0 ? allChanges.join(', ') : 'no changes';
 
   return changeSummary;
 };
@@ -145,10 +136,7 @@ const mapPackageRevisionsToRows = (
   ): PackageRevisionRow => {
     const { revision, resourcesMap } = summary;
     const previousSummary = allSummaries[index + 1];
-    const creationTimestamp = formatCreationTimestamp(
-      revision.metadata.creationTimestamp,
-      true,
-    );
+    const creationTimestamp = formatCreationTimestamp(revision.metadata.creationTimestamp, true);
 
     return {
       id: revision.metadata.name,
@@ -159,19 +147,14 @@ const mapPackageRevisionsToRows = (
       created: creationTimestamp,
       resourcesCount: getPackageResourcesFromResourcesMap(resourcesMap).length,
       changesSummary: getResourcesChangesSummary(summary, previousSummary),
-      isCurrentRevision:
-        revision.metadata.name === currentRevision.metadata.name,
+      isCurrentRevision: revision.metadata.name === currentRevision.metadata.name,
     };
   };
 
   return revisions.map(mapToPackageRevisionRow);
 };
 
-export const PackageRevisionsTable = ({
-  repository,
-  revisions,
-  currentRevision,
-}: PackageRevisionsTableProps) => {
+export const PackageRevisionsTable = ({ repository, revisions, currentRevision }: PackageRevisionsTableProps) => {
   const navigate = useNavigate();
 
   const packageRef = useRouteRef(packageRouteRef);
@@ -193,9 +176,7 @@ export const PackageRevisionsTable = ({
       options={{ search: false, paging: false }}
       columns={columns}
       data={data}
-      onRowClick={(_, thisPackage) =>
-        navigateToPackageRevision(thisPackage?.name)
-      }
+      onRowClick={(_, thisPackage) => navigateToPackageRevision(thisPackage?.name)}
     />
   );
 };

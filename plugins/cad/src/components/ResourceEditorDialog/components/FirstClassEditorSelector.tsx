@@ -19,10 +19,7 @@ import { PackageResource } from '../../../utils/packageRevisionResources';
 import { ApplyReplacementsEditor } from './FirstClassEditors/ApplyReplacementsEditor';
 import { ConfigMapEditor } from './FirstClassEditors/ConfigMapEditor';
 import { PackageVariantEditor } from './FirstClassEditors/PackageVariantEditor';
-import {
-  DeploymentEditor,
-  StatefulSetEditor,
-} from './FirstClassEditors/DeploymentEditor';
+import { DeploymentEditor, StatefulSetEditor } from './FirstClassEditors/DeploymentEditor';
 import { IngressEditor } from './FirstClassEditors/IngressEditor';
 import { KptfileEditor } from './FirstClassEditors/KptfileEditor';
 import { NamespaceEditor } from './FirstClassEditors/NamespaceEditor';
@@ -65,107 +62,44 @@ export const FirstClassEditorSelector = ({
 
   switch (groupVersionKind) {
     case 'apps/v1/Deployment':
-      return (
-        <DeploymentEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <DeploymentEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'apps/v1/StatefulSet':
-      return (
-        <StatefulSetEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <StatefulSetEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'config.porch.kpt.dev/v1alpha1/PackageVariant':
-      return (
-        <PackageVariantEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <PackageVariantEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'config.porch.kpt.dev/v1alpha2/PackageVariantSet':
     case 'config.porch.kpt.dev/v1alpha1/PackageVariantSet':
-      return (
-        <PackageVariantSetEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <PackageVariantSetEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'fn.kpt.dev/v1alpha1/ApplyReplacements':
-      return (
-        <ApplyReplacementsEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <ApplyReplacementsEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'fn.kpt.dev/v1alpha1/SetLabels':
       return <SetLabelsEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'infra.nephio.org/v1alpha1/Token':
-      return (
-        <NephioTokenParametricEditor
-          yamlText={yaml}
-          onResourceChange={onUpdatedYaml}
-        />
-      );
+      return <NephioTokenParametricEditor yamlText={yaml} onResourceChange={onUpdatedYaml} />;
 
     case 'infra.nephio.org/v1alpha1/WorkloadCluster':
-      return (
-        <NephioWorkloadClusterParametricEditor
-          yamlText={yaml}
-          onResourceChange={onUpdatedYaml}
-        />
-      );
+      return <NephioWorkloadClusterParametricEditor yamlText={yaml} onResourceChange={onUpdatedYaml} />;
 
     case 'kpt.dev/v1/Kptfile':
-      return (
-        <KptfileEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <KptfileEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'networking.k8s.io/v1/Ingress':
-      return (
-        <IngressEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <IngressEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'rbac.authorization.k8s.io/v1/Role':
       return <RoleEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'rbac.authorization.k8s.io/v1/RoleBinding':
-      return (
-        <RoleBindingEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <RoleBindingEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'req.nephio.org/v1alpha1/Capacity':
-      return (
-        <NephioCapacityParametricEditor
-          yamlText={yaml}
-          onResourceChange={onUpdatedYaml}
-        />
-      );
+      return <NephioCapacityParametricEditor yamlText={yaml} onResourceChange={onUpdatedYaml} />;
 
     case 'v1/ConfigMap':
       return <ConfigMapEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
@@ -177,13 +111,7 @@ export const FirstClassEditorSelector = ({
       return <ResourceQuotaEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;
 
     case 'v1/Service':
-      return (
-        <ServiceEditor
-          yaml={yaml}
-          onUpdatedYaml={onUpdatedYaml}
-          packageResources={packageResources}
-        />
-      );
+      return <ServiceEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} packageResources={packageResources} />;
 
     case 'v1/ServiceAccount':
       return <ServiceAccountEditor yaml={yaml} onUpdatedYaml={onUpdatedYaml} />;

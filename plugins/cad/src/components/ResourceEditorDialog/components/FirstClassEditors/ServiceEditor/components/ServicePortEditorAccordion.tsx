@@ -22,10 +22,7 @@ import React, { Fragment, useRef } from 'react';
 import { ContainerPort, PodTemplateSpec } from '../../../../../../types/Pod';
 import { ServicePort } from '../../../../../../types/Service';
 import { Select } from '../../../../../Controls/Select';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../styles';
 
 type OnUpdate = (newValue?: ServicePort) => void;
@@ -56,16 +53,13 @@ export const ServicePortEditorAccordion = ({
   const viewModel = useRef<ServicePort>(clone(servicePort));
   const classes = useEditorStyles();
 
-  const isNodePortRelevant =
-    serviceType === 'NodePort' || serviceType === 'LoadBalancer';
+  const isNodePortRelevant = serviceType === 'NodePort' || serviceType === 'LoadBalancer';
 
   const podPortSelectItems: TargetPortSelectItem[] = [];
   const getProtocol = (protocol?: string): string => protocol || 'TCP';
   const getPortDescription = (port: ContainerPort): string => {
     const namePrefix = port.name ? `${port.name}: ` : '';
-    const portDescription = `${getProtocol(port.protocol)} ${
-      port.containerPort
-    }`;
+    const portDescription = `${getProtocol(port.protocol)} ${port.containerPort}`;
 
     return `${namePrefix}${portDescription}`;
   };
@@ -82,8 +76,7 @@ export const ServicePortEditorAccordion = ({
     }),
   );
 
-  const toNumber = (strNumber: string): number | undefined =>
-    !isNaN(strNumber) ? parseInt(strNumber, 10) : undefined;
+  const toNumber = (strNumber: string): number | undefined => (!isNaN(strNumber) ? parseInt(strNumber, 10) : undefined);
 
   const servicePortUpdated = (): void => {
     const updatedServicePort = clone(viewModel.current);
@@ -97,8 +90,7 @@ export const ServicePortEditorAccordion = ({
   if (targetPort) {
     const selectItem = podPortSelectItems.find(
       podPort =>
-        (getProtocol(podPort.protocol) === targetProtocol &&
-          podPort.portNumber === targetPort) ||
+        (getProtocol(podPort.protocol) === targetProtocol && podPort.portNumber === targetPort) ||
         podPort.portName === targetPort,
     );
 
@@ -110,25 +102,15 @@ export const ServicePortEditorAccordion = ({
   const getDescription = (): string => {
     if (!targetPort) return 'New';
 
-    const namePrefix = viewModel.current.name
-      ? `${viewModel.current.name}: `
-      : '';
+    const namePrefix = viewModel.current.name ? `${viewModel.current.name}: ` : '';
     const incomingPort = `${targetProtocol} ${viewModel.current.port}`;
-    const nodePort =
-      isNodePortRelevant && viewModel.current.nodePort
-        ? ` / node ${viewModel.current.nodePort}`
-        : '';
+    const nodePort = isNodePortRelevant && viewModel.current.nodePort ? ` / node ${viewModel.current.nodePort}` : '';
 
     return `${namePrefix}${incomingPort}${nodePort} → ${targetPort}`;
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Service Port"
-      description={getDescription()}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Service Port" description={getDescription()} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -167,14 +149,11 @@ export const ServicePortEditorAccordion = ({
                 viewModel.current.port = toNumber(value);
 
                 if (!viewModel.current.targetPort) {
-                  const podPortItemMatch = podPortSelectItems.find(
-                    item => item.portNumber === viewModel.current.port,
-                  );
+                  const podPortItemMatch = podPortSelectItems.find(item => item.portNumber === viewModel.current.port);
 
                   if (podPortItemMatch) {
                     viewModel.current.protocol = podPortItemMatch.protocol;
-                    viewModel.current.targetPort =
-                      podPortItemMatch.portName ?? viewModel.current.port;
+                    viewModel.current.targetPort = podPortItemMatch.portName ?? viewModel.current.port;
                   }
                 }
 
@@ -188,26 +167,19 @@ export const ServicePortEditorAccordion = ({
               items={podPortSelectItems}
               selected={selectedPortValue}
               onChange={value => {
-                const selectedTargetPort = podPortSelectItems.find(
-                  item => item.value === value,
-                );
+                const selectedTargetPort = podPortSelectItems.find(item => item.value === value);
 
                 if (selectedTargetPort) {
                   viewModel.current.protocol = selectedTargetPort.protocol;
                   viewModel.current.targetPort =
-                    selectedTargetPort.portName ??
-                    toNumber(selectedTargetPort.portNumber as any as string);
+                    selectedTargetPort.portName ?? toNumber(selectedTargetPort.portNumber as any as string);
                   servicePortUpdated();
                 }
               }}
             />
           </div>
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

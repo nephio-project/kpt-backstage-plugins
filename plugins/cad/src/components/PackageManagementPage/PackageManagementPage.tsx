@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-import {
-  Breadcrumbs,
-  ContentHeader,
-  Progress,
-} from '@backstage/core-components';
+import { Breadcrumbs, ContentHeader, Progress } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
 import { makeStyles, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import React from 'react';
 import useAsync from 'react-use/lib/useAsync';
 import { configAsDataApiRef } from '../../apis';
-import {
-  getRepositorySummaries,
-  populatePackageSummaries,
-} from '../../utils/repositorySummary';
+import { getRepositorySummaries, populatePackageSummaries } from '../../utils/repositorySummary';
 import { DashboardTabContent } from './components/DashboardTabContent';
 import { RepositoriesTabContent } from './components/RepositoriesTabContent';
 import { Tabs } from '../Controls';

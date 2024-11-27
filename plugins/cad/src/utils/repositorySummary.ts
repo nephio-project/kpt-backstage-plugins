@@ -19,23 +19,17 @@ import { Repository } from '../types/Repository';
 import { RepositorySummary } from '../types/RepositorySummary';
 import { filterPackageSummaries, getPackageSummaries } from './packageSummary';
 
-export const getRepositorySummaries = (
-  allRepositories: Repository[],
-): RepositorySummary[] => {
-  const repositorySummaries: RepositorySummary[] = allRepositories.map(
-    repository => ({ repository: repository, downstreamRepositories: [] }),
-  );
+export const getRepositorySummaries = (allRepositories: Repository[]): RepositorySummary[] => {
+  const repositorySummaries: RepositorySummary[] = allRepositories.map(repository => ({
+    repository: repository,
+    downstreamRepositories: [],
+  }));
 
   return repositorySummaries;
 };
 
-export const getRepositorySummary = (
-  repositorySummaries: RepositorySummary[],
-  name: string,
-): RepositorySummary => {
-  const repositorySummary = repositorySummaries.find(
-    summary => summary.repository.metadata.name === name,
-  );
+export const getRepositorySummary = (repositorySummaries: RepositorySummary[], name: string): RepositorySummary => {
+  const repositorySummary = repositorySummaries.find(summary => summary.repository.metadata.name === name);
 
   if (!repositorySummary) {
     throw new Error(`Repository ${name} does not exist`);
@@ -55,9 +49,8 @@ export const populatePackageSummaries = (
   );
 
   repositorySummaries.forEach(repositorySummary => {
-    repositorySummary.packageSummaries = filterPackageSummaries(
-      allPackageSummaries,
-      { repository: repositorySummary.repository },
-    );
+    repositorySummary.packageSummaries = filterPackageSummaries(allPackageSummaries, {
+      repository: repositorySummary.repository,
+    });
   });
 };

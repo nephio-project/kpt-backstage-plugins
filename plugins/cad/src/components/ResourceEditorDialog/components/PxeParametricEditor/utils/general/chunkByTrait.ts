@@ -25,10 +25,7 @@ type TraitToken = string | number | boolean | null;
  * @param array The original array.
  * @param getTrait The function called for determining the trait value of an item.
  */
-export const chunkByTrait = <T>(
-  array: readonly T[],
-  getTrait: (item: T) => TraitToken,
-): T[][] =>
+export const chunkByTrait = <T>(array: readonly T[], getTrait: (item: T) => TraitToken): T[][] =>
   array.reduce(
     ({ chunks, currentTrait }, item) => {
       const lastChunk = chunks[chunks.length - 1] ?? null;
@@ -36,9 +33,7 @@ export const chunkByTrait = <T>(
       const chunkContinues = itemTrait !== null && itemTrait === currentTrait;
 
       return {
-        chunks: chunkContinues
-          ? [...chunks.slice(0, chunks.length - 1), [...lastChunk, item]]
-          : [...chunks, [item]],
+        chunks: chunkContinues ? [...chunks.slice(0, chunks.length - 1), [...lastChunk, item]] : [...chunks, [item]],
         currentTrait: itemTrait,
       };
     },

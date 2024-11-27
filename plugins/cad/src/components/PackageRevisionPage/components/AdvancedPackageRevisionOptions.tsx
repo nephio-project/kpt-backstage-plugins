@@ -23,10 +23,7 @@ import { configAsDataApiRef } from '../../../apis';
 import { repositoryRouteRef } from '../../../routes';
 import { Repository } from '../../../types/Repository';
 import { RootSync } from '../../../types/RootSync';
-import {
-  getPackageDescriptor,
-  isReadOnlyRepository,
-} from '../../../utils/repository';
+import { getPackageDescriptor, isReadOnlyRepository } from '../../../utils/repository';
 import { toLowerCase } from '../../../utils/string';
 import { ConfirmationDialog } from '../../Controls/ConfirmationDialog';
 
@@ -95,8 +92,7 @@ export const AdvancedPackageRevisionOptions = ({
   if (isReadOnlyRepository(repository)) {
     return (
       <Alert severity="info">
-        Advanced options are hidden since this{' '}
-        {toLowerCase(getPackageDescriptor(repository))} is read-only.
+        Advanced options are hidden since this {toLowerCase(getPackageDescriptor(repository))} is read-only.
       </Alert>
     );
   }
@@ -113,11 +109,7 @@ export const AdvancedPackageRevisionOptions = ({
       />
 
       <div>
-        <Button
-          color="secondary"
-          variant="contained"
-          onClick={openDeletePackageRevisionDialog}
-        >
+        <Button color="secondary" variant="contained" onClick={openDeletePackageRevisionDialog}>
           Delete revision
         </Button>
       </div>
@@ -133,11 +125,7 @@ export const AdvancedPackageRevisionOptions = ({
             onAction={executeDeleteSync}
           />
 
-          <Button
-            color="secondary"
-            variant="contained"
-            onClick={openDeleteSyncDialog}
-          >
+          <Button color="secondary" variant="contained" onClick={openDeleteSyncDialog}>
             Delete Sync
           </Button>
         </div>

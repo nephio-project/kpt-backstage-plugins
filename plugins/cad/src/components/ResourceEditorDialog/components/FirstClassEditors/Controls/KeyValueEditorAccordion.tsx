@@ -24,9 +24,7 @@ import { IconButton } from '../../../../Controls';
 import { useEditorStyles } from '../styles';
 import { EditorAccordion, AccordionState } from './EditorAccordion';
 
-type OnUpdatedKeyValueObject = (
-  keyValueObject: KubernetesKeyValueObject,
-) => void;
+type OnUpdatedKeyValueObject = (keyValueObject: KubernetesKeyValueObject) => void;
 
 type KeyValueObjectEditorProps = {
   id: string;
@@ -77,12 +75,7 @@ export const KeyValueEditorAccordion = ({
   const description = `${refViewModel.current.length} ${toLowerCase(title)}`;
 
   return (
-    <EditorAccordion
-      id={id}
-      state={state}
-      title={title}
-      description={description}
-    >
+    <EditorAccordion id={id} state={state} title={title} description={description}>
       <Fragment>
         {refViewModel.current.map((keyValuePair, index) => (
           <div className={classes.multiControlRow} key={index}>

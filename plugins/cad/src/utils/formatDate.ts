@@ -19,10 +19,7 @@ import moment from 'moment';
 const DATE_FORMAT = `MMMM D, YYYY`;
 const DATE_TIME_FORMAT = `MMMM D, YYYY h:mm A`;
 
-export const formatCreationTimestamp = (
-  timestamp?: string,
-  includeTime: boolean = false,
-): string => {
+export const formatCreationTimestamp = (timestamp?: string, includeTime: boolean = false): string => {
   if (!timestamp) return '';
 
   const timeFormat = includeTime ? DATE_TIME_FORMAT : DATE_FORMAT;

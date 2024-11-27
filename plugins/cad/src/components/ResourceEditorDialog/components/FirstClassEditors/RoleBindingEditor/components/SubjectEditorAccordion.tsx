@@ -22,10 +22,7 @@ import { RoleBindingSubject } from '../../../../../../types/RoleBinding';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { sortByLabel } from '../../../../../../utils/selectItem';
 import { Select } from '../../../../../Controls/Select';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
 
 type OnUpdate = (newValue?: RoleBindingSubject) => void;
 
@@ -78,8 +75,7 @@ export const SubjectEditorAccordion = ({
   });
 
   const serviceAccountResources = useMemo(
-    () =>
-      packageResources.filter(resource => resource.kind === 'ServiceAccount'),
+    () => packageResources.filter(resource => resource.kind === 'ServiceAccount'),
     [packageResources],
   );
 
@@ -101,17 +97,10 @@ export const SubjectEditorAccordion = ({
     onUpdate(updatedSubject);
   };
 
-  const description = subject.kind
-    ? `${subject.kind} ${subject.name}`
-    : 'new subject';
+  const description = subject.kind ? `${subject.kind} ${subject.name}` : 'new subject';
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Subject"
-      description={description}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Subject" description={description} state={state}>
       <Fragment>
         <Select
           label="Kind"
@@ -149,11 +138,7 @@ export const SubjectEditorAccordion = ({
           />
         )}
 
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

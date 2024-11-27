@@ -20,23 +20,14 @@ import AddIcon from '@material-ui/icons/Add';
 import { omit, startCase } from 'lodash';
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { KubernetesKeyValueObject } from '../../../../../types/KubernetesResource';
-import {
-  Service,
-  ServiceMetadata,
-  ServicePort,
-} from '../../../../../types/Service';
+import { Service, ServiceMetadata, ServicePort } from '../../../../../types/Service';
 import { PackageResource } from '../../../../../utils/packageRevisionResources';
 import { sortByLabel } from '../../../../../utils/selectItem';
 import { dumpYaml, loadYaml } from '../../../../../utils/yaml';
 import { Select } from '../../../../Controls/Select';
 import { EditorAccordion, ResourceMetadataAccordion } from '../Controls';
 import { useEditorStyles } from '../styles';
-import {
-  Deletable,
-  getActiveElements,
-  isActiveElement,
-  updateList,
-} from '../util/deletable';
+import { Deletable, getActiveElements, isActiveElement, updateList } from '../util/deletable';
 import { ServicePortEditorAccordion } from './components/ServicePortEditorAccordion';
 
 type OnUpdatedYamlFn = (yaml: string) => void;
@@ -76,21 +67,14 @@ const keyValueObjHash = (keyValueObject: KubernetesKeyValueObject): string =>
     .map(key => `${key}:${keyValueObject[key]}`)
     .join('|');
 
-export const ServiceEditor = ({
-  yaml,
-  onUpdatedYaml,
-  packageResources,
-}: ServiceEditorProps) => {
+export const ServiceEditor = ({ yaml, onUpdatedYaml, packageResources }: ServiceEditorProps) => {
   const resourceYaml = loadYaml(yaml) as Service;
   resourceYaml.spec = resourceYaml.spec ?? {};
 
   const workloadResources = useMemo(
     () =>
       packageResources.filter(
-        resource =>
-          resource.kind === 'Deployment' ||
-          resource.kind === 'StatefulSet' ||
-          resource.kind === 'DaemonSet',
+        resource => resource.kind === 'Deployment' || resource.kind === 'StatefulSet' || resource.kind === 'DaemonSet',
       ),
     [packageResources],
   );
@@ -100,8 +84,7 @@ export const ServiceEditor = ({
       workloadResources.map(workload => ({
         label: `${workload.kind}: ${workload.name}`,
         value: workload.name,
-        selectorLabels: loadYaml(workload.yaml).spec.selector
-          .matchLabels as KubernetesKeyValueObject,
+        selectorLabels: loadYaml(workload.yaml).spec.selector.matchLabels as KubernetesKeyValueObject,
       })),
     ) as WorkloadSelectItem[];
   }, [workloadResources]);
@@ -110,9 +93,7 @@ export const ServiceEditor = ({
     metadata: resourceYaml.metadata,
     selector:
       (workloadSelectItems.find(
-        s =>
-          keyValueObjHash(s.selectorLabels || {}) ===
-          keyValueObjHash(resourceYaml.spec.selector || {}),
+        s => keyValueObjHash(s.selectorLabels || {}) === keyValueObjHash(resourceYaml.spec.selector || {}),
       )?.value as string) || '',
     type: resourceYaml.spec.type || 'ClusterIP',
     externalTrafficPolicy: resourceYaml.spec.externalTrafficPolicy || 'Cluster',
@@ -122,19 +103,14 @@ export const ServiceEditor = ({
 
   const [state, setState] = useState<State>(createResourceState());
 
-  const isExternalTrafficPolicyRelevant =
-    state.type === 'LoadBalancer' || state.type === 'NodePort';
+  const isExternalTrafficPolicyRelevant = state.type === 'LoadBalancer' || state.type === 'NodePort';
   const isExternalNameRelevant = state.type === 'ExternalName';
   const isTargetRelevant = state.type !== 'ExternalName';
 
   const targetPodTemplateSpec = useMemo(() => {
-    const targetResource = workloadResources.find(
-      workload => workload.name === state.selector,
-    );
+    const targetResource = workloadResources.find(workload => workload.name === state.selector);
 
-    return targetResource
-      ? loadYaml(targetResource.yaml).spec.template
-      : undefined;
+    return targetResource ? loadYaml(targetResource.yaml).spec.template : undefined;
   }, [workloadResources, state.selector]);
 
   const [expanded, setExpanded] = useState<string>();
@@ -148,20 +124,13 @@ export const ServiceEditor = ({
     resourceYaml.metadata = state.metadata;
     resourceYaml.spec.type = state.type;
     resourceYaml.spec.selector = isTargetRelevant
-      ? workloadSelectItems.find(s => s.value === state.selector)
-          ?.selectorLabels
+      ? workloadSelectItems.find(s => s.value === state.selector)?.selectorLabels
       : undefined;
     resourceYaml.spec.ports = isTargetRelevant
-      ? getActiveElements(state.servicePorts).map(servicePort =>
-          omit(servicePort, servicePortOmitKeys),
-        )
+      ? getActiveElements(state.servicePorts).map(servicePort => omit(servicePort, servicePortOmitKeys))
       : undefined;
-    resourceYaml.spec.externalTrafficPolicy = isExternalTrafficPolicyRelevant
-      ? state.externalTrafficPolicy
-      : undefined;
-    resourceYaml.spec.externalName = isExternalNameRelevant
-      ? state.externalName
-      : undefined;
+    resourceYaml.spec.externalTrafficPolicy = isExternalTrafficPolicyRelevant ? state.externalTrafficPolicy : undefined;
+    resourceYaml.spec.externalName = isExternalNameRelevant ? state.externalName : undefined;
 
     onUpdatedYaml(dumpYaml(resourceYaml));
   }, [
@@ -175,8 +144,7 @@ export const ServiceEditor = ({
   ]);
 
   const getServiceDescription = (): string => {
-    const target =
-      state.type === 'ExternalName' ? state.externalName : state.selector;
+    const target = state.type === 'ExternalName' ? state.externalName : state.selector;
 
     return `${startCase(state.type)} ${target ? `→ ${target}` : ''}`;
   };
@@ -209,9 +177,7 @@ export const ServiceEditor = ({
               label="External Traffic Type"
               items={externalTrafficPolicySelectItems}
               selected={state.externalTrafficPolicy}
-              onChange={v =>
-                setState(s => ({ ...s, externalTrafficPolicy: v }))
-              }
+              onChange={v => setState(s => ({ ...s, externalTrafficPolicy: v }))}
             />
           )}
 
@@ -220,9 +186,7 @@ export const ServiceEditor = ({
               label="External Name"
               variant="outlined"
               value={state.externalName}
-              onChange={e =>
-                setState(s => ({ ...s, externalName: e.target.value }))
-              }
+              onChange={e => setState(s => ({ ...s, externalName: e.target.value }))}
               fullWidth
             />
           )}
@@ -252,11 +216,7 @@ export const ServiceEditor = ({
                 onUpdate={updatedServicePort =>
                   setState(s => ({
                     ...s,
-                    servicePorts: updateList(
-                      s.servicePorts.slice(),
-                      updatedServicePort,
-                      index,
-                    ),
+                    servicePorts: updateList(s.servicePorts.slice(), updatedServicePort, index),
                   }))
                 }
                 targetPodTemplateSpec={targetPodTemplateSpec}

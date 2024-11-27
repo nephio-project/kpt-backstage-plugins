@@ -18,15 +18,8 @@ import { LinkButton } from '@backstage/core-components';
 import { useRouteRef } from '@backstage/core-plugin-api';
 import { Button } from '@material-ui/core';
 import React, { Fragment } from 'react';
-import {
-  clonePackageRouteRef,
-  editPackageRouteRef,
-  packageRouteRef,
-} from '../../../routes';
-import {
-  PackageRevision,
-  PackageRevisionLifecycle,
-} from '../../../types/PackageRevision';
+import { clonePackageRouteRef, editPackageRouteRef, packageRouteRef } from '../../../routes';
+import { PackageRevision, PackageRevisionLifecycle } from '../../../types/PackageRevision';
 import { RepositorySummary } from '../../../types/RepositorySummary';
 import { RootSync } from '../../../types/RootSync';
 import {
@@ -131,11 +124,7 @@ const DraftPackageRevisionOptions = ({
   );
 };
 
-const ProposedPackageRevisionOptions = ({
-  repositorySummary,
-  onClick,
-  disabled,
-}: PackageRevisionOptionsProps) => {
+const ProposedPackageRevisionOptions = ({ repositorySummary, onClick, disabled }: PackageRevisionOptionsProps) => {
   const isViewOnly = isReadOnlyRepository(repositorySummary.repository);
 
   if (isViewOnly) {
@@ -184,8 +173,7 @@ const PublishedPackageRevisionOptions = ({
   const latestPublishedRevision = findLatestPublishedRevision(packageRevisions);
 
   const isReadOnly = isReadOnlyRepository(repositorySummary.repository);
-  const isLatestPublishedPackageRevision =
-    packageRevision && isLatestPublishedRevision(packageRevision);
+  const isLatestPublishedPackageRevision = packageRevision && isLatestPublishedRevision(packageRevision);
 
   if (!latestPublishedRevision) {
     throw new Error('Latest published revision cannot be found');
@@ -224,17 +212,12 @@ const PublishedPackageRevisionOptions = ({
 
   const isNewerUnpublishedRevision = latestRevision !== latestPublishedRevision;
 
-  const showUpgrade =
-    !isReadOnly && isUpgradeAvailable && !isNewerUnpublishedRevision;
+  const showUpgrade = !isReadOnly && isUpgradeAvailable && !isNewerUnpublishedRevision;
   const showCreateNewRevision = !isReadOnly && !isNewerUnpublishedRevision;
   const showClone =
-    RepositoryContentDetails[packageContentType].cloneTo.length > 0 &&
-    canCloneRevision(packageRevision);
+    RepositoryContentDetails[packageContentType].cloneTo.length > 0 && canCloneRevision(packageRevision);
 
-  const showCreateSync =
-    !isReadOnly &&
-    isDeploymentRepository(repositorySummary.repository) &&
-    rootSync === null;
+  const showCreateSync = !isReadOnly && isDeploymentRepository(repositorySummary.repository) && rootSync === null;
 
   return (
     <Fragment>
@@ -308,10 +291,8 @@ export const PackageRevisionOptions = ({
   disabled,
   mode,
 }: PackageRevisionOptionsProps) => {
-  const isDraft =
-    packageRevision.spec.lifecycle === PackageRevisionLifecycle.DRAFT;
-  const isProposed =
-    packageRevision.spec.lifecycle === PackageRevisionLifecycle.PROPOSED;
+  const isDraft = packageRevision.spec.lifecycle === PackageRevisionLifecycle.DRAFT;
+  const isProposed = packageRevision.spec.lifecycle === PackageRevisionLifecycle.PROPOSED;
 
   if (isDraft) {
     return (

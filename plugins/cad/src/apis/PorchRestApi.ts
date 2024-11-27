@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  DiscoveryApi,
-  FetchApi,
-  OAuthApi,
-  OpenIdConnectApi,
-} from '@backstage/core-plugin-api';
+import { DiscoveryApi, FetchApi, OAuthApi, OpenIdConnectApi } from '@backstage/core-plugin-api';
 import { ConfigAsDataApi } from '.';
 import { ListApiGroups } from '../types/ApiGroup';
 import { ListConfigManagements } from '../types/ConfigManagement';
@@ -27,10 +22,7 @@ import { GetFeaturesResponse } from '../types/Features';
 import { Function } from '../types/Function';
 import { KubernetesStatus } from '../types/KubernetesStatus';
 import { PackageRevision } from '../types/PackageRevision';
-import {
-  ListPackageRevisionResources,
-  PackageRevisionResources,
-} from '../types/PackageRevisionResource';
+import { ListPackageRevisionResources, PackageRevisionResources } from '../types/PackageRevisionResource';
 import { ListRepositories, Repository } from '../types/Repository';
 import { ListRootSyncs, RootSync } from '../types/RootSync';
 import { ListSecrets, Secret } from '../types/Secret';
@@ -52,18 +44,13 @@ type KptFunctionMinorVersinDetails = {
 export class FetchError extends Error {
   responseText?: string;
 
-  static async forResponse(
-    method: string,
-    response: Response,
-  ): Promise<FetchError> {
+  static async forResponse(method: string, response: Response): Promise<FetchError> {
     const requestDescription = `${method} ${response.url}`;
     const statusDescription = `${response.status} ${response.statusText}`;
 
     const responseText = await response.text();
 
-    const newFetchError = new FetchError(
-      `${statusDescription}, ${requestDescription}`,
-    );
+    const newFetchError = new FetchError(`${statusDescription}, ${requestDescription}`);
     newFetchError.responseText = responseText;
 
     return newFetchError;
@@ -146,13 +133,8 @@ export class PorchRestAPI implements ConfigAsDataApi {
 
       const fetchError = await FetchError.forResponse(method, response);
 
-      if (
-        fetchError.responseText &&
-        fetchError.responseText.includes('"kind":"Status"')
-      ) {
-        const k8Status = JSON.parse(
-          fetchError.responseText,
-        ) as KubernetesStatus;
+      if (fetchError.responseText && fetchError.responseText.includes('"kind":"Status"')) {
+        const k8Status = JSON.parse(fetchError.responseText) as KubernetesStatus;
 
         throw new KubernetesStatusError(k8Status);
       }
@@ -185,9 +167,7 @@ export class PorchRestAPI implements ConfigAsDataApi {
   }
 
   async listConfigManagements(): Promise<ListConfigManagements> {
-    const configManagements = await this.cadFetch(
-      'apis/configmanagement.gke.io/v1/configmanagements',
-    );
+    const configManagements = await this.cadFetch('apis/configmanagement.gke.io/v1/configmanagements');
 
     return configManagements;
   }
@@ -195,38 +175,28 @@ export class PorchRestAPI implements ConfigAsDataApi {
   async createSecret(secret: Secret): Promise<Secret> {
     const namespace = secret.metadata.namespace || this.namespace;
 
-    const newSecret = await this.cadFetch(
-      `api/v1/namespaces/${namespace}/secrets`,
-      {
-        method: 'POST',
-        body: JSON.stringify(secret),
-      },
-    );
+    const newSecret = await this.cadFetch(`api/v1/namespaces/${namespace}/secrets`, {
+      method: 'POST',
+      body: JSON.stringify(secret),
+    });
 
     return newSecret;
   }
 
   async getSecret(name: string): Promise<Secret> {
-    const newSecret = await this.cadFetch(
-      `api/v1/namespaces/${this.namespace}/secrets/${name}`,
-    );
+    const newSecret = await this.cadFetch(`api/v1/namespaces/${this.namespace}/secrets/${name}`);
 
     return newSecret;
   }
 
-  async deleteSecret(
-    name: string,
-    namespace: string = this.namespace,
-  ): Promise<void> {
+  async deleteSecret(name: string, namespace: string = this.namespace): Promise<void> {
     await this.cadFetch(`api/v1/namespaces/${namespace}/secrets/${name}`, {
       method: 'DELETE',
     });
   }
 
   async listSecrets(): Promise<ListSecrets> {
-    const secretsList = await this.cadFetch(
-      `api/v1/namespaces/${this.namespace}/secrets`,
-    );
+    const secretsList = await this.cadFetch(`api/v1/namespaces/${this.namespace}/secrets`);
 
     return secretsList;
   }
@@ -268,9 +238,7 @@ export class PorchRestAPI implements ConfigAsDataApi {
     );
   }
 
-  async createPackageRevision(
-    packageRevision: PackageRevision,
-  ): Promise<PackageRevision> {
+  async createPackageRevision(packageRevision: PackageRevision): Promise<PackageRevision> {
     const newPackageRevision = await this.cadFetch(
       `apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/packagerevisions`,
       {
@@ -282,17 +250,14 @@ export class PorchRestAPI implements ConfigAsDataApi {
     return newPackageRevision;
   }
 
-  async listPackageRevisions(
-    repositoryName?: string,
-  ): Promise<PackageRevision[]> {
+  async listPackageRevisions(repositoryName?: string): Promise<PackageRevision[]> {
     const listResponse = await this.cadFetch(
       `apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/packagerevisions`,
     );
 
     const packageRevisions = repositoryName
       ? listResponse.items.filter(
-          (packageRevision: PackageRevision) =>
-            packageRevision.spec.repository === repositoryName,
+          (packageRevision: PackageRevision) => packageRevision.spec.repository === repositoryName,
         )
       : listResponse.items;
 
@@ -307,9 +272,7 @@ export class PorchRestAPI implements ConfigAsDataApi {
     return packageRevision;
   }
 
-  async replacePackageRevision(
-    packageRevision: PackageRevision,
-  ): Promise<PackageRevision> {
+  async replacePackageRevision(packageRevision: PackageRevision): Promise<PackageRevision> {
     const newPackageRevision = await this.cadFetch(
       `apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/packagerevisions/${packageRevision.metadata.name}`,
       {
@@ -321,9 +284,7 @@ export class PorchRestAPI implements ConfigAsDataApi {
     return newPackageRevision;
   }
 
-  async approvePackageRevision(
-    packageRevision: PackageRevision,
-  ): Promise<PackageRevision> {
+  async approvePackageRevision(packageRevision: PackageRevision): Promise<PackageRevision> {
     const approvedPackageRevision = await this.cadFetch(
       `apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/packagerevisions/${packageRevision.metadata.name}/approval`,
       {
@@ -360,9 +321,7 @@ export class PorchRestAPI implements ConfigAsDataApi {
     return resourcesResponse;
   }
 
-  async getPackageRevisionResources(
-    packageName: string,
-  ): Promise<PackageRevisionResources> {
+  async getPackageRevisionResources(packageName: string): Promise<PackageRevisionResources> {
     const resourcesResponse = await this.cadFetch(
       `apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/packagerevisionresources/${packageName}`,
     );
@@ -379,9 +338,7 @@ export class PorchRestAPI implements ConfigAsDataApi {
   }
 
   async listCatalogFunctions(): Promise<Function[]> {
-    const functionCatalog: KptFunctionCatalog = await this.cadFetch(
-      'v1/function-catalog',
-    );
+    const functionCatalog: KptFunctionCatalog = await this.cadFetch('v1/function-catalog');
 
     const functions: Function[] = [];
 
@@ -415,15 +372,10 @@ export class PorchRestAPI implements ConfigAsDataApi {
   }
 
   async listFunctions(repositoryName?: string): Promise<Function[]> {
-    const listResponse = await this.cadFetch(
-      `apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/functions`,
-    );
+    const listResponse = await this.cadFetch(`apis/porch.kpt.dev/v1alpha1/namespaces/${this.namespace}/functions`);
 
     const functions = repositoryName
-      ? listResponse.items.filter(
-          (kptFunction: Function) =>
-            kptFunction.spec.repositoryRef.name === repositoryName,
-        )
+      ? listResponse.items.filter((kptFunction: Function) => kptFunction.spec.repositoryRef.name === repositoryName)
       : listResponse.items;
 
     return functions;
@@ -458,11 +410,8 @@ export class PorchRestAPI implements ConfigAsDataApi {
   }
 
   async deleteRootSync(name: string): Promise<void> {
-    await this.cadFetch(
-      `apis/configsync.gke.io/v1beta1/namespaces/config-management-system/rootsyncs/${name}`,
-      {
-        method: 'DELETE',
-      },
-    );
+    await this.cadFetch(`apis/configsync.gke.io/v1beta1/namespaces/config-management-system/rootsyncs/${name}`, {
+      method: 'DELETE',
+    });
   }
 }

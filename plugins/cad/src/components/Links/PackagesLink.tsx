@@ -26,20 +26,14 @@ type PackagesLinkProps = {
   breadcrumb?: boolean;
 };
 
-export const PackagesLink = ({
-  contentDetails,
-  breadcrumb,
-}: PackagesLinkProps) => {
+export const PackagesLink = ({ contentDetails, breadcrumb }: PackagesLinkProps) => {
   const packagesRef = useRouteRef(packagesRouteRef);
 
   const classes = useLinkStyles();
   const className = breadcrumb ? classes.breadcrumb : '';
 
   return (
-    <Link
-      className={className}
-      to={packagesRef({ packageContent: contentDetails.contentLink })}
-    >
+    <Link className={className} to={packagesRef({ packageContent: contentDetails.contentLink })}>
       {contentDetails.contentSummary}s
     </Link>
   );

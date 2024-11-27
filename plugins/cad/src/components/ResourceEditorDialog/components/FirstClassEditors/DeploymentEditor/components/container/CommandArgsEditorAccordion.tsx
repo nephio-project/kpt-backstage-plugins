@@ -17,10 +17,7 @@
 import { TextField } from '@material-ui/core';
 import { cloneDeep } from 'lodash';
 import React, { Fragment, useRef } from 'react';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 
 type CommandArgsState = {
   command?: string[];
@@ -72,12 +69,7 @@ export const CommandArgsEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Command / Args"
-      description={getDescription(healthState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Command / Args" description={getDescription(healthState)} state={state}>
       <Fragment>
         <TextField
           label="Command"

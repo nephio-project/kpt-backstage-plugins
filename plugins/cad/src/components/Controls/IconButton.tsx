@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  IconButton as MaterialIconButton,
-  makeStyles,
-  Tooltip,
-} from '@material-ui/core';
+import { IconButton as MaterialIconButton, makeStyles, Tooltip } from '@material-ui/core';
 import React, { ReactNode } from 'react';
 
 type IconButtonProps = {
@@ -37,18 +33,10 @@ const useStyles = makeStyles({
   },
 });
 
-export const IconButton = ({
-  title,
-  className,
-  inTable,
-  stopPropagation,
-  onClick,
-  children,
-}: IconButtonProps) => {
+export const IconButton = ({ title, className, inTable, stopPropagation, onClick, children }: IconButtonProps) => {
   const classes = useStyles();
 
-  const finalClassName =
-    className || (inTable ? classes.inTableStyle : undefined);
+  const finalClassName = className || (inTable ? classes.inTableStyle : undefined);
 
   return (
     <Tooltip title={title}>

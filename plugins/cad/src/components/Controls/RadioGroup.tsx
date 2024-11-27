@@ -48,13 +48,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const RadioGroup = ({
-  label,
-  value,
-  options,
-  onChange,
-  helperText,
-}: RadioGroupProps) => {
+export const RadioGroup = ({ label, value, options, onChange, helperText }: RadioGroupProps) => {
   const classes = useStyles();
 
   const labelId = `label-${snakeCase(label)}`;
@@ -70,16 +64,10 @@ export const RadioGroup = ({
       >
         {options.map(option => (
           <Fragment key={option.value}>
-            <FormControlLabel
-              value={option.value}
-              control={<Radio color="primary" />}
-              label={option.label}
-            />
+            <FormControlLabel value={option.value} control={<Radio color="primary" />} label={option.label} />
 
             {option.description && (
-              <FormHelperText className={classes.optionDescription}>
-                {option.description}
-              </FormHelperText>
+              <FormHelperText className={classes.optionDescription}>{option.description}</FormHelperText>
             )}
           </Fragment>
         ))}

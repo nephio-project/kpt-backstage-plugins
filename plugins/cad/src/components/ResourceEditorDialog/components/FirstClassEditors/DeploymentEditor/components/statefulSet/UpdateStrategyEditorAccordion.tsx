@@ -20,16 +20,9 @@ import { clone, startCase } from 'lodash';
 import React, { Fragment, useRef } from 'react';
 import { StatefulSetUpdateStrategy } from '../../../../../../../types/StatefulSet';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
-import {
-  getNumber,
-  getNumberOrString,
-  toLowerCase,
-} from '../../../../../../../utils/string';
+import { getNumber, getNumberOrString, toLowerCase } from '../../../../../../../utils/string';
 import { Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type UpdateStrategyState = {
@@ -52,21 +45,13 @@ const STRATEGY = ['OnDelete', 'RollingUpdate'];
 const POD_MANAGEMENT_POLICY = ['OrderedReady', 'Parallel'];
 
 const strategySelectItems: SelectItem[] = buildSelectItemsFromList(STRATEGY);
-const podManagementPolicySelectItems: SelectItem[] = buildSelectItemsFromList(
-  POD_MANAGEMENT_POLICY,
-);
+const podManagementPolicySelectItems: SelectItem[] = buildSelectItemsFromList(POD_MANAGEMENT_POLICY);
 
-const normalizeStrategy = (
-  strategyState: UpdateStrategyState,
-): UpdateStrategyState => {
+const normalizeStrategy = (strategyState: UpdateStrategyState): UpdateStrategyState => {
   const updateStrategy = strategyState.updateStrategy || {};
 
   if (updateStrategy.rollingUpdate) {
-    if (
-      Object.entries(updateStrategy.rollingUpdate).filter(
-        ([_, value]) => !!value,
-      ).length === 0
-    ) {
+    if (Object.entries(updateStrategy.rollingUpdate).filter(([_, value]) => !!value).length === 0) {
       updateStrategy.rollingUpdate = undefined;
     }
 
@@ -95,9 +80,7 @@ const getDescription = (strategyState: UpdateStrategyState): string => {
         statements.push(`${updateStrategy.rollingUpdate?.partition} partition`);
       }
       if (updateStrategy.rollingUpdate?.maxUnavailable) {
-        statements.push(
-          `${updateStrategy.rollingUpdate?.maxUnavailable} max unavailable`,
-        );
+        statements.push(`${updateStrategy.rollingUpdate?.maxUnavailable} max unavailable`);
       }
     }
   }
@@ -109,9 +92,7 @@ const getDescription = (strategyState: UpdateStrategyState): string => {
   return toLowerCase(statements.join(', '));
 };
 
-const getUpdateStrategy = (
-  strategyState: UpdateStrategyState,
-): StatefulSetUpdateStrategy => {
+const getUpdateStrategy = (strategyState: UpdateStrategyState): StatefulSetUpdateStrategy => {
   strategyState.updateStrategy = strategyState.updateStrategy || {};
   return strategyState.updateStrategy;
 };
@@ -134,12 +115,7 @@ export const UpdateStrategyEditorAccordion = ({
   };
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Updates"
-      description={getDescription(updateStrategyState)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Updates" description={getDescription(updateStrategyState)} state={state}>
       <Fragment>
         <div className={classes.multiControlRow}>
           <Select
@@ -153,8 +129,7 @@ export const UpdateStrategyEditorAccordion = ({
             }}
           />
 
-          {(!viewModel.updateStrategy ||
-            viewModel.updateStrategy?.type === 'RollingUpdate') && (
+          {(!viewModel.updateStrategy || viewModel.updateStrategy?.type === 'RollingUpdate') && (
             <Fragment>
               <TextField
                 label="Partition"
@@ -172,15 +147,11 @@ export const UpdateStrategyEditorAccordion = ({
               <TextField
                 label="Max Unavailable"
                 variant="outlined"
-                value={
-                  viewModel.updateStrategy?.rollingUpdate?.maxUnavailable || ''
-                }
+                value={viewModel.updateStrategy?.rollingUpdate?.maxUnavailable || ''}
                 onChange={e => {
                   const strategy = getUpdateStrategy(viewModel);
                   strategy.rollingUpdate = strategy.rollingUpdate || {};
-                  strategy.rollingUpdate.maxUnavailable = getNumberOrString(
-                    e.target.value,
-                  );
+                  strategy.rollingUpdate.maxUnavailable = getNumberOrString(e.target.value);
                   valueUpdated();
                 }}
                 fullWidth

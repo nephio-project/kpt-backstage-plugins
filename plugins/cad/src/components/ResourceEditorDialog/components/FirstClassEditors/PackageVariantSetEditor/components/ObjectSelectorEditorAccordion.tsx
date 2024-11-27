@@ -18,14 +18,8 @@ import React, { useRef, useState } from 'react';
 import { clone } from 'lodash';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { TextField, Button } from '@material-ui/core';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../Controls/EditorAccordion';
-import {
-  PackageVariantSetObjectSelector,
-  PackageVariantSetTempleate,
-} from '../../../../../../types/PackageVariantSet';
+import { AccordionState, EditorAccordion } from '../../Controls/EditorAccordion';
+import { PackageVariantSetObjectSelector, PackageVariantSetTempleate } from '../../../../../../types/PackageVariantSet';
 import { KeyValueEditorAccordion } from '../../Controls';
 import { PackageResource } from '../../../../../../utils/packageRevisionResources';
 import { TemplateEditorAccordion } from './templates/TemplateEditorAccordion';
@@ -117,11 +111,7 @@ export const ObjectSelectorEditorAccordion = ({
         }}
       />
       <div className={classes.multiControlRow}>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete Object Selector
         </Button>
       </div>

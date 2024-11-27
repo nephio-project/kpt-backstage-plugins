@@ -18,22 +18,14 @@ import { CustomResourceDefinition } from '../../../../../../types/CustomResource
 import { KubernetesResource } from '../../../../../../types/KubernetesResource';
 import { Metadata } from '../StructuredMetadata';
 
-export const getCustomResourceDefinitionStructuredMetadata = (
-  resource: KubernetesResource,
-): Metadata => {
+export const getCustomResourceDefinitionStructuredMetadata = (resource: KubernetesResource): Metadata => {
   const crd = resource as CustomResourceDefinition;
 
   const names = crd.spec.names;
 
   return {
-    groupVersionKinds: crd.spec.versions.map(
-      version => `${crd.spec.group}/${version.name}/${names.kind}`,
-    ),
-    resourceNames: [
-      `singular: ${names.singular}`,
-      `plural: ${names.plural}`,
-      `list kind: ${names.listKind}`,
-    ],
+    groupVersionKinds: crd.spec.versions.map(version => `${crd.spec.group}/${version.name}/${names.kind}`),
+    resourceNames: [`singular: ${names.singular}`, `plural: ${names.plural}`, `list kind: ${names.listKind}`],
     scope: crd.spec.scope,
   };
 };

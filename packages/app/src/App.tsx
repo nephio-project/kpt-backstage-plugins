@@ -34,10 +34,7 @@ const routes = (
   <FlatRoutes>
     <Navigate key="/" to="config-as-data" />
     <Route path="/catalog" element={<CatalogIndexPage />} />
-    <Route
-      path="/catalog/:namespace/:kind/:name"
-      element={<CatalogEntityPage />}
-    />
+    <Route path="/catalog/:namespace/:kind/:name" element={<CatalogEntityPage />} />
     <Route path="/settings" element={<UserSettingsPage />} />
     <Route path="/config-as-data" element={<CadPage />} />
   </FlatRoutes>

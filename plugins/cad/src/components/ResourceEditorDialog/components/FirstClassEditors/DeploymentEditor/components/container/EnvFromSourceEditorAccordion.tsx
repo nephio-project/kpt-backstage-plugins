@@ -20,16 +20,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { clone } from 'lodash';
 import React, { Fragment, useMemo, useRef } from 'react';
 import { EnvFromSource } from '../../../../../../../types/Pod';
-import {
-  getDeployableResources,
-  PackageResource,
-} from '../../../../../../../utils/packageRevisionResources';
+import { getDeployableResources, PackageResource } from '../../../../../../../utils/packageRevisionResources';
 import { buildSelectItemsFromList } from '../../../../../../../utils/selectItem';
 import { Autocomplete, Checkbox, Select } from '../../../../../../Controls';
-import {
-  AccordionState,
-  EditorAccordion,
-} from '../../../Controls/EditorAccordion';
+import { AccordionState, EditorAccordion } from '../../../Controls/EditorAccordion';
 import { useEditorStyles } from '../../../styles';
 
 type OnUpdate = (newValue?: EnvFromSource) => void;
@@ -46,10 +40,7 @@ const SOURCE = ['config map', 'secret'];
 
 const sourceSelectItems: SelectItem[] = buildSelectItemsFromList(SOURCE);
 
-const getResourceNames = (
-  packageResources: PackageResource[],
-  kind: string,
-): string[] => {
+const getResourceNames = (packageResources: PackageResource[], kind: string): string[] => {
   const resources = getDeployableResources(packageResources, kind);
 
   return resources.map(configMap => configMap.name);
@@ -63,10 +54,7 @@ const getEnvFromSourceSource = (envFrom: EnvFromSource): string => {
   return 'config map';
 };
 
-const normalizeEnvFrom = (
-  envFrom: EnvFromSource,
-  source: string,
-): EnvFromSource => {
+const normalizeEnvFrom = (envFrom: EnvFromSource, source: string): EnvFromSource => {
   if (source !== 'config map') {
     envFrom.configMapRef = undefined;
   }
@@ -104,31 +92,17 @@ export const EnvFromSourceEditorAccordion = ({
   const source = refSource.current;
 
   const valueUpdated = (): void => {
-    const updatedEnvFromSource = normalizeEnvFrom(
-      clone(viewModel),
-      refSource.current,
-    );
+    const updatedEnvFromSource = normalizeEnvFrom(clone(viewModel), refSource.current);
 
     onUpdate(updatedEnvFromSource);
   };
 
-  const configMapNames = useMemo(
-    () => getResourceNames(packageResources, 'ConfigMap'),
-    [packageResources],
-  );
+  const configMapNames = useMemo(() => getResourceNames(packageResources, 'ConfigMap'), [packageResources]);
 
-  const secretNames = useMemo(
-    () => getResourceNames(packageResources, 'Secret'),
-    [packageResources],
-  );
+  const secretNames = useMemo(() => getResourceNames(packageResources, 'Secret'), [packageResources]);
 
   return (
-    <EditorAccordion
-      id={id}
-      title="Env From"
-      description={getDescription(envFromSource, source)}
-      state={state}
-    >
+    <EditorAccordion id={id} title="Env From" description={getDescription(envFromSource, source)} state={state}>
       <Fragment>
         <Fragment>
           <div className={classes.multiControlRow}>
@@ -195,11 +169,7 @@ export const EnvFromSourceEditorAccordion = ({
             />
           )}
         </Fragment>
-        <Button
-          variant="outlined"
-          startIcon={<DeleteIcon />}
-          onClick={() => onUpdate(undefined)}
-        >
+        <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => onUpdate(undefined)}>
           Delete
         </Button>
       </Fragment>

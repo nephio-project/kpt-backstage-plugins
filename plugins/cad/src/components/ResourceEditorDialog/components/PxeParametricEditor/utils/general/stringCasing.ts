@@ -20,8 +20,7 @@
  * @param str The original string.
  * @returns A string with first letter capitalized.
  */
-export const upperCaseFirstLetter = (str: string): string =>
-  str ? str[0].toUpperCase() + str.slice(1) : str;
+export const upperCaseFirstLetter = (str: string): string => (str ? str[0].toUpperCase() + str.slice(1) : str);
 
 /**
  * Returns a string with first letter decapitalized.
@@ -29,5 +28,4 @@ export const upperCaseFirstLetter = (str: string): string =>
  * @param str The original string.
  * @returns A string with first letter decapitalized.
  */
-export const lowerCaseFirstLetter = (str: string): string =>
-  str ? str[0].toLowerCase() + str.slice(1) : str;
+export const lowerCaseFirstLetter = (str: string): string => (str ? str[0].toLowerCase() + str.slice(1) : str);
