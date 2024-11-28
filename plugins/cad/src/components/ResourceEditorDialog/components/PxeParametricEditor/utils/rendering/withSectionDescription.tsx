@@ -32,7 +32,7 @@ export const withSectionDescription = (
     const resource = useContext(PxeResourceContext);
 
     const entriesForDescription = useMemo(
-      () => findAllInConfigurationEntries(entries, entry => isWidgetNode(entry)),
+      () => findAllInConfigurationEntries(entries, entry => isWidgetNode(entry), { searchInSections: false }),
       [entries],
     ) as PxeWidgetEntry[];
     const sectionDescription = generateDescriptionForEntries(entriesForDescription, resource);

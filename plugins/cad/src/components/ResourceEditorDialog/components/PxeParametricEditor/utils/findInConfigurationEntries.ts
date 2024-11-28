@@ -17,17 +17,23 @@ import { PxeConfigurationEntry } from '../types/PxeConfiguration.types';
 import { isArray } from 'lodash';
 import { isLayoutNode, isSectionNode } from './nodePredicates';
 
+type SearchOptions = {
+  readonly searchInLayouts?: boolean;
+  readonly searchInSections?: boolean;
+};
+
 export const findInConfigurationEntries = (
   searchIn: PxeConfigurationEntry | readonly PxeConfigurationEntry[],
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
+  { searchInLayouts = true, searchInSections = true }: SearchOptions = {},
 ): PxeConfigurationEntry | null => {
   const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
 
   for (const entry of entries) {
     if (isSuccess(entry)) {
       return entry;
-    } else if (isSectionNode(entry) || isLayoutNode(entry)) {
-      const foundEntry = findInConfigurationEntries(entry.entries, isSuccess);
+    } else if ((isLayoutNode(entry) && searchInLayouts) || (isSectionNode(entry) && searchInSections)) {
+      const foundEntry = findInConfigurationEntries(entry.entries, isSuccess, { searchInLayouts, searchInSections });
       if (foundEntry) {
         return foundEntry;
       }
@@ -39,6 +45,7 @@ export const findInConfigurationEntries = (
 export const findAllInConfigurationEntries = (
   searchIn: PxeConfigurationEntry | readonly PxeConfigurationEntry[],
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
+  { searchInLayouts = true, searchInSections = true }: SearchOptions = {},
 ): PxeConfigurationEntry[] => {
   const foundEntries: PxeConfigurationEntry[] = [];
   const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
@@ -47,8 +54,10 @@ export const findAllInConfigurationEntries = (
     if (isSuccess(entry)) {
       foundEntries.push(entry);
     }
-    if (isSectionNode(entry) || isLayoutNode(entry)) {
-      foundEntries.push(...findAllInConfigurationEntries(entry.entries, isSuccess));
+    if ((isLayoutNode(entry) && searchInLayouts) || (isSectionNode(entry) && searchInSections)) {
+      foundEntries.push(
+        ...findAllInConfigurationEntries(entry.entries, isSuccess, { searchInLayouts, searchInSections }),
+      );
     }
   }
   return foundEntries;

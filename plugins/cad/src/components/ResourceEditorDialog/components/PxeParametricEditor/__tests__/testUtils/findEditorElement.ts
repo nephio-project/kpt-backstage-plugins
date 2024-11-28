@@ -15,7 +15,17 @@
  */
 
 /* eslint @backstage/no-undeclared-imports: off */
+import * as changeCase from 'change-case';
 import { RenderResult } from '@testing-library/react';
+
+export const findSection = (searchRoot: RenderResult | HTMLElement, name: string): HTMLDivElement =>
+  findElement(searchRoot, `[data-testid="Section_${changeCase.camelCase(name)}"]`, `Section "${name}"`);
+
+export const findSectionTitle = (searchRoot: RenderResult | HTMLElement): HTMLParagraphElement =>
+  findElement(searchRoot, `div > div > p:nth-child(1)`, 'Section title');
+
+export const findSectionDescription = (searchRoot: RenderResult | HTMLElement): HTMLParagraphElement =>
+  findElement(searchRoot, `div > div > p:nth-child(2)`, 'Section description');
 
 export const findTextFieldInput = (searchRoot: RenderResult | HTMLElement, path: string): HTMLInputElement =>
   findElement(searchRoot, `[data-testid="TextField_${path}"] input`, `Text field ${path}`);

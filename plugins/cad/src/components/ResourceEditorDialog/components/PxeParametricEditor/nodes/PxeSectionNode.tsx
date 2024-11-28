@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import * as changeCase from 'change-case';
 import { nanoid } from 'nanoid';
 import React, { useRef } from 'react';
 import { EditorAccordion } from '../../FirstClassEditors/Controls';
@@ -41,6 +42,7 @@ export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = withSectio
 
     return (
       <EditorAccordion
+        data-testid={`Section_${changeCase.camelCase(name)}`}
         id={sectionIdRef.current}
         title={name}
         state={ancestorLevelExpandedSectionState}
