@@ -100,7 +100,7 @@ function bridgeDomainItemConfiguration() {
 function interfaceItemConfiguration() {
   return section(
     { name: 'Interface' },
-    // TODO Different options depending on where used.
+    // TODO Needs different options depending on where interface is used.
     selectValue({ path: '$value.kind', isRequired: true, options: INTERFACE_KIND_OPTIONS }),
     singleLineText({ path: '$value.interfaceName' }),
     singleLineText({ path: '$value.bridgeDomainName' }),
