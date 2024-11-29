@@ -27,13 +27,14 @@ export const findInConfigurationEntries = (
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
   { searchInLayouts = true, searchInSections = true }: SearchOptions = {},
 ): PxeConfigurationEntry | null => {
+  const options = { searchInLayouts, searchInSections };
   const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
 
   for (const entry of entries) {
     if (isSuccess(entry)) {
       return entry;
     } else if ((isLayoutNode(entry) && searchInLayouts) || (isSectionNode(entry) && searchInSections)) {
-      const foundEntry = findInConfigurationEntries(entry.entries, isSuccess, { searchInLayouts, searchInSections });
+      const foundEntry = findInConfigurationEntries(entry.entries, isSuccess, options);
       if (foundEntry) {
         return foundEntry;
       }
@@ -47,17 +48,16 @@ export const findAllInConfigurationEntries = (
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
   { searchInLayouts = true, searchInSections = true }: SearchOptions = {},
 ): PxeConfigurationEntry[] => {
-  const foundEntries: PxeConfigurationEntry[] = [];
+  const options = { searchInLayouts, searchInSections };
   const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
 
+  const foundEntries: PxeConfigurationEntry[] = [];
   for (const entry of entries) {
     if (isSuccess(entry)) {
       foundEntries.push(entry);
     }
     if ((isLayoutNode(entry) && searchInLayouts) || (isSectionNode(entry) && searchInSections)) {
-      foundEntries.push(
-        ...findAllInConfigurationEntries(entry.entries, isSuccess, { searchInLayouts, searchInSections }),
-      );
+      foundEntries.push(...findAllInConfigurationEntries(entry.entries, isSuccess, options));
     }
   }
   return foundEntries;
