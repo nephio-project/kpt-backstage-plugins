@@ -43,6 +43,10 @@ const CONFIGURATION: PxeConfiguration = {
         singleLineText({ path: 'spec.valueF' }),
         rowLayout(singleLineText({ path: 'spec.valueG' }), singleLineText({ path: 'spec.valueH' })),
       ),
+      section(
+        { name: 'Section with custom value name' },
+        singleLineText({ path: 'spec.valueI', name: 'custom value' }),
+      ),
     ),
   ],
 };
@@ -57,6 +61,7 @@ spec:
   valueF: bar2
   valueG: fizz2
   valueH: buzz2
+  valueI: foo3
   roster1: []
   roster2: {}
 `;
@@ -83,6 +88,12 @@ describe('ParametricEditorSection', () => {
     const sectionDescription = findSectionDescription(findSection(editor, 'Nested section'));
 
     expect(sectionDescription.textContent).toBe('Value e: foo2, Value f: bar2, Value g: fizz2, Value h: buzz2');
+  });
+
+  it('should have description which includes customized value name', async () => {
+    const sectionDescription = findSectionDescription(findSection(editor, 'Section with custom value name'));
+
+    expect(sectionDescription.textContent).toBe('Custom value: foo3');
   });
 
   describe('(as implicit roster section)', () => {
