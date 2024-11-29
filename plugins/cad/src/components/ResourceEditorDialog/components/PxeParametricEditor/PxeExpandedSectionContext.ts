@@ -20,10 +20,10 @@ import { PxeExpandedSection, PxeExpandedSectionStateTuple } from './types/PxePar
 
 export const PxeExpandedSectionContext = createContext<PxeExpandedSectionStateTuple>([undefined, noop]);
 
-export const useAncestorExpandedSectionState = (): PxeExpandedSectionStateTuple =>
-  useContext(PxeExpandedSectionContext);
-
 export const useNewExpandedSectionState = (): PxeExpandedSectionStateTuple => {
   const [expandedSection, setExpandedSection] = useState<PxeExpandedSection>(undefined);
   return useMemo<PxeExpandedSectionStateTuple>(() => [expandedSection, setExpandedSection], [expandedSection]);
 };
+
+export const useAncestorExpandedSectionState = (): PxeExpandedSectionStateTuple =>
+  useContext(PxeExpandedSectionContext);

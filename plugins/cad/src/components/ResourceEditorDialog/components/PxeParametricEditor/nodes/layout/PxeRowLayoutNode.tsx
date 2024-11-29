@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+import { makeStyles } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
-import { makeStyles } from '@material-ui/core';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 const useStyles = makeStyles(() => ({

@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PxeConfigurationEntry } from '../types/PxeConfiguration.types';
+
 import { isArray } from 'lodash';
+import { PxeConfigurationEntry } from '../types/PxeConfiguration.types';
 import { isLayoutNode, isSectionNode } from './nodePredicates';
 
 type SearchOptions = {
