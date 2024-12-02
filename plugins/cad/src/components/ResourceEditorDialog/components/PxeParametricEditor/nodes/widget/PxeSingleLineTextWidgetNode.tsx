@@ -15,34 +15,36 @@
  */
 
 import { TextField } from '@material-ui/core';
-import { get } from 'lodash';
 import React from 'react';
 import { PxeSingleLineTextWidgetEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
+import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
+import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
-export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry,
-  onResourceChangeRequest,
-  resourceChunk,
-}) => {
-  const {
-    textFilter,
-    values: [valueDescriptor],
-  } = configurationEntry as PxeSingleLineTextWidgetEntry;
+export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
+  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
+    useDiagnostics(configurationEntry);
 
-  return (
-    <TextField
-      label={generateValueLabel(valueDescriptor)}
-      variant="outlined"
-      value={get(resourceChunk, valueDescriptor.path) ?? ''}
-      onChange={e => {
-        onResourceChangeRequest({
-          valueDescriptor,
-          newValue: textFilter(e.target.value),
-        });
-      }}
-      fullWidth
-    />
-  );
-};
+    const {
+      textFilter,
+      valueDescriptors: [valueDescriptor],
+    } = configurationEntry as PxeSingleLineTextWidgetEntry;
+
+    return (
+      <TextField
+        data-testid={`TextField_${valueDescriptor.path}`}
+        label={generateValueLabel(valueDescriptor)}
+        variant="outlined"
+        value={currentValue ?? ''}
+        onChange={e => {
+          onResourceChangeRequest({
+            valueDescriptor,
+            newValue: textFilter(e.target.value),
+          });
+        }}
+        fullWidth
+      />
+    );
+  },
+);

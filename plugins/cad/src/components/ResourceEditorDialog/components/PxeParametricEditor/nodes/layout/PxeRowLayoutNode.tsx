@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+import { makeStyles } from '@material-ui/core';
+import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
-import { makeStyles } from '@material-ui/core';
+import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
@@ -27,26 +29,23 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry,
-  parentExpandedSectionState,
-  onResourceChangeRequest,
-  resourceChunk,
-}) => {
-  const { entries } = configurationEntry as PxeRowLayoutEntry;
+export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
+  ({ configurationEntry, onResourceChangeRequest }) => {
+    useDiagnostics(configurationEntry);
+    const { entries } = configurationEntry as PxeRowLayoutEntry;
 
-  const classes = useStyles();
-  return (
-    <div className={classes.rowContainer}>
-      {entries.map((entry, index) => (
-        <PxeParametricEditorNode
-          key={`${index}`}
-          configurationEntry={entry}
-          resourceChunk={resourceChunk}
-          parentExpandedSectionState={parentExpandedSectionState}
-          onResourceChangeRequest={onResourceChangeRequest}
-        />
-      ))}
-    </div>
-  );
-};
+    const classes = useStyles();
+    return (
+      <div className={classes.rowContainer}>
+        {entries.map((entry, index) => (
+          <PxeParametricEditorNode
+            key={`${index}`}
+            configurationEntry={entry}
+            onResourceChangeRequest={onResourceChangeRequest}
+          />
+        ))}
+      </div>
+    );
+  },
+  isEqual,
+);

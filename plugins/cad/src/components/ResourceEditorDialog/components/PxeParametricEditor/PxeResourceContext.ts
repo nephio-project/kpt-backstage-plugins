@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import { PxeConfigurationEntry, PxeNodeType, PxeRowLayoutEntry } from '../types/PxeConfiguration.types';
+import { createContext } from 'react';
+import { PxeResourceChunk } from './types/PxeParametricEditor.types';
 
-export const rowLayoutConfigurationEntry = (...childEntries: PxeConfigurationEntry[]): PxeRowLayoutEntry => ({
-  type: PxeNodeType.RowLayout,
-  entries: childEntries,
-});
+export const PxeResourceContext = createContext<PxeResourceChunk>({});

@@ -15,7 +15,7 @@
  */
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles } from '@material-ui/core';
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { KubernetesResource } from '../../types/KubernetesResource';
 import { getGroupVersionKind } from '../../utils/kubernetesResource';
 import { PackageResource } from '../../utils/packageRevisionResources';
@@ -91,7 +91,7 @@ export const ResourceEditorDialog = ({ open, onClose, yaml, onSaveYaml, packageR
     <Dialog open={open} onClose={onDialogClose} maxWidth="lg">
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <Fragment>
+        <>
           <div className={classes.container} style={{ height: `${latestYamlHeight}px` }}>
             {!showYamlView && isNamedEditor ? (
               <FirstClassEditorSelector
@@ -110,7 +110,7 @@ export const ResourceEditorDialog = ({ open, onClose, yaml, onSaveYaml, packageR
               Show {showYamlView ? 'Formatted View' : 'YAML View'}
             </Button>
           )}
-        </Fragment>
+        </>
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={onDialogClose}>

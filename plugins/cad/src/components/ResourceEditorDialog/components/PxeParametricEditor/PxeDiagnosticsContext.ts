@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-import { PxeConfigurationEntry, PxeNodeType, PxeRowLayoutEntry } from '../types/PxeConfiguration.types';
+import { createContext, useContext } from 'react';
+import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
+import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
 
-export const rowLayoutConfigurationEntry = (...childEntries: PxeConfigurationEntry[]): PxeRowLayoutEntry => ({
-  type: PxeNodeType.RowLayout,
-  entries: childEntries,
-});
+export const PxeDiagnosticsContext = createContext<PxeDiagnosticsReporter | null>(null);
+
+export const useDiagnostics = (configurationEntry: PxeConfigurationEntry) => {
+  const diagnosticsReporter = useContext(PxeDiagnosticsContext);
+  if (diagnosticsReporter) {
+    diagnosticsReporter.reportRender(configurationEntry);
+  }
+};

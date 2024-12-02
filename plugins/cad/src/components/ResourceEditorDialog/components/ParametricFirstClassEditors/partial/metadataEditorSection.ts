@@ -24,18 +24,12 @@ export const metadataEditorSection = ({ isNamespacedResource }: { isNamespacedRe
     { name: 'Resource Metadata' },
     singleLineText({ path: 'metadata.name', isRequired: true }),
     ...(isNamespacedResource ? [singleLineText({ path: 'metadata.namespace' })] : []),
-    section(
-      { name: 'Labels' },
-      objectTypeRoster(
-        { path: 'metadata.labels', isRequired: false },
-        rowLayout(singleLineText({ path: 'key', isRequired: true }), singleLineText({ path: 'value' })),
-      ),
+    objectTypeRoster(
+      { name: 'Labels', path: 'metadata.labels', isRequired: false },
+      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
     ),
-    section(
-      { name: 'Annotations' },
-      objectTypeRoster(
-        { path: 'metadata.annotations', isRequired: false },
-        rowLayout(singleLineText({ path: 'key', isRequired: true }), singleLineText({ path: 'value' })),
-      ),
+    objectTypeRoster(
+      { name: 'Annotations', path: 'metadata.annotations', isRequired: false },
+      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
     ),
   );

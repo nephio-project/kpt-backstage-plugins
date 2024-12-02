@@ -28,9 +28,9 @@ export const NephioWorkloadClusterParametricEditor = createEditorFromConfigurati
       { name: 'Configuration' },
       singleLineText({ path: 'spec.clusterName', isRequired: true }),
       singleLineText({ path: 'spec.masterInterface' }),
-      section(
-        { name: 'CNIs' },
-        arrayTypeRoster({ path: 'spec.cnis', isRequired: false, name: 'CNIs' }, singleLineText({ path: 'value' })),
+      arrayTypeRoster(
+        { name: 'CNIs', path: 'spec.cnis', isRequired: false },
+        singleLineText({ path: '$value', isRequired: true }),
       ),
     ),
   ],

@@ -16,24 +16,15 @@
 
 import * as changeCase from 'change-case';
 import { get, size } from 'lodash';
-import {
-  PxeConfigurationEntryType,
-  PxeSectionEntry,
-  PxeValueDescriptor,
-  PxeValueType,
-  PxeWidgetEntry,
-} from '../types/PxeConfiguration.types';
+import { PxeValueDescriptor, PxeValueType, PxeWidgetEntry } from '../types/PxeConfiguration.types';
 import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
-import { isEmptyPxeValue } from './isEmptyPxeValue';
 import { upperCaseFirstLetter } from './general/stringCasing';
+import { isEmptyPxeValue } from './isEmptyPxeValue';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateSectionDescription = (sectionEntry: PxeSectionEntry, resourceChunk: PxeResourceChunk): string =>
-  sectionEntry.entries
-    .filter(childEntry => childEntry.type !== PxeConfigurationEntryType.Section)
-    .flatMap(childEntry => generateValueDescriptionsForWidget(childEntry as PxeWidgetEntry, resourceChunk))
-    .join(', ');
+export const generateDescriptionForEntries = (entries: PxeWidgetEntry[], resourceChunk: PxeResourceChunk): string =>
+  entries.flatMap(widgetEntry => generateValueDescriptionsForWidget(widgetEntry, resourceChunk)).join(', ');
 
 export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercase: boolean = true): string => {
   if (valueDescriptor.display?.name) {
@@ -47,7 +38,7 @@ export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercas
 };
 
 const generateValueDescriptionsForWidget = (widgetEntry: PxeWidgetEntry, resourceChunk: PxeResourceChunk): string[] =>
-  widgetEntry.values
+  widgetEntry.valueDescriptors
     .map(valueDescriptor => generateValueDescription(valueDescriptor, resourceChunk))
     .filter(segment => segment !== null) as string[];
 

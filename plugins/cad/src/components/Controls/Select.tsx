@@ -27,13 +27,13 @@ type SelectProps = {
   helperText?: string;
 };
 
-export const Select = ({ label, selected, items, onChange, className, helperText }: SelectProps) => {
+export const Select = ({ label, selected, items, onChange, className, helperText, ...otherProps }: SelectProps) => {
   const handleChange = (event: ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
     onChange(event.target.value as string);
   };
 
   return (
-    <FormControl fullWidth variant="outlined" className={className}>
+    <FormControl {...otherProps} fullWidth variant="outlined" className={className}>
       <InputLabel id="select-label">{label}</InputLabel>
       <MaterialSelect labelId="select-label" value={selected} label={label} onChange={handleChange}>
         {items.map(item => (

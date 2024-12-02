@@ -17,6 +17,7 @@
 import React from 'react';
 import { PxeConfiguration } from './types/PxeConfiguration.types';
 import { PxeParametricEditor } from './PxeParametricEditor';
+import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
 
 type ConfiguredEditorProps = {
   readonly yamlText: string;
@@ -24,6 +25,13 @@ type ConfiguredEditorProps = {
 };
 
 export const createEditorFromConfiguration =
-  (configuration: PxeConfiguration): React.FC<ConfiguredEditorProps> =>
+  (configuration: PxeConfiguration, diagnosticsReporter?: PxeDiagnosticsReporter): React.FC<ConfiguredEditorProps> =>
   ({ yamlText, onResourceChange }) =>
-    <PxeParametricEditor configuration={configuration} yamlText={yamlText} onResourceChange={onResourceChange} />;
+    (
+      <PxeParametricEditor
+        configuration={configuration}
+        yamlText={yamlText}
+        onResourceChange={onResourceChange}
+        __diagnosticsReporter={diagnosticsReporter}
+      />
+    );

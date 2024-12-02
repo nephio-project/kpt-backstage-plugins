@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const EditorAccordion = ({ id, title, description, state, children }: EditorAccordionProps) => {
+export const EditorAccordion = ({ id, title, description, state, children, ...otherProps }: EditorAccordionProps) => {
   const classes = useStyles();
   const detailsRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +70,7 @@ export const EditorAccordion = ({ id, title, description, state, children }: Edi
   }, [expanded]);
 
   return (
-    <Accordion expanded={expanded} onChange={onChange}>
+    <Accordion {...otherProps} expanded={expanded} onChange={onChange}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography className={classes.title}>{title}</Typography>
         <Typography className={classes.description}>{description}</Typography>
