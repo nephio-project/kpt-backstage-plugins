@@ -52,7 +52,10 @@
     ]
   },
   "jest": {
-    "setupFilesAfterEnv": ["<rootDir>/../../../jest.setup.js","@testing-library/jest-dom"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/../../../jest.setup.js",
+      "@testing-library/jest-dom"
+    ],
     "moduleNameMapper": {
       "monaco-editor": "<rootDir>/../../../node_modules/monaco-editor/monaco.d.ts"
     }
