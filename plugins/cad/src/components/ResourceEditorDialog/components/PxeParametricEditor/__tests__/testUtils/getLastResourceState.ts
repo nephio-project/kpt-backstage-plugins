@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { PxeConfigurationEntry, PxeNodeType, PxeRowLayoutEntry } from '../types/PxeConfiguration.types';
+import { load } from 'js-yaml';
+import { PxeResourceChunk } from '../../types/PxeParametricEditor.types';
 
-export const rowLayoutConfigurationEntry = (...childEntries: PxeConfigurationEntry[]): PxeRowLayoutEntry => ({
-  type: PxeNodeType.RowLayout,
-  entries: childEntries,
-});
+export const getLastResourceState = (resourceChangeHandler: jest.Mock): PxeResourceChunk & any =>
+  load(resourceChangeHandler.mock.lastCall[0]);

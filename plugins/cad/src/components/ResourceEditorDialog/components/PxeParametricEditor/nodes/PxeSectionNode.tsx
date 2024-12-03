@@ -14,43 +14,45 @@
  * limitations under the License.
  */
 
-import { noop } from 'lodash';
+import * as changeCase from 'change-case';
 import { nanoid } from 'nanoid';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { EditorAccordion } from '../../FirstClassEditors/Controls';
-import { PxeExpandedSectionState } from '../types/PxeParametricEditor.types';
 import { PxeSectionEntry } from '../types/PxeConfiguration.types';
-import { generateSectionDescription } from '../utils/generateLabelsForWidgets';
+import { withSectionDescription } from '../utils/rendering/withSectionDescription';
 import { PxeParametricEditorNodeProps } from '../PxeParametricEditorNode';
 import { PxeParametricEditorNodeList } from '../PxeParametricEditorNodeList';
+import {
+  PxeExpandedSectionContext,
+  useAncestorExpandedSectionState,
+  useNewExpandedSectionState,
+} from '../PxeExpandedSectionContext';
+import { useDiagnostics } from '../PxeDiagnosticsContext';
 
-export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = ({
-  configurationEntry: configurationEntryUncasted,
-  resourceChunk,
-  onResourceChangeRequest,
-  parentExpandedSectionState,
-}) => {
-  const configurationEntry = configurationEntryUncasted as PxeSectionEntry;
-  const { name, entries: childEntries } = configurationEntry;
+export const PxeSectionNode: React.FC<PxeParametricEditorNodeProps> = withSectionDescription(
+  ({ configurationEntry, onResourceChangeRequest, children, sectionDescription }) => {
+    useDiagnostics(configurationEntry);
 
-  const sectionIdRef = useRef(`section-${nanoid()}`);
-  const [expandedSection, setExpandedSection] = useState<PxeExpandedSectionState>(undefined);
+    const sectionEntry = configurationEntry as PxeSectionEntry;
+    const { name, entries: childEntries } = sectionEntry;
 
-  const description = generateSectionDescription(configurationEntry, resourceChunk);
+    const sectionIdRef = useRef(`section-${nanoid()}`);
+    const ancestorLevelExpandedSectionState = useAncestorExpandedSectionState();
+    const sectionLevelExpandedSectionState = useNewExpandedSectionState();
 
-  return (
-    <EditorAccordion
-      id={sectionIdRef.current}
-      title={name}
-      state={parentExpandedSectionState ?? [undefined, noop]}
-      description={description}
-    >
-      <PxeParametricEditorNodeList
-        entries={childEntries}
-        resourceChunk={resourceChunk}
-        onResourceChangeRequest={onResourceChangeRequest}
-        parentExpandedSectionState={[expandedSection, setExpandedSection]}
-      />
-    </EditorAccordion>
-  );
-};
+    return (
+      <EditorAccordion
+        data-testid={`Section_${changeCase.camelCase(name)}`}
+        id={sectionIdRef.current}
+        title={name}
+        state={ancestorLevelExpandedSectionState}
+        description={sectionDescription}
+      >
+        <PxeExpandedSectionContext.Provider value={sectionLevelExpandedSectionState}>
+          <PxeParametricEditorNodeList entries={childEntries} onResourceChangeRequest={onResourceChangeRequest} />
+          {children}
+        </PxeExpandedSectionContext.Provider>
+      </EditorAccordion>
+    );
+  },
+);

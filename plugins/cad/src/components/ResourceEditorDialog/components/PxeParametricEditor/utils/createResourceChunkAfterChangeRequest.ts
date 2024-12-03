@@ -17,6 +17,7 @@
 import { cloneDeep, set, unset } from 'lodash';
 import { PxeResourceChangeRequest, PxeResourceChunk } from '../types/PxeParametricEditor.types';
 import { isEmptyPxeValue } from './isEmptyPxeValue';
+import { defaultValueForType } from './defaultValueForType';
 
 export const createResourceChunkAfterChangeRequest = (
   resourceChunk: PxeResourceChunk,
@@ -27,10 +28,10 @@ export const createResourceChunkAfterChangeRequest = (
 
   // TODO Using cloneDeep may lead to performance issues. Consider different implementation.
   const newResourceChunk = cloneDeep(resourceChunk);
-  if (!isEmptyPxeValue(newValue) || isRequired) {
-    set(newResourceChunk, path, newValue);
-  } else {
+  if (isEmptyPxeValue(newValue) && !isRequired) {
     unset(newResourceChunk, path);
+  } else {
+    set(newResourceChunk, path, newValue ?? defaultValueForType(valueDescriptor.type));
   }
 
   return newResourceChunk;

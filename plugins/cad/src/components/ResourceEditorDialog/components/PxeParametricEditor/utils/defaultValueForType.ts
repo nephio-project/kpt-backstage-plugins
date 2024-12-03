@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-import { PxeConfigurationEntry, PxeNodeType, PxeRowLayoutEntry } from '../types/PxeConfiguration.types';
+import { PxeValueType } from '../types/PxeConfiguration.types';
+import { PxeValue } from '../types/PxeParametricEditor.types';
 
-export const rowLayoutConfigurationEntry = (...childEntries: PxeConfigurationEntry[]): PxeRowLayoutEntry => ({
-  type: PxeNodeType.RowLayout,
-  entries: childEntries,
-});
+export const defaultValueForType = (valueType: PxeValueType): PxeValue => {
+  switch (valueType) {
+    case PxeValueType.String:
+      return '';
+    case PxeValueType.Number:
+      return 0;
+    case PxeValueType.Object:
+      return {};
+    case PxeValueType.Array:
+      return [];
+    default:
+      throw new Error(`Unsupported value type ${valueType}`);
+  }
+};

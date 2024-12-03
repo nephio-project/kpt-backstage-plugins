@@ -14,43 +14,35 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from 'react';
-import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
+import { isEqual } from 'lodash';
+import React from 'react';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
+import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
+import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { chunkByTrait } from './utils/general/chunkByTrait';
-import { PxeConfigurationEntry, PxeConfigurationEntryType } from './types/PxeConfiguration.types';
-import {
-  PxeExpandedSectionStateTuple,
-  PxeResourceChangeRequestHandler,
-  PxeResourceChunk,
-} from './types/PxeParametricEditor.types';
+import { isSectionNode } from './utils/nodePredicates';
+import { renderGroupedArray } from './utils/rendering/renderGroupedArray';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
-  readonly resourceChunk: PxeResourceChunk;
   readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
-  readonly parentExpandedSectionState?: PxeExpandedSectionStateTuple;
 };
 
-export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = ({
-  entries,
-  resourceChunk,
-  onResourceChangeRequest,
-  parentExpandedSectionState,
-}) => {
-  const groupedEntries = chunkByTrait(entries, entry => entry.type === PxeConfigurationEntryType.Section || null);
+export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
+  ({ entries, onResourceChangeRequest }) => {
+    const groupedEntries = chunkByTrait(entries, entry => isSectionNode(entry) || null);
 
-  return (
-    <Fragment>
-      {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
-        <PxeParametricEditorNode
-          key={`${groupIndex}-${itemIndex}`}
-          configurationEntry={entry}
-          resourceChunk={resourceChunk}
-          parentExpandedSectionState={parentExpandedSectionState}
-          onResourceChangeRequest={onResourceChangeRequest}
-        />
-      ))}
-    </Fragment>
-  );
-};
+    return (
+      <>
+        {renderGroupedArray(groupedEntries, (entry, groupIndex, itemIndex) => (
+          <PxeParametricEditorNode
+            key={`${groupIndex}-${itemIndex}`}
+            configurationEntry={entry}
+            onResourceChangeRequest={onResourceChangeRequest}
+          />
+        ))}
+      </>
+    );
+  },
+  isEqual,
+);

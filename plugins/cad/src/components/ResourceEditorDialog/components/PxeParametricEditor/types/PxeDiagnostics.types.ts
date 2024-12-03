@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { PxeConfigurationEntry } from './PxeConfiguration.types';
 
-import { PxeConfigurationEntry, PxeNodeType, PxeRowLayoutEntry } from '../types/PxeConfiguration.types';
-
-export const rowLayoutConfigurationEntry = (...childEntries: PxeConfigurationEntry[]): PxeRowLayoutEntry => ({
-  type: PxeNodeType.RowLayout,
-  entries: childEntries,
-});
+export type PxeDiagnosticsReporter = {
+  readonly reportRender: (entry: PxeConfigurationEntry) => void;
+};
