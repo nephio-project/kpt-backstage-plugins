@@ -19,13 +19,13 @@ import { PxeConfiguration } from './types/PxeConfiguration.types';
 import { PxeParametricEditor } from './PxeParametricEditor';
 import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
 
-type ConfiguredEditorProps = {
+export type PxeConfiguredEditorProps = {
   readonly yamlText: string;
   readonly onResourceChange: (yaml: string) => void;
 };
 
 export const createEditorFromConfiguration =
-  (configuration: PxeConfiguration, diagnosticsReporter?: PxeDiagnosticsReporter): React.FC<ConfiguredEditorProps> =>
+  (configuration: PxeConfiguration, diagnosticsReporter?: PxeDiagnosticsReporter): React.FC<PxeConfiguredEditorProps> =>
   ({ yamlText, onResourceChange }) =>
     (
       <PxeParametricEditor
