@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, makeStyles } from '@material-ui/core';
+import { get } from 'lodash';
 import React, { useState } from 'react';
 import { ResourceEditorDialogProps } from './ResourceEditorDialog';
 import { parseYaml } from './components/PxeParametricEditor/utils/yamlConversion';
-import { get } from 'lodash';
 import { YamlViewer } from '../Controls';
 import { getGroupVersionKind } from '../../utils/kubernetesResource';
 import { KubernetesResource } from '../../types/KubernetesResource';
@@ -28,14 +28,14 @@ import { NephioNetworkParametricEditor } from './components/ParametricFirstClass
 import { NephioWorkloadClusterParametricEditor } from './components/ParametricFirstClassEditors/NephioWorkloadClusterParametricEditor';
 import { NephioCapacityParametricEditor } from './components/ParametricFirstClassEditors/NephioCapacityParametricEditor';
 
+type EditorViewMode = 'gui' | 'yaml';
+
 const EDITOR_COMPONENT_BY_GVK: Record<string, React.FC<PxeConfiguredEditorProps>> = {
   'infra.nephio.org/v1alpha1/Token': NephioTokenParametricEditor,
   'infra.nephio.org/v1alpha1/Network': NephioNetworkParametricEditor,
   'infra.nephio.org/v1alpha1/WorkloadCluster': NephioWorkloadClusterParametricEditor,
   'req.nephio.org/v1alpha1/Capacity': NephioCapacityParametricEditor,
 };
-
-type EditorViewMode = 'gui' | 'yaml';
 
 export const ModernResourceEditorDialog = ({
   yaml: initialYaml,
@@ -61,26 +61,21 @@ export const ModernResourceEditorDialog = ({
     setPreviouslyOpen(open);
   }
 
-  const handleYamlChange = (newYaml: string) => {
-    setYaml(newYaml);
-  };
+  const ConfiguredEditor = EDITOR_COMPONENT_BY_GVK[gvk];
+  const classes = useStyles();
 
+  const handleYamlChange = (newYaml: string) => setYaml(newYaml);
+  const handleViewModeToggle = () => setViewMode(viewMode === 'gui' ? 'yaml' : 'gui');
   const handleCloseAndSave = () => {
     handleSaveYaml(yaml);
     handleClose();
   };
 
-  const handleViewModeToggle = () => {
-    setViewMode(viewMode === 'gui' ? 'yaml' : 'gui');
-  };
-
-  const ConfiguredEditor = EDITOR_COMPONENT_BY_GVK[gvk];
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xl">
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <div>
+        <div className={classes.editorContainer}>
           {viewMode === 'gui' ? (
             <ConfiguredEditor yamlText={yaml} onResourceChange={handleYamlChange} />
           ) : (
@@ -108,3 +103,12 @@ const dialogTitleFromResource = (resource: object) => {
   const resourceName = get(resource, 'metadata.name', '');
   return `${resourceKind} ${resourceName}`.trim() || 'Edit resource';
 };
+
+const useStyles = makeStyles({
+  editorContainer: {
+    width: '1100px',
+    height: 'calc(100vh - 480px)',
+    marginBottom: '16px',
+    overflowY: 'scroll',
+  },
+});
