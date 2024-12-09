@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  PxeConfigurationEntry,
-  PxeLayoutEntry,
-  PxeNodeType,
-  PxeSectionEntry,
-  PxeWidgetEntry,
-} from '../types/PxeConfiguration.types';
-
-export const isSectionNode = (entry: PxeConfigurationEntry): entry is PxeSectionEntry =>
-  entry.type === PxeNodeType.Section;
+import { PxeConfigurationEntry, PxeLayoutEntry, PxeNodeType, PxeWidgetEntry } from '../types/PxeConfiguration.types';
 
 export const isLayoutNode = (entry: PxeConfigurationEntry): entry is PxeLayoutEntry =>
   [PxeNodeType.RowLayout].includes(entry.type);

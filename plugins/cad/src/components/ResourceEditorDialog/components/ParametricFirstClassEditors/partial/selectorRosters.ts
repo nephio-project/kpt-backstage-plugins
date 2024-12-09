@@ -24,7 +24,7 @@ const SELECTOR_OPERATOR_OPTIONS = [
   { value: 'DoesNotExist', label: 'Does Not Exist' },
 ];
 
-const { section, rowLayout, arrayTypeRoster, objectTypeRoster, selectValue, singleLineText } = PxeConfigurationFactory;
+const { rowLayout, arrayTypeRoster, objectTypeRoster, selectValue, singleLineText } = PxeConfigurationFactory;
 
 export const selectorRosters = (pathPrefix: string) => [
   objectTypeRoster(
@@ -37,14 +37,11 @@ export const selectorRosters = (pathPrefix: string) => [
       path: `${pathPrefix}.matchExpressions`,
       item: { type: PxeValueType.Object, isRequired: true },
     },
-    section(
-      { name: 'Match expression' },
-      rowLayout(
-        singleLineText({ path: '$value.key', isRequired: true }),
-        selectValue({ path: '$value.operator', isRequired: true, options: SELECTOR_OPERATOR_OPTIONS }),
-      ),
-      // TODO Needs different value requirements for different operators.
-      arrayTypeRoster({ name: 'Values', path: '$value.values' }, singleLineText({ path: '$value', isRequired: true })),
+    rowLayout(
+      singleLineText({ path: '$value.key', isRequired: true }),
+      selectValue({ path: '$value.operator', isRequired: true, options: SELECTOR_OPERATOR_OPTIONS }),
     ),
+    // TODO Needs different value requirements for different operators.
+    arrayTypeRoster({ name: 'Values', path: '$value.values' }, singleLineText({ path: '$value', isRequired: true })),
   ),
 ];

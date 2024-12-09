@@ -23,16 +23,15 @@ export type PxeConfiguration = {
 
 // Entries
 
-export type PxeConfigurationEntry = PxeSectionEntry | PxeRowLayoutEntry | PxeWidgetEntry;
+export type PxeConfigurationEntry = PxeRowLayoutEntry | PxeWidgetEntry;
 
 export enum PxeNodeType {
-  Section = 'Section',
-  Roster = 'Roster',
-
   RowLayout = 'RowLayout',
 
   SingleLineText = 'SingleLineText',
   SelectValue = 'SelectValue',
+
+  Roster = 'Roster',
 }
 
 // Values
@@ -51,14 +50,6 @@ export type PxeValueDescriptor = {
   readonly display?: {
     readonly name?: string;
   };
-};
-
-// Section
-
-export type PxeSectionEntry = {
-  readonly type: PxeNodeType.Section;
-  readonly name: string;
-  readonly entries: readonly PxeConfigurationEntry[];
 };
 
 // Layouts

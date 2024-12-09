@@ -18,7 +18,6 @@ import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { PxeConfigurationEntry, PxeNodeType } from './types/PxeConfiguration.types';
-import { PxeSectionNode } from './nodes/PxeSectionNode';
 import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
 import { PxeRosterWidgetNode } from './nodes/widget/roster/PxeRosterWidgetNode';
 import { PxeSingleLineTextWidgetNode } from './nodes/widget/PxeSingleLineTextWidgetNode';
@@ -30,8 +29,6 @@ export type PxeParametricEditorNodeProps = {
 };
 
 const NODE_BY_TYPE_RECORD: Record<PxeNodeType, React.FC<PxeParametricEditorNodeProps>> = {
-  [PxeNodeType.Section]: PxeSectionNode,
-
   [PxeNodeType.RowLayout]: PxeRowLayoutNode,
 
   [PxeNodeType.Roster]: PxeRosterWidgetNode,

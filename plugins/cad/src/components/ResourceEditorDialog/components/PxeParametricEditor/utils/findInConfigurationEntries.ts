@@ -16,7 +16,7 @@
 
 import { isArray } from 'lodash';
 import { PxeConfigurationEntry } from '../types/PxeConfiguration.types';
-import { isLayoutNode, isSectionNode } from './nodePredicates';
+import { isLayoutNode } from './nodePredicates';
 
 type SearchOptions = {
   readonly searchInLayouts?: boolean;
@@ -26,15 +26,15 @@ type SearchOptions = {
 export const findInConfigurationEntries = (
   searchIn: PxeConfigurationEntry | readonly PxeConfigurationEntry[],
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
-  { searchInLayouts = true, searchInSections = true }: SearchOptions = {},
+  { searchInLayouts = true }: SearchOptions = {},
 ): PxeConfigurationEntry | null => {
-  const options = { searchInLayouts, searchInSections };
+  const options = { searchInLayouts };
   const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
 
   for (const entry of entries) {
     if (isSuccess(entry)) {
       return entry;
-    } else if ((isLayoutNode(entry) && searchInLayouts) || (isSectionNode(entry) && searchInSections)) {
+    } else if (isLayoutNode(entry) && searchInLayouts) {
       const foundEntry = findInConfigurationEntries(entry.entries, isSuccess, options);
       if (foundEntry) {
         return foundEntry;
@@ -47,9 +47,9 @@ export const findInConfigurationEntries = (
 export const findAllInConfigurationEntries = (
   searchIn: PxeConfigurationEntry | readonly PxeConfigurationEntry[],
   isSuccess: (entry: PxeConfigurationEntry) => boolean,
-  { searchInLayouts = true, searchInSections = true }: SearchOptions = {},
+  { searchInLayouts = true }: SearchOptions = {},
 ): PxeConfigurationEntry[] => {
-  const options = { searchInLayouts, searchInSections };
+  const options = { searchInLayouts };
   const entries: PxeConfigurationEntry[] = isArray(searchIn) ? searchIn : [searchIn];
 
   const foundEntries: PxeConfigurationEntry[] = [];
@@ -57,7 +57,7 @@ export const findAllInConfigurationEntries = (
     if (isSuccess(entry)) {
       foundEntries.push(entry);
     }
-    if ((isLayoutNode(entry) && searchInLayouts) || (isSectionNode(entry) && searchInSections)) {
+    if (isLayoutNode(entry) && searchInLayouts) {
       foundEntries.push(...findAllInConfigurationEntries(entry.entries, isSuccess, options));
     }
   }

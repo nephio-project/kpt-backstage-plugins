@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { Button, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { IconButton } from '../../../../../../Controls';
 import { PxeParametricEditorNode } from '../../../PxeParametricEditorNode';
-import { PxeConfigurationEntry, PxeNodeType, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
-import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
-import { isSectionNode } from '../../../utils/nodePredicates';
+import { PxeConfigurationEntry, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.types';
 import { useEditorStyles } from '../../../../FirstClassEditors/styles';
 
@@ -51,25 +49,14 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
           <PxeParametricEditorNode
             configurationEntry={entries[0]}
             onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
-          >
-            {isSectionNode(entries[0]) && (
-              <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleItemDeletion(itemIndex)}>
-                Delete {generateValueLabel(rosterValueDescriptor)}
-              </Button>
-            )}
-          </PxeParametricEditorNode>
+          />
         </div>
-        {entries[0].type !== PxeNodeType.Section && (
-          <div className={rosterClasses.itemActions}>
-            <IconButton
-              title="Delete"
-              className={editorClasses.iconButton}
-              onClick={() => handleItemDeletion(itemIndex)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        )}
+
+        <div className={rosterClasses.itemActions}>
+          <IconButton title="Delete" className={editorClasses.iconButton} onClick={() => handleItemDeletion(itemIndex)}>
+            <DeleteIcon />
+          </IconButton>
+        </div>
       </div>
     );
   },

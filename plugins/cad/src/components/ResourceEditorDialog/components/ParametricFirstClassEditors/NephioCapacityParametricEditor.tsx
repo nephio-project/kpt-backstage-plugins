@@ -16,24 +16,21 @@
 
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
-import { metadataEditorSection } from './partial/metadataEditorSection';
+import { metadataEditorEntries } from './partial/metadataEditorSection';
 
-const { section, singleLineText, naturalNumberText } = PxeConfigurationFactory;
+const { singleLineText, naturalNumberText } = PxeConfigurationFactory;
 
 export const NephioCapacityParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
   entries: [
-    metadataEditorSection({ isNamespacedResource: true }),
-    section(
-      { name: 'Capacity' },
-      singleLineText({ path: 'spec.maxUplinkThroughput' }),
-      singleLineText({ path: 'spec.maxDownlinkThroughput' }),
-      naturalNumberText({
-        path: 'spec.maxNFConnections',
-        name: 'max NF connections',
-      }),
-      naturalNumberText({ path: 'spec.maxSessions' }),
-      naturalNumberText({ path: 'spec.maxSubscribers' }),
-    ),
+    ...metadataEditorEntries({ isNamespacedResource: true }),
+    singleLineText({ path: 'spec.maxUplinkThroughput' }),
+    singleLineText({ path: 'spec.maxDownlinkThroughput' }),
+    naturalNumberText({
+      path: 'spec.maxNFConnections',
+      name: 'max NF connections',
+    }),
+    naturalNumberText({ path: 'spec.maxSessions' }),
+    naturalNumberText({ path: 'spec.maxSubscribers' }),
   ],
 });
