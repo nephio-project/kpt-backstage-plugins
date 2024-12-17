@@ -28,6 +28,7 @@ type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
   readonly itemIndex: number;
   readonly entries: readonly PxeConfigurationEntry[];
+  readonly railBarHeight?: number;
   readonly onResourceChangeRequestForItem: (itemIndex: number, changeRequest: PxeResourceChangeRequest) => void;
   readonly onItemDeletion: (itemIndex: number) => void;
 };
@@ -37,6 +38,7 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
     rosterValueDescriptor,
     itemIndex,
     entries,
+    railBarHeight,
     onResourceChangeRequestForItem: handleResourceChangeRequestForItem,
     onItemDeletion: handleItemDeletion,
   }) => {
@@ -56,7 +58,7 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
             <DeleteIcon />
           </IconButton>
         }
-        bottomRail
+        railBarHeight={railBarHeight}
       />
     );
   },

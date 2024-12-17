@@ -23,16 +23,17 @@ type PxeRosterBranchProps = {
   readonly className?: string;
   readonly content: React.ReactNode;
   readonly actions?: React.ReactNode;
-  readonly bottomRail: boolean;
+  readonly railBarHeight?: number;
+  readonly bottomRail?: boolean;
 };
 
 export const PxeRosterBranch: React.FC<PxeRosterBranchProps> = React.memo(
-  ({ className, content, actions, bottomRail, ...otherProps }) => {
+  ({ className, content, actions, railBarHeight, bottomRail, ...otherProps }) => {
     const classes = useStyles();
 
     return (
       <div className={`${classes.container} ${className ?? ''}`} {...otherProps}>
-        <PxeRosterItemRail className={classes.rail} bottomLeg={bottomRail} />
+        <PxeRosterItemRail className={classes.rail} barHeight={railBarHeight} bottomLeg={bottomRail} />
         <div className={classes.itemContent}>{content}</div>
         <div className={classes.itemActions}>{actions}</div>
       </div>

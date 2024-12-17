@@ -18,7 +18,7 @@ import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
 import { PxeParametricEditorNodeProps } from '../../../PxeParametricEditorNode';
-import { PxeRosterWidgetEntry, PxeValueType } from '../../../types/PxeConfiguration.types';
+import { PxeNodeType, PxeRosterWidgetEntry, PxeValueType } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest, PxeValue } from '../../../types/PxeParametricEditor.types';
 import { createResourceChunkAfterChangeRequest } from '../../../utils/createResourceChunkAfterChangeRequest';
 import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
@@ -91,6 +91,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
     const isAddButtonEnabled = rosterValueType === PxeValueType.Array || itemChunks.every(({ $key }) => $key !== '');
 
     const classes = useStyles();
+    // FIXME railBarHeight adjustment could be done better.
     return (
       <div>
         <PxeRosterHeader name={generateValueLabel(valueDescriptor)} rosterValueType={rosterValueType} />
@@ -101,12 +102,14 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
               rosterValueDescriptor={valueDescriptor}
               itemIndex={itemIndex}
               entries={itemEntries}
+              railBarHeight={itemEntries[0]?.type === PxeNodeType.Roster ? 34 : undefined}
               onResourceChangeRequestForItem={handleResourceChangeRequestForItem}
               onItemDeletion={handleItemDeletion}
             />
           </PxeResourceContext.Provider>
         ))}
         <PxeRosterBranch
+          railBarHeight={38}
           bottomRail={false}
           content={
             <Button
