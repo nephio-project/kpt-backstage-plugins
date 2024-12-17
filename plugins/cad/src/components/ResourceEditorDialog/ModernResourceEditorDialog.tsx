@@ -109,6 +109,7 @@ const useStyles = makeStyles({
     width: '1200px',
     height: 'calc(100vh - 480px)',
     marginBottom: '16px',
+    paddingRight: '50px',
     overflowY: 'auto',
   },
 });

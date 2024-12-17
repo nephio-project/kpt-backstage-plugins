@@ -109,6 +109,7 @@ function interfaceItemConfiguration() {
 
 function prefixItemConfiguration() {
   return [
+    singleLineText({ path: '$value.prefix', isRequired: true }),
     objectTypeRoster(
       { name: 'Labels', path: '$value.labels' },
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),

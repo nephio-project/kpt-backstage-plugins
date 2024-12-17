@@ -72,7 +72,8 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
 
 const useStyles = makeStyles({
   select: {
-    width: '500px',
+    width: '100%',
+    maxWidth: '500px',
     marginTop: '6px',
     '& fieldset': {
       borderColor: '#74777f',

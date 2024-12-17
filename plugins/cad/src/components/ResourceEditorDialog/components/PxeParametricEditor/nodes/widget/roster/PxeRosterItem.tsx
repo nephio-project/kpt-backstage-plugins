@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { IconButton } from '../../../../../../Controls';
@@ -55,7 +55,7 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
         }
         actions={
           <IconButton title="Delete" className={editorClasses.iconButton} onClick={() => handleItemDeletion(itemIndex)}>
-            <DeleteIcon />
+            <CloseIcon />
           </IconButton>
         }
         railBarHeight={railBarHeight}

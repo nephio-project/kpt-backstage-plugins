@@ -56,9 +56,10 @@ const useStyles = makeStyles(() => ({
     flex: '1 1 auto',
     marginTop: '18px',
   },
+  // FIXME Maybe calculate 31 from (18 + 6 + 14/2)
   itemActions: {
     position: 'absolute',
-    top: '24px',
-    right: '16px',
+    top: '31px',
+    right: '-48px',
   },
 }));

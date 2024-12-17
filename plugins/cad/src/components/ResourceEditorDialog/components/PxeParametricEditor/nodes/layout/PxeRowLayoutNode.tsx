@@ -21,14 +21,6 @@ import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
-const useStyles = makeStyles(() => ({
-  rowContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '16px',
-  },
-}));
-
 export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
   ({ configurationEntry, onResourceChangeRequest }) => {
     useDiagnostics(configurationEntry);
@@ -38,14 +30,25 @@ export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.me
     return (
       <div className={classes.rowContainer}>
         {entries.map((entry, index) => (
-          <PxeParametricEditorNode
-            key={`${index}`}
-            configurationEntry={entry}
-            onResourceChangeRequest={onResourceChangeRequest}
-          />
+          <div className={classes.rowItem} key={`${index}`}>
+            <PxeParametricEditorNode configurationEntry={entry} onResourceChangeRequest={onResourceChangeRequest} />
+          </div>
         ))}
       </div>
     );
   },
   isEqual,
 );
+
+// FIXME 500px is duplicated
+const useStyles = makeStyles(() => ({
+  rowContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '16px',
+  },
+  rowItem: {
+    flex: '1 1 0',
+    maxWidth: '500px',
+  },
+}));
