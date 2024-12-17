@@ -106,9 +106,9 @@ const dialogTitleFromResource = (resource: object) => {
 
 const useStyles = makeStyles({
   editorContainer: {
-    width: '1100px',
+    width: '1200px',
     height: 'calc(100vh - 480px)',
     marginBottom: '16px',
-    overflowY: 'scroll',
+    overflowY: 'auto',
   },
 });

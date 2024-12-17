@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { makeStyles } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { IconButton } from '../../../../../../Controls';
-import { PxeParametricEditorNode } from '../../../PxeParametricEditorNode';
 import { PxeConfigurationEntry, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.types';
 import { useEditorStyles } from '../../../../FirstClassEditors/styles';
+import { PxeParametricEditorNodeList } from '../../../PxeParametricEditorNodeList';
+import { PxeRosterBranch } from './PxeRosterBranch';
 
 type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
@@ -41,39 +41,24 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
     onItemDeletion: handleItemDeletion,
   }) => {
     const editorClasses = useEditorStyles();
-    const rosterClasses = useStyles();
 
     return (
-      <div className={rosterClasses.item} data-testid={`RosterItem_${rosterValueDescriptor.path}_${itemIndex}`}>
-        <div className={rosterClasses.itemContent}>
-          <PxeParametricEditorNode
-            configurationEntry={entries[0]}
+      <PxeRosterBranch
+        data-testid={`RosterItem_${rosterValueDescriptor.path}_${itemIndex}`}
+        content={
+          <PxeParametricEditorNodeList
+            entries={entries}
             onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
           />
-        </div>
-
-        <div className={rosterClasses.itemActions}>
+        }
+        actions={
           <IconButton title="Delete" className={editorClasses.iconButton} onClick={() => handleItemDeletion(itemIndex)}>
             <DeleteIcon />
           </IconButton>
-        </div>
-      </div>
+        }
+        bottomRail
+      />
     );
   },
   isEqual,
 );
-
-const useStyles = makeStyles(() => ({
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemContent: {
-    flex: '1 1 auto',
-  },
-  itemActions: {
-    flex: '0 0 auto',
-    paddingLeft: '16px',
-  },
-}));

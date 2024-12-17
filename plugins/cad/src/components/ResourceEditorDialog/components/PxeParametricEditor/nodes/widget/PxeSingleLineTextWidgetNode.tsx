@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TextField } from '@material-ui/core';
+import { makeStyles, TextField } from '@material-ui/core';
 import React from 'react';
 import { PxeSingleLineTextWidgetEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
@@ -31,9 +31,11 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
       valueDescriptors: [valueDescriptor],
     } = configurationEntry as PxeSingleLineTextWidgetEntry;
 
+    const classes = useStyles();
     return (
       <TextField
         data-testid={`TextField_${valueDescriptor.path}`}
+        className={classes.textField}
         label={generateValueLabel(valueDescriptor)}
         variant="outlined"
         value={currentValue ?? ''}
@@ -43,8 +45,17 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
             newValue: textFilter(e.target.value),
           });
         }}
-        fullWidth
       />
     );
   },
 );
+
+const useStyles = makeStyles({
+  textField: {
+    width: '500px',
+    marginTop: '6px',
+    '& fieldset': {
+      borderColor: '#74777f', // FIXME extract color
+    },
+  },
+});

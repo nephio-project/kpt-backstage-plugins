@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import { Select } from '../../../../../Controls';
+import { FormControl, InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core';
+import { nanoid } from 'nanoid';
+import React, { useRef } from 'react';
 import { PxeSelectValueWidgetEntry } from '../../types/PxeConfiguration.types';
 import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
+import { PxeValue } from '../../types/PxeParametricEditor.types';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
 
@@ -28,27 +30,52 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
   ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
 
+    const idRef = useRef(`select-value-${nanoid()}`);
+
     const widgetEntry = configurationEntry as PxeSelectValueWidgetEntry;
     const [valueDescriptor] = widgetEntry.valueDescriptors;
 
+    const selectLabel = generateValueLabel(valueDescriptor);
     const selectItems = widgetEntry.options.map(({ value, label }) => ({
       value: value !== undefined ? value : DEFAULT_VALUE,
       label,
     }));
 
+    const classes = useStyles();
+
     return (
-      <Select
-        data-testid={`Select_${valueDescriptor.path}`}
-        label={generateValueLabel(valueDescriptor)}
-        items={selectItems}
-        selected={(currentValue ?? DEFAULT_VALUE) as string}
-        onChange={value => {
-          onResourceChangeRequest({
-            valueDescriptor,
-            newValue: value !== DEFAULT_VALUE ? value : undefined,
-          });
-        }}
-      />
+      <FormControl variant="outlined" className={classes.select}>
+        <InputLabel id={`select-value-label-${idRef.current}`}>{selectLabel}</InputLabel>
+        <Select
+          data-testid={`Select_${valueDescriptor.path}`}
+          value={(currentValue ?? DEFAULT_VALUE) as string}
+          label={selectLabel}
+          labelId={`select-value-label-${idRef.current}`}
+          variant="outlined"
+          onChange={({ target: { value } }) => {
+            onResourceChangeRequest({
+              valueDescriptor,
+              newValue: value !== DEFAULT_VALUE ? (value as PxeValue) : undefined,
+            });
+          }}
+        >
+          {selectItems.map(item => (
+            <MenuItem key={item.value} value={item.value}>
+              {item.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     );
   },
 );
+
+const useStyles = makeStyles({
+  select: {
+    width: '500px',
+    marginTop: '6px',
+    '& fieldset': {
+      borderColor: '#74777f',
+    },
+  },
+});

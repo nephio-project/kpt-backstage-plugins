@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Button } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useState } from 'react';
 import { PxeParametricEditorNodeProps } from '../../../PxeParametricEditorNode';
@@ -28,6 +28,8 @@ import { PxeResourceContext } from '../../../PxeResourceContext';
 import { useDiagnostics } from '../../../PxeDiagnosticsContext';
 import { withCurrentValues } from '../../../utils/rendering/withCurrentValues';
 import { PxeRosterItem } from './PxeRosterItem';
+import { PxeRosterHeader } from './PxeRosterHeader';
+import { PxeRosterBranch } from './PxeRosterBranch';
 
 type RosterItemResourceChunk = {
   readonly $key: string;
@@ -88,38 +90,39 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
 
     const isAddButtonEnabled = rosterValueType === PxeValueType.Array || itemChunks.every(({ $key }) => $key !== '');
 
-    if (itemEntries.length === 0) {
-      return null;
-    } else if (itemEntries.length > 1) {
-      // TODO With proper styling this should be actually possible. Reconsider handling this.
-      throw new Error('Roster Widget does not support multiple configuration entries per item.');
-    } else {
-      return (
-        <>
-          {itemChunks.map((itemChunk, itemIndex) => (
-            <PxeResourceContext.Provider value={itemChunk} key={itemIndex}>
-              <PxeRosterItem
-                key={itemIndex}
-                rosterValueDescriptor={valueDescriptor}
-                itemIndex={itemIndex}
-                entries={itemEntries}
-                onResourceChangeRequestForItem={handleResourceChangeRequestForItem}
-                onItemDeletion={handleItemDeletion}
-              />
-            </PxeResourceContext.Provider>
-          ))}
-          <Button
-            data-testid={`RosterAddButton_${valueDescriptor.path}`}
-            variant="outlined"
-            startIcon={<AddIcon />}
-            disabled={!isAddButtonEnabled}
-            onClick={handleItemAddition}
-          >
-            Add {generateValueLabel(valueDescriptor)}
-          </Button>
-        </>
-      );
-    }
+    const classes = useStyles();
+    return (
+      <div>
+        <PxeRosterHeader name={generateValueLabel(valueDescriptor)} rosterValueType={rosterValueType} />
+        {itemChunks.map((itemChunk, itemIndex) => (
+          <PxeResourceContext.Provider value={itemChunk} key={itemIndex}>
+            <PxeRosterItem
+              key={itemIndex}
+              rosterValueDescriptor={valueDescriptor}
+              itemIndex={itemIndex}
+              entries={itemEntries}
+              onResourceChangeRequestForItem={handleResourceChangeRequestForItem}
+              onItemDeletion={handleItemDeletion}
+            />
+          </PxeResourceContext.Provider>
+        ))}
+        <PxeRosterBranch
+          bottomRail={false}
+          content={
+            <Button
+              data-testid={`RosterAddButton_${valueDescriptor.path}`}
+              className={classes.addButton}
+              variant="outlined"
+              startIcon={<AddIcon />}
+              disabled={!isAddButtonEnabled}
+              onClick={handleItemAddition}
+            >
+              Add {generateValueLabel(valueDescriptor)}
+            </Button>
+          }
+        />
+      </div>
+    );
   },
 );
 
@@ -136,3 +139,13 @@ const valueFromItemChunks = (
   rosterType === PxeValueType.Object
     ? Object.fromEntries(itemChunks.map(itemChunk => [itemChunk.$key, itemChunk.$value]))
     : itemChunks.map(itemChunk => itemChunk.$value);
+
+const useStyles = makeStyles(() => ({
+  addButton: {
+    height: '40px',
+    borderRadius: '20px',
+    borderColor: '#74777f',
+    color: '#3d5f90',
+    textTransform: 'none',
+  },
+}));

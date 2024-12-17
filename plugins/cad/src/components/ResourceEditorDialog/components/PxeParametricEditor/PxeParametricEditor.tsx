@@ -16,7 +16,6 @@
 
 import { pick } from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
-import { useEditorStyles } from '../FirstClassEditors/styles';
 import { PxeConfiguration } from './types/PxeConfiguration.types';
 import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
@@ -57,17 +56,13 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
     [],
   );
 
-  const classes = useEditorStyles();
-
   return (
-    <div className={classes.root}>
-      <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
-        <PxeExpandedSectionContext.Provider value={rootLevelExpandedSectionStateTuple}>
-          <PxeResourceContext.Provider value={resource}>
-            <PxeParametricEditorNodeList entries={entries} onResourceChangeRequest={handleResourceChangeRequest} />
-          </PxeResourceContext.Provider>
-        </PxeExpandedSectionContext.Provider>
-      </PxeDiagnosticsContext.Provider>
-    </div>
+    <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
+      <PxeExpandedSectionContext.Provider value={rootLevelExpandedSectionStateTuple}>
+        <PxeResourceContext.Provider value={resource}>
+          <PxeParametricEditorNodeList entries={entries} onResourceChangeRequest={handleResourceChangeRequest} />
+        </PxeResourceContext.Provider>
+      </PxeExpandedSectionContext.Provider>
+    </PxeDiagnosticsContext.Provider>
   );
 };

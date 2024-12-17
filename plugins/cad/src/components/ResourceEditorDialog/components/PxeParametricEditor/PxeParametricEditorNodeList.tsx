@@ -19,6 +19,7 @@ import React from 'react';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
 import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
+import { makeStyles } from '@material-ui/core';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
@@ -27,8 +28,9 @@ type PxeParametricEditorNodeListProps = {
 
 export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
   ({ entries, onResourceChangeRequest }) => {
+    const classes = useClasses();
     return (
-      <>
+      <div className={classes.nodesContainer}>
         {entries.map((entry, index) => (
           <PxeParametricEditorNode
             key={`${index}`}
@@ -36,8 +38,17 @@ export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListPr
             onResourceChangeRequest={onResourceChangeRequest}
           />
         ))}
-      </>
+      </div>
     );
   },
   isEqual,
 );
+
+const useClasses = makeStyles({
+  nodesContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    gap: '18px',
+  },
+});
