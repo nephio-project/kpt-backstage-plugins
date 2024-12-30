@@ -16,7 +16,7 @@
 
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
-import { metadataEditorEntries } from './partial/metadataEditorSection';
+import { metadataEditorTab } from './partial/metadataEditorSection';
 import { PxeValueType } from '../PxeParametricEditor/types/PxeConfiguration.types';
 import { selectorRosters } from './partial/selectorRosters';
 
@@ -34,27 +34,37 @@ const INTERFACE_ATTACHMENT_TYPE_OPTIONS = [
 
 export const NephioNetworkParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
-  entries: [
-    ...metadataEditorEntries({ isNamespacedResource: true }),
-    singleLineText({ path: 'spec.topology', isRequired: true }),
-    arrayTypeRoster(
-      {
-        name: 'Routing tables',
-        path: 'spec.routingTables',
-        isRequired: false,
-        item: { type: PxeValueType.Object, isRequired: true },
-      },
-      ...routingTableItemConfiguration(),
-    ),
-    arrayTypeRoster(
-      {
-        name: 'Bridge domains',
-        path: 'spec.bridgeDomains',
-        isRequired: false,
-        item: { type: PxeValueType.Object, isRequired: true },
-      },
-      ...bridgeDomainItemConfiguration(),
-    ),
+  tabs: [
+    metadataEditorTab({ isNamespacedResource: true }),
+    { name: 'Topology', entries: [singleLineText({ path: 'spec.topology', isRequired: true })] },
+    {
+      name: 'Routing tables',
+      entries: [
+        arrayTypeRoster(
+          {
+            name: 'Routing tables',
+            path: 'spec.routingTables',
+            isRequired: false,
+            item: { type: PxeValueType.Object, isRequired: true },
+          },
+          ...routingTableItemConfiguration(),
+        ),
+      ],
+    },
+    {
+      name: 'Bridge domains',
+      entries: [
+        arrayTypeRoster(
+          {
+            name: 'Bridge domains',
+            path: 'spec.bridgeDomains',
+            isRequired: false,
+            item: { type: PxeValueType.Object, isRequired: true },
+          },
+          ...bridgeDomainItemConfiguration(),
+        ),
+      ],
+    },
   ],
 });
 

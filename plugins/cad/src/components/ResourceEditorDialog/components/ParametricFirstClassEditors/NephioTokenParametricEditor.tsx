@@ -17,7 +17,7 @@
 import { PxeValueType } from '../PxeParametricEditor/types/PxeConfiguration.types';
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
-import { metadataEditorEntries } from './partial/metadataEditorSection';
+import { metadataEditorTab } from './partial/metadataEditorSection';
 
 const { selectValue } = PxeConfigurationFactory;
 
@@ -29,13 +29,18 @@ const DELETION_POLICY_OPTIONS = [
 
 export const NephioTokenParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
-  entries: [
-    ...metadataEditorEntries({ isNamespacedResource: true }),
-    selectValue({
-      path: 'spec.lifecycle.deletionPolicy',
-      type: PxeValueType.String,
-      isRequired: false,
-      options: DELETION_POLICY_OPTIONS,
-    }),
+  tabs: [
+    metadataEditorTab({ isNamespacedResource: true }),
+    {
+      name: 'Token',
+      entries: [
+        selectValue({
+          path: 'spec.lifecycle.deletionPolicy',
+          type: PxeValueType.String,
+          isRequired: false,
+          options: DELETION_POLICY_OPTIONS,
+        }),
+      ],
+    },
   ],
 });

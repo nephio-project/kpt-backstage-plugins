@@ -15,15 +15,16 @@
  */
 
 import { makeStyles, TextField } from '@material-ui/core';
-import React from 'react';
+import React, { useContext } from 'react';
 import { PxeSingleLineTextWidgetEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
+import { PxeResourceChangeRequestContext } from '../../PxeResourceChangeRequestContext';
 
 export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
-  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
+  ({ configurationEntry, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
 
     const {
@@ -31,7 +32,9 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
       valueDescriptors: [valueDescriptor],
     } = configurationEntry as PxeSingleLineTextWidgetEntry;
 
+    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
     const classes = useStyles();
+
     return (
       <TextField
         data-testid={`TextField_${valueDescriptor.path}`}

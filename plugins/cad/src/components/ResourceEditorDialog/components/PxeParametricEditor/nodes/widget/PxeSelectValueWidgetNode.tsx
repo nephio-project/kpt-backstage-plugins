@@ -16,18 +16,19 @@
 
 import { FormControl, InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core';
 import { nanoid } from 'nanoid';
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { PxeSelectValueWidgetEntry } from '../../types/PxeConfiguration.types';
 import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
+import { PxeValue } from '../../types/PxeParametricEditor.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
-import { PxeValue } from '../../types/PxeParametricEditor.types';
+import { PxeResourceChangeRequestContext } from '../../PxeResourceChangeRequestContext';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
 
 export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
-  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
+  ({ configurationEntry, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
 
     const idRef = useRef(`select-value-${nanoid()}`);
@@ -41,6 +42,7 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
       label,
     }));
 
+    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
     const classes = useStyles();
 
     return (

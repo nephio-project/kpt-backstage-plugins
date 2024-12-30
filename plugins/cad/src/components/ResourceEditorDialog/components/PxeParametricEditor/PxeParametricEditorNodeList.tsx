@@ -14,35 +14,26 @@
  * limitations under the License.
  */
 
+import { makeStyles } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import React from 'react';
-import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
-import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
-import { makeStyles } from '@material-ui/core';
+import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
-  readonly onResourceChangeRequest: PxeResourceChangeRequestHandler;
 };
 
-export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
-  ({ entries, onResourceChangeRequest }) => {
-    const classes = useClasses();
-    return (
-      <div className={classes.nodesContainer}>
-        {entries.map((entry, index) => (
-          <PxeParametricEditorNode
-            key={`${index}`}
-            configurationEntry={entry}
-            onResourceChangeRequest={onResourceChangeRequest}
-          />
-        ))}
-      </div>
-    );
-  },
-  isEqual,
-);
+export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(({ entries }) => {
+  const classes = useClasses();
+  return (
+    <div className={classes.nodesContainer}>
+      {entries.map((entry, index) => (
+        <PxeParametricEditorNode key={`${index}`} configurationEntry={entry} />
+      ))}
+    </div>
+  );
+}, isEqual);
 
 const useClasses = makeStyles({
   nodesContainer: {

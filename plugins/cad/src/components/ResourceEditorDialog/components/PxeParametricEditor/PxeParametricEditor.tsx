@@ -21,10 +21,10 @@ import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.typ
 import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
-import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
 import { PxeDiagnosticsContext } from './PxeDiagnosticsContext';
 import { PxeResourceContext } from './PxeResourceContext';
-import { PxeExpandedSectionContext, useNewExpandedSectionState } from './PxeExpandedSectionContext';
+import { PxeResourceChangeRequestContext } from './PxeResourceChangeRequestContext';
+import { PxeParametricEditorTabs } from './PxeParametricEditorTabs';
 
 export type PxeParametricEditorProps = {
   readonly configuration: PxeConfiguration;
@@ -34,7 +34,7 @@ export type PxeParametricEditorProps = {
 };
 
 export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
-  configuration: { topLevelProperties, entries },
+  configuration: { topLevelProperties, tabs },
   yamlText,
   onResourceChange,
   __diagnosticsReporter,
@@ -48,8 +48,6 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
     onResourceChange(stringifyYaml({ ...initialYamlObject.current, ...resource }));
   }
 
-  const rootLevelExpandedSectionStateTuple = useNewExpandedSectionState();
-
   const handleResourceChangeRequest: PxeResourceChangeRequestHandler = useCallback(
     (changeRequest): void =>
       setResource(prevResource => createResourceChunkAfterChangeRequest(prevResource, changeRequest)),
@@ -58,11 +56,11 @@ export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
 
   return (
     <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
-      <PxeExpandedSectionContext.Provider value={rootLevelExpandedSectionStateTuple}>
+      <PxeResourceChangeRequestContext.Provider value={handleResourceChangeRequest}>
         <PxeResourceContext.Provider value={resource}>
-          <PxeParametricEditorNodeList entries={entries} onResourceChangeRequest={handleResourceChangeRequest} />
+          <PxeParametricEditorTabs tabs={tabs} />
         </PxeResourceContext.Provider>
-      </PxeExpandedSectionContext.Provider>
+      </PxeResourceChangeRequestContext.Provider>
     </PxeDiagnosticsContext.Provider>
   );
 };

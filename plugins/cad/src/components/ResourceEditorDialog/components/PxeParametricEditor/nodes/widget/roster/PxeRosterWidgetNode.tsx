@@ -16,7 +16,7 @@
 
 import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { PxeParametricEditorNodeProps } from '../../../PxeParametricEditorNode';
 import { PxeNodeType, PxeRosterWidgetEntry, PxeValueType } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest, PxeValue } from '../../../types/PxeParametricEditor.types';
@@ -30,6 +30,7 @@ import { withCurrentValues } from '../../../utils/rendering/withCurrentValues';
 import { PxeRosterItem } from './PxeRosterItem';
 import { PxeRosterHeader } from './PxeRosterHeader';
 import { PxeRosterBranch } from './PxeRosterBranch';
+import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
 
 type RosterItemResourceChunk = {
   readonly $key: string;
@@ -40,7 +41,7 @@ type RosterValueType = PxeValueType.Object | PxeValueType.Array;
 
 // TODO Rework roster - instead of being index-based use temp ids for items.
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
-  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
+  ({ configurationEntry, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
 
     const {
@@ -90,7 +91,9 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
 
     const isAddButtonEnabled = rosterValueType === PxeValueType.Array || itemChunks.every(({ $key }) => $key !== '');
 
+    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
     const classes = useStyles();
+
     // FIXME railBarHeight adjustment could be done better.
     return (
       <div>

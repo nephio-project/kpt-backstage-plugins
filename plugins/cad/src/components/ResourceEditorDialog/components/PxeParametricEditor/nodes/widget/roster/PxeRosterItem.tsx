@@ -23,6 +23,7 @@ import { PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.typ
 import { useEditorStyles } from '../../../../FirstClassEditors/styles';
 import { PxeParametricEditorNodeList } from '../../../PxeParametricEditorNodeList';
 import { PxeRosterBranch } from './PxeRosterBranch';
+import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
 
 type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
@@ -48,10 +49,11 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
       <PxeRosterBranch
         data-testid={`RosterItem_${rosterValueDescriptor.path}_${itemIndex}`}
         content={
-          <PxeParametricEditorNodeList
-            entries={entries}
-            onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
-          />
+          <PxeResourceChangeRequestContext.Provider
+            value={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
+          >
+            <PxeParametricEditorNodeList entries={entries} />
+          </PxeResourceChangeRequestContext.Provider>
         }
         actions={
           <IconButton title="Delete" className={editorClasses.iconButton} onClick={() => handleItemDeletion(itemIndex)}>
