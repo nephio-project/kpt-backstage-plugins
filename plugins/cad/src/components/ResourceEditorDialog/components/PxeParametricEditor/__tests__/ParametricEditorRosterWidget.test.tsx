@@ -29,23 +29,28 @@ const { arrayTypeRoster, objectTypeRoster, rowLayout, singleLineText } = PxeConf
 
 const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['spec'],
-  entries: [
-    arrayTypeRoster(
-      { path: 'spec.arr.string.opt', name: 'Test' },
-      singleLineText({ path: '$value', isRequired: false }),
-    ),
-    arrayTypeRoster(
-      { path: 'spec.arr.string.req', name: 'Test' },
-      singleLineText({ path: '$value', isRequired: true }),
-    ),
-    objectTypeRoster(
-      { path: 'spec.obj.string.opt', name: 'Test' },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: false })),
-    ),
-    objectTypeRoster(
-      { path: 'spec.obj.string.req', name: 'Test' },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
-    ),
+  tabs: [
+    {
+      name: 'Test',
+      entries: [
+        arrayTypeRoster(
+          { path: 'spec.arr.string.opt', name: 'Test' },
+          singleLineText({ path: '$value', isRequired: false }),
+        ),
+        arrayTypeRoster(
+          { path: 'spec.arr.string.req', name: 'Test' },
+          singleLineText({ path: '$value', isRequired: true }),
+        ),
+        objectTypeRoster(
+          { path: 'spec.obj.string.opt', name: 'Test' },
+          rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: false })),
+        ),
+        objectTypeRoster(
+          { path: 'spec.obj.string.req', name: 'Test' },
+          rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
+        ),
+      ],
+    },
   ],
 };
 

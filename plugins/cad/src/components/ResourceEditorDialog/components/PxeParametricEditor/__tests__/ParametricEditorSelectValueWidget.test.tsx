@@ -40,12 +40,22 @@ const OPTIONS_N_OPT: readonly PxeValueOption[] = [...OPTIONS_N, { value: undefin
 
 const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['spec'],
-  entries: [
-    selectValue({ path: 'spec.selectOptional', options: OPTIONS_S_OPT }),
-    selectValue({ path: 'spec.selectRequired', options: OPTIONS_S, isRequired: true }),
-    selectValue({ path: 'spec.selectNumberOptional', options: OPTIONS_N_OPT, type: PxeValueType.Number }),
-    selectValue({ path: 'spec.selectNumberRequired', options: OPTIONS_N, type: PxeValueType.Number, isRequired: true }),
-    selectValue({ path: 'spec.selectCustomName', options: OPTIONS_S, name: 'fizz buzz' }),
+  tabs: [
+    {
+      name: 'Test',
+      entries: [
+        selectValue({ path: 'spec.selectOptional', options: OPTIONS_S_OPT }),
+        selectValue({ path: 'spec.selectRequired', options: OPTIONS_S, isRequired: true }),
+        selectValue({ path: 'spec.selectNumberOptional', options: OPTIONS_N_OPT, type: PxeValueType.Number }),
+        selectValue({
+          path: 'spec.selectNumberRequired',
+          options: OPTIONS_N,
+          type: PxeValueType.Number,
+          isRequired: true,
+        }),
+        selectValue({ path: 'spec.selectCustomName', options: OPTIONS_S, name: 'fizz buzz' }),
+      ],
+    },
   ],
 };
 

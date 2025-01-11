@@ -46,10 +46,9 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
     const classes = useStyles();
 
     return (
-      <FormControl variant="outlined" className={classes.select}>
+      <FormControl data-testid={`Select_${valueDescriptor.path}`} variant="outlined" className={classes.select}>
         <InputLabel id={`select-value-label-${idRef.current}`}>{selectLabel}</InputLabel>
         <Select
-          data-testid={`Select_${valueDescriptor.path}`}
           value={(currentValue ?? DEFAULT_VALUE) as string}
           label={selectLabel}
           labelId={`select-value-label-${idRef.current}`}
