@@ -52,7 +52,7 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
           <PxeResourceChangeRequestContext.Provider
             value={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
           >
-            <PxeParametricEditorNodeList entries={entries} />
+            <PxeParametricEditorNodeList entries={entries} isInRosterItem />
           </PxeResourceChangeRequestContext.Provider>
         }
         actions={

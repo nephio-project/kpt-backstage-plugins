@@ -17,6 +17,7 @@
 import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeConfigurationEntry, PxeNodeType } from './types/PxeConfiguration.types';
+import { PxeNodeListPositionInfo } from './types/PxeParametricEditor.types';
 import { PxeRowLayoutNode } from './nodes/layout/PxeRowLayoutNode';
 import { PxeRosterWidgetNode } from './nodes/widget/roster/PxeRosterWidgetNode';
 import { PxeSingleLineTextWidgetNode } from './nodes/widget/PxeSingleLineTextWidgetNode';
@@ -24,6 +25,7 @@ import { PxeSelectValueWidgetNode } from './nodes/widget/PxeSelectValueWidgetNod
 
 export type PxeParametricEditorNodeProps = {
   readonly configurationEntry: PxeConfigurationEntry;
+  readonly listPositionInfo: PxeNodeListPositionInfo;
 };
 
 const NODE_BY_TYPE_RECORD: Record<PxeNodeType, React.FC<PxeParametricEditorNodeProps>> = {

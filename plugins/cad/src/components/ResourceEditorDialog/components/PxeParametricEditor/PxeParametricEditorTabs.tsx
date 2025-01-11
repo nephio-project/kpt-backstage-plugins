@@ -40,7 +40,7 @@ export const PxeParametricEditorTabs: React.FC<PxeParametricEditorTabsProps> = (
       </Tabs>
       {tabs.map(({ entries }, index) => (
         <div key={index} hidden={value !== index}>
-          <PxeParametricEditorNodeList entries={entries} />
+          <PxeParametricEditorNodeList entries={entries} isInRosterItem={false} />
         </div>
       ))}
     </div>

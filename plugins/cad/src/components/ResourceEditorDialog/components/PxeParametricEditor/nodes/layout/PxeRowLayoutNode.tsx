@@ -21,22 +21,25 @@ import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
 
-export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(({ configurationEntry }) => {
-  useDiagnostics(configurationEntry);
-  const { entries } = configurationEntry as PxeRowLayoutEntry;
+export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
+  ({ configurationEntry, listPositionInfo }) => {
+    useDiagnostics(configurationEntry);
+    const { entries } = configurationEntry as PxeRowLayoutEntry;
 
-  const classes = useStyles();
+    const classes = useStyles();
 
-  return (
-    <div className={classes.rowContainer}>
-      {entries.map((entry, index) => (
-        <div className={classes.rowItem} key={`${index}`}>
-          <PxeParametricEditorNode configurationEntry={entry} />
-        </div>
-      ))}
-    </div>
-  );
-}, isEqual);
+    return (
+      <div className={classes.rowContainer}>
+        {entries.map((entry, index) => (
+          <div className={classes.rowItem} key={`${index}`}>
+            <PxeParametricEditorNode configurationEntry={entry} listPositionInfo={listPositionInfo} />
+          </div>
+        ))}
+      </div>
+    );
+  },
+  isEqual,
+);
 
 // FIXME 500px is duplicated
 const useStyles = makeStyles(() => ({

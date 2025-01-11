@@ -58,6 +58,10 @@ const useStyles = makeStyles({
     width: '100%',
     maxWidth: '500px',
     marginTop: '6px',
+    backgroundColor: '#ffffff',
+    '& label': {
+      backgroundColor: '#ffffff',
+    },
     '& fieldset': {
       borderColor: '#74777f', // FIXME extract color
     },

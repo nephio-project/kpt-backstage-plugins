@@ -22,24 +22,49 @@ import { PxeParametricEditorNode } from './PxeParametricEditorNode';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
+  readonly isInRosterItem: boolean;
 };
 
-export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(({ entries }) => {
-  const classes = useClasses();
-  return (
-    <div className={classes.nodesContainer}>
-      {entries.map((entry, index) => (
-        <PxeParametricEditorNode key={`${index}`} configurationEntry={entry} />
-      ))}
-    </div>
-  );
-}, isEqual);
+export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
+  ({ entries, isInRosterItem }) => {
+    const classes = useClasses();
+    return (
+      <div className={classes.nodesContainer}>
+        {entries.map((entry, index) => {
+          const isFirstNode = index === 0;
+          const isLastNode = index === entries.length - 1;
+          return [
+            <PxeParametricEditorNode
+              key={`node-${index}`}
+              configurationEntry={entry}
+              listPositionInfo={{ isInRosterItem, isFirstNode, isLastNode }}
+            />,
+            !isLastNode && (
+              <div className={classes.nodeSeparator} key={`separator-${index}`}>
+                <div className={isInRosterItem ? classes.nodeSeparatorRail : ''} />
+              </div>
+            ),
+          ];
+        })}
+      </div>
+    );
+  },
+  isEqual,
+);
 
 const useClasses = makeStyles({
   nodesContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
-    gap: '18px',
+  },
+  nodeSeparator: {
+    height: '18px',
+    overflow: 'visible',
+  },
+  nodeSeparatorRail: {
+    height: '32px',
+    width: '17px',
+    borderRight: 'solid 1px #c4c6Cf',
   },
 });

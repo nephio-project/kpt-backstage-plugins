@@ -41,8 +41,9 @@ type RosterValueType = PxeValueType.Object | PxeValueType.Array;
 
 // TODO Rework roster - instead of being index-based use temp ids for items.
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
-  ({ configurationEntry, currentValues: [currentValue] }) => {
+  ({ configurationEntry, listPositionInfo: { isInRosterItem, isLastNode }, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
+    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
 
     const {
       valueDescriptors: [valueDescriptor],
@@ -91,7 +92,6 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
 
     const isAddButtonEnabled = rosterValueType === PxeValueType.Array || itemChunks.every(({ $key }) => $key !== '');
 
-    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
     const classes = useStyles();
 
     // FIXME railBarHeight adjustment could be done better.
@@ -113,7 +113,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
         ))}
         <PxeRosterBranch
           railBarHeight={38}
-          bottomRail={false}
+          bottomRail={isInRosterItem && !isLastNode}
           content={
             <Button
               data-testid={`RosterAddButton_${valueDescriptor.path}`}

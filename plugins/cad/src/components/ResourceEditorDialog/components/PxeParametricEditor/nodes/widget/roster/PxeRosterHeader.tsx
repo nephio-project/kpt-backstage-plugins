@@ -45,6 +45,7 @@ const useStyles = makeStyles(() => ({
     padding: '0 12px',
     borderRadius: '16px',
     border: '1px solid #c4c6Cf',
+    backgroundColor: '#ffffff',
   },
   nameLabel: {
     fontWeight: 700,
