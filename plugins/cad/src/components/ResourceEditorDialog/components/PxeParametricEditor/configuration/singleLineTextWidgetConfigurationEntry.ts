@@ -20,7 +20,7 @@ import { identityTextFilter, naturalNumberTextFilter, TextFilter } from '../vali
 export const singleLineTextWidgetConfigurationEntry = ({
   path,
   type = PxeValueType.String,
-  isRequired = false,
+  isRequired,
   name,
   textFilter = identityTextFilter,
 }: {
@@ -29,11 +29,17 @@ export const singleLineTextWidgetConfigurationEntry = ({
   isRequired?: boolean;
   name?: string;
   textFilter?: TextFilter;
-}): PxeSingleLineTextWidgetEntry => ({
-  type: PxeNodeType.SingleLineText,
-  valueDescriptors: [{ path, type, isRequired, display: { name } }],
-  textFilter,
-});
+}): PxeSingleLineTextWidgetEntry => {
+  if (isRequired !== undefined && path === '$key') {
+    throw new Error('Roster item "$key" entry is always required. Explicit value is prohibited.');
+  }
+
+  return {
+    type: PxeNodeType.SingleLineText,
+    valueDescriptors: [{ path, type, isRequired: path === '$key' ? true : isRequired ?? false, display: { name } }],
+    textFilter,
+  };
+};
 
 export const naturalNumberTextWidgetConfigurationEntry = ({
   path,

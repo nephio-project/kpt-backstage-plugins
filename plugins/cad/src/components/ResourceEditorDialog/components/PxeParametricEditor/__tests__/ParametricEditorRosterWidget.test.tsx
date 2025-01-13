@@ -157,6 +157,15 @@ describe('ParametricEditorRosterWidget', () => {
         expect(roster).toEqual({ foofizz: 'bar' });
       });
 
+      it('should clear item key on text input clear', async () => {
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$key');
+
+        await userEvent.clear(keyTextInput);
+
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+        expect(roster).toEqual({ '': 'bar' });
+      });
+
       it('should change item value on text input', async () => {
         const textInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$value');
 
@@ -218,6 +227,15 @@ describe('ParametricEditorRosterWidget', () => {
 
         const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
         expect(roster).toEqual({ foofizz: 'bar' });
+      });
+
+      it('should clear item key on text input clear', async () => {
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$key');
+
+        await userEvent.clear(keyTextInput);
+
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+        expect(roster).toEqual({ '': 'bar' });
       });
 
       it('should change item value on text input', async () => {
