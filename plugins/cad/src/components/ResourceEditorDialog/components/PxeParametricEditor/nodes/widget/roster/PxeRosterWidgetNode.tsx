@@ -122,7 +122,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
               disabled={!isAddButtonEnabled}
               onClick={handleItemAddition}
             >
-              Add {generateValueLabel(valueDescriptor)}
+              Add {generateValueLabel(valueDescriptor, { singularize: true })}
             </Button>
           }
         />

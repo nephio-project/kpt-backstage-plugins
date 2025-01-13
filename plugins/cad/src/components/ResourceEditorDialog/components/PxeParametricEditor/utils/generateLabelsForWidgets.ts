@@ -15,18 +15,21 @@
  */
 
 import * as changeCase from 'change-case';
+import { identity } from 'lodash';
+import pluralize from 'pluralize';
 import { PxeValueDescriptor } from '../types/PxeConfiguration.types';
-import { upperCaseFirstLetter } from './general/stringCasing';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercase: boolean = true): string => {
-  if (valueDescriptor.display?.name) {
-    return uppercase ? upperCaseFirstLetter(valueDescriptor.display.name) : valueDescriptor.display.name;
-  } else {
-    const pathSegments = valueDescriptor.path.split('.');
-    return (uppercase ? changeCase.sentenceCase : changeCase.noCase)(
-      pathSegments[pathSegments.length - 1] ?? FALLBACK_DEFAULT_VALUE_NAME,
-    );
-  }
+export const generateValueLabel = (
+  valueDescriptor: PxeValueDescriptor,
+  { singularize = false }: { lowercase?: boolean; singularize?: boolean } = {},
+): string => {
+  const pathSegments = valueDescriptor.path.split('.');
+  const rawLabel =
+    valueDescriptor.display?.name ??
+    changeCase.sentenceCase(pathSegments[pathSegments.length - 1] ?? FALLBACK_DEFAULT_VALUE_NAME);
+
+  const pluralityFunction = singularize ? pluralize.singular : identity<string>;
+  return pluralityFunction(rawLabel) ?? rawLabel;
 };

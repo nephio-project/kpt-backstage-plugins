@@ -25,6 +25,7 @@ import { PxeParametricEditorNodeList } from '../../../PxeParametricEditorNodeLis
 import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
 import { PXE_RAIL_BAR_HEIGHT_ROSTER_ITEM } from '../../../PxeSharedStyles';
 import { PxeRosterBranch } from './PxeRosterBranch';
+import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
 
 type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
@@ -57,7 +58,11 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
           </PxeResourceChangeRequestContext.Provider>
         }
         actions={
-          <IconButton title="Delete" className={editorClasses.iconButton} onClick={() => handleItemDeletion(itemIndex)}>
+          <IconButton
+            title={`Delete ${generateValueLabel(rosterValueDescriptor, { singularize: true })}`}
+            className={editorClasses.iconButton}
+            onClick={() => handleItemDeletion(itemIndex)}
+          >
             <CloseIcon />
           </IconButton>
         }
