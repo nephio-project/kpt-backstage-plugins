@@ -22,7 +22,7 @@ import { defaultValueForType } from './defaultValueForType';
 export const createResourceChunkAfterChangeRequest = (
   resourceChunk: PxeResourceChunk,
   changeRequest: PxeResourceChangeRequest,
-) => {
+): PxeResourceChunk => {
   const { valueDescriptor, newValue } = changeRequest;
   const { isRequired, path } = valueDescriptor;
 

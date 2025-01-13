@@ -48,7 +48,7 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
       label,
     }));
 
-    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
+    const handleResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
     const classes = useStyles();
 
     return (
@@ -60,7 +60,7 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
           labelId={`select-value-label-${idRef.current}`}
           variant="outlined"
           onChange={({ target: { value } }) => {
-            onResourceChangeRequest({
+            handleResourceChangeRequest({
               valueDescriptor,
               newValue: value !== DEFAULT_VALUE ? (value as PxeValue) : undefined,
             });

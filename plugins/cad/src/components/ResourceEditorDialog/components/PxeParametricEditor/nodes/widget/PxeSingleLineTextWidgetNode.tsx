@@ -38,7 +38,7 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
       valueDescriptors: [valueDescriptor],
     } = configurationEntry as PxeSingleLineTextWidgetEntry;
 
-    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
+    const handleResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
     const classes = useStyles();
 
     return (
@@ -49,7 +49,7 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
         variant="outlined"
         value={currentValue ?? ''}
         onChange={e => {
-          onResourceChangeRequest({
+          handleResourceChangeRequest({
             valueDescriptor,
             newValue: textFilter(e.target.value),
           });

@@ -44,7 +44,7 @@ type RosterValueType = PxeValueType.Object | PxeValueType.Array;
 export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
   ({ configurationEntry, listPositionInfo: { isInRosterItem, isLastNode }, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
-    const onResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
+    const handleResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
 
     const {
       valueDescriptors: [valueDescriptor],
@@ -68,12 +68,12 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
       };
 
       const newValue = valueFromItemChunks([...itemChunks, newItemChunk], rosterValueType);
-      onResourceChangeRequest({ valueDescriptor, newValue });
+      handleResourceChangeRequest({ valueDescriptor, newValue });
     };
 
     const handleItemDeletion = (itemIndex: number) => {
       const newValue = valueFromItemChunks(arrayWithItemRemoved(itemChunks, itemIndex), rosterValueType);
-      onResourceChangeRequest({ valueDescriptor, newValue });
+      handleResourceChangeRequest({ valueDescriptor, newValue });
     };
 
     const handleResourceChangeRequestForItem = (itemIndex: number, changeRequest: PxeResourceChangeRequest) => {
@@ -85,7 +85,7 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
       const newItemChunks = arrayWithItemReplaced(itemChunks, itemIndex, newItemChunk);
       const newValue = valueFromItemChunks(newItemChunks, rosterValueType);
       if (Object.values(newValue).length === itemChunks.length) {
-        onResourceChangeRequest({ valueDescriptor, newValue });
+        handleResourceChangeRequest({ valueDescriptor, newValue });
       } else {
         setItemChunks(newItemChunks);
       }
