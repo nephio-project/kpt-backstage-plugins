@@ -18,7 +18,7 @@ import { makeStyles } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeValueType } from '../../../types/PxeConfiguration.types';
-import { PXE_COLOR_BACKGROUND_WHITE, PXE_COLOR_ROSTER_RAIL } from '../../../PxeSharedStyles';
+import { PXE_COLOR_BACKGROUND_WHITE, PXE_COLOR_RAIL } from '../../../PxeSharedStyles';
 
 type PxeRosterHeaderProps = {
   readonly name: string;
@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
     height: '32px',
     padding: '0 12px',
     borderRadius: '16px',
-    border: `solid 1px ${PXE_COLOR_ROSTER_RAIL}`,
+    border: `solid 1px ${PXE_COLOR_RAIL}`,
     backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
   },
   nameLabel: {

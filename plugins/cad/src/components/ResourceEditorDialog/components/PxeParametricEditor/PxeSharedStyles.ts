@@ -17,7 +17,7 @@
 export const PXE_COLOR_BACKGROUND_WHITE = '#ffffff';
 export const PXE_COLOR_BORDER_DEFAULT = '#74777f';
 export const PXE_COLOR_ACCENT = '#3d5f90';
-export const PXE_COLOR_ROSTER_RAIL = '#c4c6Cf';
+export const PXE_COLOR_RAIL = '#c4c6cf';
 
 export const PXE_INPUT_WIDTH = 500;
 export const PXE_INPUT_TOP_MARGIN = 6;

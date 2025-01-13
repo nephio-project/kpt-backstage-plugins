@@ -18,7 +18,7 @@ import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React from 'react';
 import { PxeConfigurationTab } from './types/PxeConfiguration.types';
 import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
-import { PXE_COLOR_ACCENT } from './PxeSharedStyles';
+import { PXE_COLOR_ACCENT, PXE_COLOR_RAIL } from './PxeSharedStyles';
 
 type PxeParametricEditorTabsProps = {
   readonly tabs: readonly PxeConfigurationTab[];
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => {
       backgroundColor: PXE_COLOR_ACCENT,
     },
     tab: {
-      borderBottom: 'solid 1px #c4c6cF',
+      borderBottom: `solid 1px ${PXE_COLOR_RAIL}`,
       fontWeight: 600,
       letterSpacing: '0.5px',
       color: theme.palette.text.primary,

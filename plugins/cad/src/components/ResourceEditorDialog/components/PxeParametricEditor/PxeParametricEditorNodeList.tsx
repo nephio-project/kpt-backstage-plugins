@@ -19,7 +19,7 @@ import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
-import { PXE_COLOR_ROSTER_RAIL, PXE_RAIL_WIDTH } from './PxeSharedStyles';
+import { PXE_COLOR_RAIL, PXE_RAIL_WIDTH } from './PxeSharedStyles';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
@@ -75,6 +75,6 @@ const useNodeSeparatorClasses = makeStyles({
     height: '32px',
     width: '1px',
     marginLeft: PXE_RAIL_WIDTH / 2,
-    backgroundColor: PXE_COLOR_ROSTER_RAIL,
+    backgroundColor: PXE_COLOR_RAIL,
   },
 });

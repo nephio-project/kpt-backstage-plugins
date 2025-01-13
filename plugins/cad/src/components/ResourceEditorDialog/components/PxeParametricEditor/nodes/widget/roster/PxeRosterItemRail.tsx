@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
-import { PXE_COLOR_ROSTER_RAIL, PXE_RAIL_BAR_HEIGHT_DEFAULT, PXE_RAIL_WIDTH } from '../../../PxeSharedStyles';
+import { PXE_COLOR_RAIL, PXE_RAIL_BAR_HEIGHT_DEFAULT, PXE_RAIL_WIDTH } from '../../../PxeSharedStyles';
 
 type PxeRosterItemRailProps = {
   readonly className?: string;
@@ -42,7 +42,7 @@ const useStyles = makeStyles(() => ({
   rail: {
     width: PXE_RAIL_WIDTH,
     overflow: 'hidden',
-    backgroundColor: PXE_COLOR_ROSTER_RAIL,
+    backgroundColor: PXE_COLOR_RAIL,
 
     // Prevents antialiasing by switching to hardware-accelerated rendering.
     willChange: 'transform',
