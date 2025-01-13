@@ -43,6 +43,8 @@ export const ModernResourceEditorDialog = ({
   onSaveYaml: handleSaveYaml,
   onClose: handleClose,
 }: ResourceEditorDialogProps) => {
+  // TODO The pattern of late component initialization is not great but in line with how editor dialogs currently work.
+  // It's ok but could be refactored in future.
   const [previouslyOpen, setPreviouslyOpen] = useState(false);
   const [gvk, setGVK] = useState<string>('');
   const [title, setTitle] = useState<string>('');
@@ -75,13 +77,15 @@ export const ModernResourceEditorDialog = ({
     <Dialog open={open} onClose={handleClose} maxWidth="xl">
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <div className={classes.editorContainer}>
-          {viewMode === 'gui' ? (
-            <ConfiguredEditor yamlText={yaml} onResourceChange={handleYamlChange} />
-          ) : (
-            <YamlViewer value={yaml} allowEdit onUpdatedValue={handleYamlChange} />
-          )}
-        </div>
+        {ConfiguredEditor && (
+          <div className={classes.editorContainer}>
+            {viewMode === 'gui' ? (
+              <ConfiguredEditor yamlText={yaml} onResourceChange={handleYamlChange} />
+            ) : (
+              <YamlViewer value={yaml} allowEdit onUpdatedValue={handleYamlChange} />
+            )}
+          </div>
+        )}
         <Button variant="text" color="primary" onClick={handleViewModeToggle}>
           Show {viewMode === 'gui' ? 'YAML View' : 'GUI View'}
         </Button>

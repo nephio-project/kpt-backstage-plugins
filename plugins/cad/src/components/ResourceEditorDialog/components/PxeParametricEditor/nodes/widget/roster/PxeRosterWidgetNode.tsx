@@ -18,19 +18,20 @@ import { Button, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useContext, useState } from 'react';
 import { PxeParametricEditorNodeProps } from '../../../PxeParametricEditorNode';
-import { PxeNodeType, PxeRosterWidgetEntry, PxeValueType } from '../../../types/PxeConfiguration.types';
+import { PxeRosterWidgetEntry, PxeValueType } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest, PxeValue } from '../../../types/PxeParametricEditor.types';
 import { createResourceChunkAfterChangeRequest } from '../../../utils/createResourceChunkAfterChangeRequest';
-import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
 import { arrayWithItemRemoved, arrayWithItemReplaced } from '../../../utils/general/immutableArrays';
+import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
 import { defaultValueForType } from '../../../utils/defaultValueForType';
+import { withCurrentValues } from '../../../utils/rendering/withCurrentValues';
 import { PxeResourceContext } from '../../../PxeResourceContext';
 import { useDiagnostics } from '../../../PxeDiagnosticsContext';
-import { withCurrentValues } from '../../../utils/rendering/withCurrentValues';
+import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
+import { PXE_COLOR_ACCENT, PXE_COLOR_BORDER_DEFAULT, PXE_RAIL_BAR_HEIGHT_BUTTON } from '../../../PxeSharedStyles';
 import { PxeRosterItem } from './PxeRosterItem';
 import { PxeRosterHeader } from './PxeRosterHeader';
 import { PxeRosterBranch } from './PxeRosterBranch';
-import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
 
 type RosterItemResourceChunk = {
   readonly $key: string;
@@ -94,7 +95,6 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
 
     const classes = useStyles();
 
-    // FIXME railBarHeight adjustment could be done better.
     return (
       <div>
         <PxeRosterHeader name={generateValueLabel(valueDescriptor)} rosterValueType={rosterValueType} />
@@ -105,14 +105,13 @@ export const PxeRosterWidgetNode: React.FC<PxeParametricEditorNodeProps> = withC
               rosterValueDescriptor={valueDescriptor}
               itemIndex={itemIndex}
               entries={itemEntries}
-              railBarHeight={itemEntries[0]?.type === PxeNodeType.Roster ? 34 : undefined}
               onResourceChangeRequestForItem={handleResourceChangeRequestForItem}
               onItemDeletion={handleItemDeletion}
             />
           </PxeResourceContext.Provider>
         ))}
         <PxeRosterBranch
-          railBarHeight={38}
+          railBarHeight={PXE_RAIL_BAR_HEIGHT_BUTTON}
           bottomRail={isInRosterItem && !isLastNode}
           content={
             <Button
@@ -150,8 +149,8 @@ const useStyles = makeStyles(() => ({
   addButton: {
     height: '40px',
     borderRadius: '20px',
-    borderColor: '#74777f',
-    color: '#3d5f90',
+    borderColor: PXE_COLOR_BORDER_DEFAULT,
+    color: PXE_COLOR_ACCENT,
     textTransform: 'none',
   },
 }));

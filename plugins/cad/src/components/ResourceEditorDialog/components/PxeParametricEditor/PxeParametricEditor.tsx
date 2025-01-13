@@ -36,22 +36,21 @@ export type PxeParametricEditorProps = {
 export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
   configuration: { topLevelProperties, tabs },
   yamlText,
-  onResourceChange,
+  onResourceChange: handleResourceChange,
   __diagnosticsReporter,
 }) => {
   const initialYamlObject = useRef(parseYaml(yamlText).yamlObject);
 
   const [resource, setResource] = useState(() => pick(initialYamlObject.current, topLevelProperties));
-  const previousResource = useRef(resource);
-  if (previousResource.current !== resource) {
-    previousResource.current = resource;
-    onResourceChange(stringifyYaml({ ...initialYamlObject.current, ...resource }));
-  }
 
   const handleResourceChangeRequest: PxeResourceChangeRequestHandler = useCallback(
     (changeRequest): void =>
-      setResource(prevResource => createResourceChunkAfterChangeRequest(prevResource, changeRequest)),
-    [],
+      setResource(prevResource => {
+        const updatedResource = createResourceChunkAfterChangeRequest(prevResource, changeRequest);
+        handleResourceChange(stringifyYaml({ ...initialYamlObject.current, ...updatedResource }));
+        return updatedResource;
+      }),
+    [handleResourceChange],
   );
 
   return (

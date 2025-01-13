@@ -18,6 +18,7 @@ import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React from 'react';
 import { PxeConfigurationTab } from './types/PxeConfiguration.types';
 import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
+import { PXE_COLOR_ACCENT } from './PxeSharedStyles';
 
 type PxeParametricEditorTabsProps = {
   readonly tabs: readonly PxeConfigurationTab[];
@@ -53,7 +54,7 @@ const useStyles = makeStyles(theme => {
       marginBottom: '24px',
     },
     indicator: {
-      backgroundColor: '#3d5f90',
+      backgroundColor: PXE_COLOR_ACCENT,
     },
     tab: {
       borderBottom: 'solid 1px #c4c6cF',
@@ -63,8 +64,7 @@ const useStyles = makeStyles(theme => {
       opacity: 1,
     },
     tabSelected: {
-      // FIXME Duplicated color.
-      color: '#3d5f90',
+      color: PXE_COLOR_ACCENT,
     },
   };
 });

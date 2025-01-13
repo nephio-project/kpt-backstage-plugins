@@ -22,6 +22,12 @@ import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
 import { PxeResourceChangeRequestContext } from '../../PxeResourceChangeRequestContext';
+import {
+  PXE_COLOR_BACKGROUND_WHITE,
+  PXE_COLOR_BORDER_DEFAULT,
+  PXE_INPUT_TOP_MARGIN,
+  PXE_INPUT_WIDTH,
+} from '../../PxeSharedStyles';
 
 export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
   ({ configurationEntry, currentValues: [currentValue] }) => {
@@ -56,14 +62,14 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
 const useStyles = makeStyles({
   textField: {
     width: '100%',
-    maxWidth: '500px',
-    marginTop: '6px',
-    backgroundColor: '#ffffff',
+    maxWidth: PXE_INPUT_WIDTH,
+    marginTop: PXE_INPUT_TOP_MARGIN,
+    backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
     '& label': {
-      backgroundColor: '#ffffff',
+      backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
     },
     '& fieldset': {
-      borderColor: '#74777f', // FIXME extract color
+      borderColor: PXE_COLOR_BORDER_DEFAULT,
     },
   },
 });

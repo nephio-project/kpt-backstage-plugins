@@ -20,6 +20,7 @@ import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
+import { PXE_INPUT_WIDTH } from '../../PxeSharedStyles';
 
 export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
   ({ configurationEntry, listPositionInfo }) => {
@@ -41,7 +42,6 @@ export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.me
   isEqual,
 );
 
-// FIXME 500px is duplicated
 const useStyles = makeStyles(() => ({
   rowContainer: {
     display: 'flex',
@@ -50,6 +50,6 @@ const useStyles = makeStyles(() => ({
   },
   rowItem: {
     flex: '1 1 0',
-    maxWidth: '500px',
+    maxWidth: PXE_INPUT_WIDTH,
   },
 }));

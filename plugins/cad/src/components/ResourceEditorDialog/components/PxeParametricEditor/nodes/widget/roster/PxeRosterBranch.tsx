@@ -17,6 +17,7 @@
 import { makeStyles } from '@material-ui/core';
 import { isEqual } from 'lodash';
 import React from 'react';
+import { PXE_INPUT_TOP_MARGIN } from '../../../PxeSharedStyles';
 import { PxeRosterItemRail } from './PxeRosterItemRail';
 
 type PxeRosterBranchProps = {
@@ -42,6 +43,10 @@ export const PxeRosterBranch: React.FC<PxeRosterBranchProps> = React.memo(
   isEqual,
 );
 
+const CONTENT_TOP_MARGIN = 18;
+const ACTION_RIGHT_POSITION = 48;
+const ACTION_TOP_MARGIN = 7;
+
 const useStyles = makeStyles(() => ({
   container: {
     position: 'relative',
@@ -54,12 +59,11 @@ const useStyles = makeStyles(() => ({
   },
   itemContent: {
     flex: '1 1 auto',
-    marginTop: '18px',
+    marginTop: CONTENT_TOP_MARGIN,
   },
-  // FIXME Maybe calculate 31 from (18 + 6 + 14/2)
   itemActions: {
     position: 'absolute',
-    top: '31px',
-    right: '-48px',
+    top: CONTENT_TOP_MARGIN + PXE_INPUT_TOP_MARGIN + ACTION_TOP_MARGIN,
+    right: -ACTION_RIGHT_POSITION,
   },
 }));

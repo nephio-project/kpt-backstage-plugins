@@ -24,6 +24,12 @@ import { PxeValue } from '../../types/PxeParametricEditor.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
 import { PxeResourceChangeRequestContext } from '../../PxeResourceChangeRequestContext';
+import {
+  PXE_COLOR_BACKGROUND_WHITE,
+  PXE_COLOR_BORDER_DEFAULT,
+  PXE_INPUT_TOP_MARGIN,
+  PXE_INPUT_WIDTH,
+} from '../../PxeSharedStyles';
 
 const DEFAULT_VALUE = '__DEFAULT_VALUE__';
 
@@ -74,14 +80,14 @@ export const PxeSelectValueWidgetNode: React.FC<PxeParametricEditorNodeProps> = 
 const useStyles = makeStyles({
   select: {
     width: '100%',
-    maxWidth: '500px',
-    marginTop: '6px',
-    backgroundColor: '#ffffff',
+    maxWidth: PXE_INPUT_WIDTH,
+    marginTop: PXE_INPUT_TOP_MARGIN,
+    backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
     '& label': {
-      backgroundColor: '#ffffff',
+      backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
     },
     '& fieldset': {
-      borderColor: '#74777f',
+      borderColor: PXE_COLOR_BORDER_DEFAULT,
     },
   },
 });

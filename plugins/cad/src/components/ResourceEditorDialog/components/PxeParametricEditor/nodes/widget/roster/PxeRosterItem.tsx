@@ -18,18 +18,18 @@ import CloseIcon from '@material-ui/icons/Close';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { IconButton } from '../../../../../../Controls';
-import { PxeConfigurationEntry, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
+import { PxeConfigurationEntry, PxeNodeType, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
 import { PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.types';
 import { useEditorStyles } from '../../../../FirstClassEditors/styles';
 import { PxeParametricEditorNodeList } from '../../../PxeParametricEditorNodeList';
-import { PxeRosterBranch } from './PxeRosterBranch';
 import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
+import { PXE_RAIL_BAR_HEIGHT_ROSTER_ITEM } from '../../../PxeSharedStyles';
+import { PxeRosterBranch } from './PxeRosterBranch';
 
 type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
   readonly itemIndex: number;
   readonly entries: readonly PxeConfigurationEntry[];
-  readonly railBarHeight?: number;
   readonly onResourceChangeRequestForItem: (itemIndex: number, changeRequest: PxeResourceChangeRequest) => void;
   readonly onItemDeletion: (itemIndex: number) => void;
 };
@@ -39,10 +39,11 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
     rosterValueDescriptor,
     itemIndex,
     entries,
-    railBarHeight,
     onResourceChangeRequestForItem: handleResourceChangeRequestForItem,
     onItemDeletion: handleItemDeletion,
   }) => {
+    const isRosterFirstEntry = entries[0]?.type === PxeNodeType.Roster;
+
     const editorClasses = useEditorStyles();
 
     return (
@@ -60,7 +61,7 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
             <CloseIcon />
           </IconButton>
         }
-        railBarHeight={railBarHeight}
+        railBarHeight={isRosterFirstEntry ? PXE_RAIL_BAR_HEIGHT_ROSTER_ITEM : undefined}
       />
     );
   },
