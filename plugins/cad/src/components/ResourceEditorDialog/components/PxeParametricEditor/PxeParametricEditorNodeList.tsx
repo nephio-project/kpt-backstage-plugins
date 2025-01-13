@@ -19,7 +19,7 @@ import { isEqual } from 'lodash';
 import React from 'react';
 import { PxeConfigurationEntry } from './types/PxeConfiguration.types';
 import { PxeParametricEditorNode } from './PxeParametricEditorNode';
-import { PXE_COLOR_ROSTER_RAIL } from './PxeSharedStyles';
+import { PXE_COLOR_ROSTER_RAIL, PXE_RAIL_WIDTH } from './PxeSharedStyles';
 
 type PxeParametricEditorNodeListProps = {
   readonly entries: readonly PxeConfigurationEntry[];
@@ -28,7 +28,7 @@ type PxeParametricEditorNodeListProps = {
 
 export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListProps> = React.memo(
   ({ entries, isInRosterItem }) => {
-    const classes = useClasses();
+    const classes = useNodeListClasses();
     return (
       <div className={classes.nodesContainer}>
         {entries.map((entry, index) => {
@@ -40,11 +40,7 @@ export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListPr
               configurationEntry={entry}
               listPositionInfo={{ isInRosterItem, isFirstNode, isLastNode }}
             />,
-            !isLastNode && (
-              <div className={classes.nodeSeparator} key={`separator-${index}`}>
-                <div className={isInRosterItem ? classes.nodeSeparatorRail : ''} />
-              </div>
-            ),
+            !isLastNode && <NodeSeparatorRail key={`separator-${index}`} isInRosterItem={isInRosterItem} />,
           ];
         })}
       </div>
@@ -53,19 +49,32 @@ export const PxeParametricEditorNodeList: React.FC<PxeParametricEditorNodeListPr
   isEqual,
 );
 
-const useClasses = makeStyles({
+const NodeSeparatorRail: React.FC<{ isInRosterItem: boolean }> = ({ isInRosterItem }) => {
+  const classes = useNodeSeparatorClasses();
+  return (
+    <div className={classes.nodeSeparator}>
+      <div className={isInRosterItem ? classes.nodeSeparatorRail : ''} />
+    </div>
+  );
+};
+
+const useNodeListClasses = makeStyles({
   nodesContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'stretch',
   },
+});
+
+const useNodeSeparatorClasses = makeStyles({
   nodeSeparator: {
     height: '18px',
     overflow: 'visible',
   },
   nodeSeparatorRail: {
     height: '32px',
-    width: '17px',
-    borderRight: `solid 1px ${PXE_COLOR_ROSTER_RAIL}`,
+    width: '1px',
+    marginLeft: PXE_RAIL_WIDTH / 2,
+    backgroundColor: PXE_COLOR_ROSTER_RAIL,
   },
 });
