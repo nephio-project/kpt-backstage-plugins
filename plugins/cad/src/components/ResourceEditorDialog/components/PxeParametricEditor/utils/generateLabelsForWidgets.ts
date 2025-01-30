@@ -15,44 +15,22 @@
  */
 
 import * as changeCase from 'change-case';
-import { get, size } from 'lodash';
-import { PxeValueDescriptor, PxeValueType, PxeWidgetEntry } from '../types/PxeConfiguration.types';
-import { PxeResourceChunk } from '../types/PxeParametricEditor.types';
+import { identity } from 'lodash';
+import pluralize from 'pluralize';
+import { PxeValueDescriptor } from '../types/PxeConfiguration.types';
 import { upperCaseFirstLetter } from './general/stringCasing';
-import { isEmptyPxeValue } from './isEmptyPxeValue';
 
 const FALLBACK_DEFAULT_VALUE_NAME = 'Value';
 
-export const generateDescriptionForEntries = (entries: PxeWidgetEntry[], resourceChunk: PxeResourceChunk): string =>
-  entries.flatMap(widgetEntry => generateValueDescriptionsForWidget(widgetEntry, resourceChunk)).join(', ');
-
-export const generateValueLabel = (valueDescriptor: PxeValueDescriptor, uppercase: boolean = true): string => {
-  if (valueDescriptor.display?.name) {
-    return uppercase ? upperCaseFirstLetter(valueDescriptor.display.name) : valueDescriptor.display.name;
-  } else {
-    const pathSegments = valueDescriptor.path.split('.');
-    return (uppercase ? changeCase.sentenceCase : changeCase.noCase)(
-      pathSegments[pathSegments.length - 1] ?? FALLBACK_DEFAULT_VALUE_NAME,
-    );
-  }
-};
-
-const generateValueDescriptionsForWidget = (widgetEntry: PxeWidgetEntry, resourceChunk: PxeResourceChunk): string[] =>
-  widgetEntry.valueDescriptors
-    .map(valueDescriptor => generateValueDescription(valueDescriptor, resourceChunk))
-    .filter(segment => segment !== null) as string[];
-
-const generateValueDescription = (
+export const generateValueLabel = (
   valueDescriptor: PxeValueDescriptor,
-  resourceChunk: PxeResourceChunk,
-): string | null => {
-  const { path, type, isRequired } = valueDescriptor;
-  const value = get(resourceChunk, path);
+  { singularize = false }: { lowercase?: boolean; singularize?: boolean } = {},
+): string => {
+  const pathSegments = valueDescriptor.path.split('.');
+  const rawLabel = valueDescriptor.display?.name
+    ? upperCaseFirstLetter(valueDescriptor.display.name)
+    : changeCase.sentenceCase(pathSegments[pathSegments.length - 1] ?? FALLBACK_DEFAULT_VALUE_NAME);
 
-  if (type === PxeValueType.Array || type === PxeValueType.Object) {
-    return `${size(value)} ${generateValueLabel(valueDescriptor, false)}`;
-  } else {
-    const hasDescription = !isEmptyPxeValue(value) || isRequired;
-    return hasDescription ? `${generateValueLabel(valueDescriptor)}: ${value ?? ''}` : null;
-  }
+  const pluralityFunction = singularize ? pluralize.singular : identity<string>;
+  return pluralityFunction(rawLabel) ?? rawLabel;
 };

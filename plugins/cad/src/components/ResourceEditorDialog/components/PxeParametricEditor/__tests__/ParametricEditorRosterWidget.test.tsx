@@ -29,23 +29,28 @@ const { arrayTypeRoster, objectTypeRoster, rowLayout, singleLineText } = PxeConf
 
 const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['spec'],
-  entries: [
-    arrayTypeRoster(
-      { path: 'spec.arr.string.opt', name: 'Test' },
-      singleLineText({ path: '$value', isRequired: false }),
-    ),
-    arrayTypeRoster(
-      { path: 'spec.arr.string.req', name: 'Test' },
-      singleLineText({ path: '$value', isRequired: true }),
-    ),
-    objectTypeRoster(
-      { path: 'spec.obj.string.opt', name: 'Test' },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: false })),
-    ),
-    objectTypeRoster(
-      { path: 'spec.obj.string.req', name: 'Test' },
-      rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
-    ),
+  tabs: [
+    {
+      name: 'Test',
+      entries: [
+        arrayTypeRoster(
+          { path: 'spec.arr.string.opt', name: 'Test' },
+          singleLineText({ path: '$value', isRequired: false }),
+        ),
+        arrayTypeRoster(
+          { path: 'spec.arr.string.req', name: 'Test' },
+          singleLineText({ path: '$value', isRequired: true }),
+        ),
+        objectTypeRoster(
+          { path: 'spec.obj.string.opt', name: 'Test' },
+          rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: false })),
+        ),
+        objectTypeRoster(
+          { path: 'spec.obj.string.req', name: 'Test' },
+          rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
+        ),
+      ],
+    },
   ],
 };
 
@@ -152,6 +157,15 @@ describe('ParametricEditorRosterWidget', () => {
         expect(roster).toEqual({ foofizz: 'bar' });
       });
 
+      it('should clear item key on text input clear', async () => {
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$key');
+
+        await userEvent.clear(keyTextInput);
+
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+        expect(roster).toEqual({ '': 'bar' });
+      });
+
       it('should change item value on text input', async () => {
         const textInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$value');
 
@@ -213,6 +227,15 @@ describe('ParametricEditorRosterWidget', () => {
 
         const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
         expect(roster).toEqual({ foofizz: 'bar' });
+      });
+
+      it('should clear item key on text input clear', async () => {
+        const keyTextInput = findTextFieldInput(findRosterItem(editor, rosterPath, 0), '$key');
+
+        await userEvent.clear(keyTextInput);
+
+        const roster = get(getLastResourceState(resourceChangeHandler), rosterPath);
+        expect(roster).toEqual({ '': 'bar' });
       });
 
       it('should change item value on text input', async () => {

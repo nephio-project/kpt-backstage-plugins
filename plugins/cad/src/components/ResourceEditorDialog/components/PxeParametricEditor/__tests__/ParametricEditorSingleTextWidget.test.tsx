@@ -28,9 +28,14 @@ const { singleLineText } = PxeConfigurationFactory;
 
 const CONFIGURATION: PxeConfiguration = {
   topLevelProperties: ['spec'],
-  entries: [
-    singleLineText({ path: 'spec.textOptional' }),
-    singleLineText({ path: 'spec.textRequired', isRequired: true }),
+  tabs: [
+    {
+      name: 'Test',
+      entries: [
+        singleLineText({ path: 'spec.textOptional' }),
+        singleLineText({ path: 'spec.textRequired', isRequired: true }),
+      ],
+    },
   ],
 };
 

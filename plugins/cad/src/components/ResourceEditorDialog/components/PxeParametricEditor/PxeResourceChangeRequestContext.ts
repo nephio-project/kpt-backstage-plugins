@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import { PxeConfigurationEntry, PxeNodeType, PxeSectionEntry } from '../types/PxeConfiguration.types';
+import { noop } from 'lodash';
+import { createContext } from 'react';
+import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 
-export const sectionConfigurationEntry = (
-  { name }: { name: string },
-  ...childEntries: PxeConfigurationEntry[]
-): PxeSectionEntry => ({
-  type: PxeNodeType.Section,
-  name,
-  entries: childEntries,
-});
+export const PxeResourceChangeRequestContext = createContext<PxeResourceChangeRequestHandler>(noop);

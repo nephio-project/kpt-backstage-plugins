@@ -20,6 +20,27 @@ import React from 'react';
 import { PxeRowLayoutEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNode, PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
+import { PXE_INPUT_WIDTH } from '../../PxeSharedStyles';
+
+export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
+  ({ configurationEntry, listPositionInfo }) => {
+    useDiagnostics(configurationEntry);
+    const { entries } = configurationEntry as PxeRowLayoutEntry;
+
+    const classes = useStyles();
+
+    return (
+      <div className={classes.rowContainer}>
+        {entries.map((entry, index) => (
+          <div className={classes.rowItem} key={`${index}`}>
+            <PxeParametricEditorNode configurationEntry={entry} listPositionInfo={listPositionInfo} />
+          </div>
+        ))}
+      </div>
+    );
+  },
+  isEqual,
+);
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
@@ -27,25 +48,8 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     gap: '16px',
   },
-}));
-
-export const PxeRowLayoutNode: React.FC<PxeParametricEditorNodeProps> = React.memo(
-  ({ configurationEntry, onResourceChangeRequest }) => {
-    useDiagnostics(configurationEntry);
-    const { entries } = configurationEntry as PxeRowLayoutEntry;
-
-    const classes = useStyles();
-    return (
-      <div className={classes.rowContainer}>
-        {entries.map((entry, index) => (
-          <PxeParametricEditorNode
-            key={`${index}`}
-            configurationEntry={entry}
-            onResourceChangeRequest={onResourceChangeRequest}
-          />
-        ))}
-      </div>
-    );
+  rowItem: {
+    flex: '1 1 0',
+    maxWidth: PXE_INPUT_WIDTH,
   },
-  isEqual,
-);
+}));

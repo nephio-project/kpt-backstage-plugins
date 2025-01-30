@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-import { TextField } from '@material-ui/core';
-import React from 'react';
+import { makeStyles, TextField } from '@material-ui/core';
+import React, { useContext } from 'react';
 import { PxeSingleLineTextWidgetEntry } from '../../types/PxeConfiguration.types';
 import { PxeParametricEditorNodeProps } from '../../PxeParametricEditorNode';
 import { withCurrentValues } from '../../utils/rendering/withCurrentValues';
 import { generateValueLabel } from '../../utils/generateLabelsForWidgets';
 import { useDiagnostics } from '../../PxeDiagnosticsContext';
+import { PxeResourceChangeRequestContext } from '../../PxeResourceChangeRequestContext';
+import {
+  PXE_COLOR_BACKGROUND_WHITE,
+  PXE_COLOR_BORDER_DEFAULT,
+  PXE_INPUT_TOP_MARGIN,
+  PXE_INPUT_WIDTH,
+} from '../../PxeSharedStyles';
 
 export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps> = withCurrentValues(
-  ({ configurationEntry, onResourceChangeRequest, currentValues: [currentValue] }) => {
+  ({ configurationEntry, currentValues: [currentValue] }) => {
     useDiagnostics(configurationEntry);
 
     const {
@@ -31,20 +38,38 @@ export const PxeSingleLineTextWidgetNode: React.FC<PxeParametricEditorNodeProps>
       valueDescriptors: [valueDescriptor],
     } = configurationEntry as PxeSingleLineTextWidgetEntry;
 
+    const handleResourceChangeRequest = useContext(PxeResourceChangeRequestContext);
+    const classes = useStyles();
+
     return (
       <TextField
         data-testid={`TextField_${valueDescriptor.path}`}
+        className={classes.textField}
         label={generateValueLabel(valueDescriptor)}
         variant="outlined"
         value={currentValue ?? ''}
         onChange={e => {
-          onResourceChangeRequest({
+          handleResourceChangeRequest({
             valueDescriptor,
             newValue: textFilter(e.target.value),
           });
         }}
-        fullWidth
       />
     );
   },
 );
+
+const useStyles = makeStyles({
+  textField: {
+    width: '100%',
+    maxWidth: PXE_INPUT_WIDTH,
+    marginTop: PXE_INPUT_TOP_MARGIN,
+    backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
+    '& label': {
+      backgroundColor: PXE_COLOR_BACKGROUND_WHITE,
+    },
+    '& fieldset': {
+      borderColor: PXE_COLOR_BORDER_DEFAULT,
+    },
+  },
+});

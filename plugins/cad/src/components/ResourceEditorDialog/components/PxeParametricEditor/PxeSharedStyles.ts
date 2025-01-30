@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-import { PxeConfigurationEntry, PxeLayoutEntry, PxeNodeType, PxeWidgetEntry } from '../types/PxeConfiguration.types';
+export const PXE_COLOR_BACKGROUND_WHITE = '#ffffff';
+export const PXE_COLOR_BORDER_DEFAULT = '#74777f';
+export const PXE_COLOR_ACCENT = '#3d5f90';
+export const PXE_COLOR_RAIL = '#c4c6cf';
 
-export const isLayoutNode = (entry: PxeConfigurationEntry): entry is PxeLayoutEntry =>
-  [PxeNodeType.RowLayout].includes(entry.type);
+export const PXE_INPUT_WIDTH = 500;
+export const PXE_INPUT_TOP_MARGIN = 6;
 
-export const isWidgetNode = (entry: PxeConfigurationEntry): entry is PxeWidgetEntry => 'valueDescriptors' in entry;
+export const PXE_RAIL_WIDTH = 32;
+export const PXE_RAIL_BAR_HEIGHT_DEFAULT = 50;
+export const PXE_RAIL_BAR_HEIGHT_BUTTON = 38;
+export const PXE_RAIL_BAR_HEIGHT_ROSTER_ITEM = 34;

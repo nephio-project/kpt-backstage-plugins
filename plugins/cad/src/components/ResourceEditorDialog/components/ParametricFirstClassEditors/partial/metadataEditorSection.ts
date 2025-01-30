@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-import { PxeSectionEntry } from '../../PxeParametricEditor/types/PxeConfiguration.types';
 import { PxeConfigurationFactory } from '../../PxeParametricEditor/configuration';
+import { PxeConfigurationTab } from '../../PxeParametricEditor/types/PxeConfiguration.types';
 
-const { section, rowLayout, objectTypeRoster, singleLineText } = PxeConfigurationFactory;
+const { rowLayout, objectTypeRoster, singleLineText } = PxeConfigurationFactory;
 
-export const metadataEditorSection = ({ isNamespacedResource }: { isNamespacedResource: boolean }): PxeSectionEntry =>
-  section(
-    { name: 'Resource Metadata' },
+export const metadataEditorTab = (options: { isNamespacedResource: boolean }): PxeConfigurationTab => ({
+  name: 'Metadata',
+  entries: [
     singleLineText({ path: 'metadata.name', isRequired: true }),
-    ...(isNamespacedResource ? [singleLineText({ path: 'metadata.namespace' })] : []),
+    ...(options.isNamespacedResource ? [singleLineText({ path: 'metadata.namespace' })] : []),
     objectTypeRoster(
       { name: 'Labels', path: 'metadata.labels', isRequired: false },
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
@@ -32,4 +32,5 @@ export const metadataEditorSection = ({ isNamespacedResource }: { isNamespacedRe
       { name: 'Annotations', path: 'metadata.annotations', isRequired: false },
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
     ),
-  );
+  ],
+});

@@ -16,11 +16,11 @@
 
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
-import { metadataEditorSection } from './partial/metadataEditorSection';
+import { metadataEditorTab } from './partial/metadataEditorSection';
 import { PxeValueType } from '../PxeParametricEditor/types/PxeConfiguration.types';
 import { selectorRosters } from './partial/selectorRosters';
 
-const { section, rowLayout, arrayTypeRoster, objectTypeRoster, selectValue, singleLineText } = PxeConfigurationFactory;
+const { rowLayout, arrayTypeRoster, objectTypeRoster, selectValue, singleLineText } = PxeConfigurationFactory;
 
 const INTERFACE_KIND_OPTIONS = [
   { value: 'interface', label: 'Interface' },
@@ -34,33 +34,42 @@ const INTERFACE_ATTACHMENT_TYPE_OPTIONS = [
 
 export const NephioNetworkParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
-  entries: [
-    metadataEditorSection({ isNamespacedResource: true }),
-    section({ name: 'Topology' }, singleLineText({ path: 'spec.topology', isRequired: true })),
-    arrayTypeRoster(
-      {
-        name: 'Routing tables',
-        path: 'spec.routingTables',
-        isRequired: false,
-        item: { type: PxeValueType.Object, isRequired: true },
-      },
-      routingTableItemConfiguration(),
-    ),
-    arrayTypeRoster(
-      {
-        name: 'Bridge domains',
-        path: 'spec.bridgeDomains',
-        isRequired: false,
-        item: { type: PxeValueType.Object, isRequired: true },
-      },
-      bridgeDomainItemConfiguration(),
-    ),
+  tabs: [
+    metadataEditorTab({ isNamespacedResource: true }),
+    { name: 'Topology', entries: [singleLineText({ path: 'spec.topology', isRequired: true })] },
+    {
+      name: 'Routing tables',
+      entries: [
+        arrayTypeRoster(
+          {
+            name: 'Routing tables',
+            path: 'spec.routingTables',
+            isRequired: false,
+            item: { type: PxeValueType.Object, isRequired: true },
+          },
+          ...routingTableItemConfiguration(),
+        ),
+      ],
+    },
+    {
+      name: 'Bridge domains',
+      entries: [
+        arrayTypeRoster(
+          {
+            name: 'Bridge domains',
+            path: 'spec.bridgeDomains',
+            isRequired: false,
+            item: { type: PxeValueType.Object, isRequired: true },
+          },
+          ...bridgeDomainItemConfiguration(),
+        ),
+      ],
+    },
   ],
 });
 
 function routingTableItemConfiguration() {
-  return section(
-    { name: 'Routing table' },
+  return [
     singleLineText({ path: '$value.name', isRequired: true }),
     arrayTypeRoster(
       {
@@ -69,7 +78,7 @@ function routingTableItemConfiguration() {
         isRequired: true,
         item: { type: PxeValueType.Object, isRequired: true },
       },
-      prefixItemConfiguration(),
+      ...prefixItemConfiguration(),
     ),
     arrayTypeRoster(
       {
@@ -77,14 +86,13 @@ function routingTableItemConfiguration() {
         path: '$value.interfaces',
         item: { type: PxeValueType.Object, isRequired: true },
       },
-      interfaceItemConfiguration(),
+      ...interfaceItemConfiguration(),
     ),
-  );
+  ];
 }
 
 function bridgeDomainItemConfiguration() {
-  return section(
-    { name: 'Bridge domain' },
+  return [
     singleLineText({ path: '$value.name', isRequired: true }),
     arrayTypeRoster(
       {
@@ -92,14 +100,13 @@ function bridgeDomainItemConfiguration() {
         path: '$value.interfaces',
         item: { type: PxeValueType.Object, isRequired: true },
       },
-      interfaceItemConfiguration(),
+      ...interfaceItemConfiguration(),
     ),
-  );
+  ];
 }
 
 function interfaceItemConfiguration() {
-  return section(
-    { name: 'Interface' },
+  return [
     // TODO Needs different options depending on where interface is used.
     selectValue({ path: '$value.kind', isRequired: true, options: INTERFACE_KIND_OPTIONS }),
     singleLineText({ path: '$value.interfaceName' }),
@@ -107,16 +114,15 @@ function interfaceItemConfiguration() {
     singleLineText({ path: '$value.nodeName' }),
     selectValue({ path: '$value.attachmentType', options: INTERFACE_ATTACHMENT_TYPE_OPTIONS }),
     ...selectorRosters('$value.selector'),
-  );
+  ];
 }
 
 function prefixItemConfiguration() {
-  return section(
-    { name: 'Prefix' },
+  return [
     singleLineText({ path: '$value.prefix', isRequired: true }),
     objectTypeRoster(
       { name: 'Labels', path: '$value.labels' },
       rowLayout(singleLineText({ path: '$key' }), singleLineText({ path: '$value', isRequired: true })),
     ),
-  );
+  ];
 }

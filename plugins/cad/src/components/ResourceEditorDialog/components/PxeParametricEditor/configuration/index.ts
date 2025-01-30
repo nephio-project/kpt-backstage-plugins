@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { sectionConfigurationEntry } from './sectionConfigurationEntry';
 import { rowLayoutConfigurationEntry } from './rowLayoutConfigurationEntry';
 import { arrayTypeRosterConfigurationEntry, objectTypeRosterConfigurationEntry } from './rosterConfigurationEntry';
 import {
@@ -24,12 +23,11 @@ import {
 import { selectValueWidgetConfigurationEntry } from './selectValueWidgetConfigurationEntry';
 
 export const PxeConfigurationFactory = {
-  section: sectionConfigurationEntry,
-
   rowLayout: rowLayoutConfigurationEntry,
 
   arrayTypeRoster: arrayTypeRosterConfigurationEntry,
   objectTypeRoster: objectTypeRosterConfigurationEntry,
+
   singleLineText: singleLineTextWidgetConfigurationEntry,
   naturalNumberText: naturalNumberTextWidgetConfigurationEntry,
   selectValue: selectValueWidgetConfigurationEntry,

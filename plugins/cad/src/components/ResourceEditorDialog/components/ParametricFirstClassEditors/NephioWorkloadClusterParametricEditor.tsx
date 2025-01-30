@@ -16,22 +16,24 @@
 
 import { createEditorFromConfiguration } from '../PxeParametricEditor/createEditorFromConfiguration';
 import { PxeConfigurationFactory } from '../PxeParametricEditor/configuration';
-import { metadataEditorSection } from './partial/metadataEditorSection';
+import { metadataEditorTab } from './partial/metadataEditorSection';
 
-const { section, arrayTypeRoster, singleLineText } = PxeConfigurationFactory;
+const { arrayTypeRoster, singleLineText } = PxeConfigurationFactory;
 
 export const NephioWorkloadClusterParametricEditor = createEditorFromConfiguration({
   topLevelProperties: ['metadata', 'spec'],
-  entries: [
-    metadataEditorSection({ isNamespacedResource: true }),
-    section(
-      { name: 'Configuration' },
-      singleLineText({ path: 'spec.clusterName', isRequired: true }),
-      singleLineText({ path: 'spec.masterInterface' }),
-      arrayTypeRoster(
-        { name: 'CNIs', path: 'spec.cnis', isRequired: false },
-        singleLineText({ path: '$value', isRequired: true }),
-      ),
-    ),
+  tabs: [
+    metadataEditorTab({ isNamespacedResource: true }),
+    {
+      name: 'Workload cluster',
+      entries: [
+        singleLineText({ path: 'spec.clusterName', isRequired: true }),
+        singleLineText({ path: 'spec.masterInterface' }),
+        arrayTypeRoster(
+          { name: 'CNIs', path: 'spec.cnis', isRequired: false },
+          singleLineText({ path: '$value', isRequired: true }),
+        ),
+      ],
+    },
   ],
 });

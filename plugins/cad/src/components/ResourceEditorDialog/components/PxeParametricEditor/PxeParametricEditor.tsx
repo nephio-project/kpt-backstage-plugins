@@ -16,16 +16,15 @@
 
 import { pick } from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
-import { useEditorStyles } from '../FirstClassEditors/styles';
 import { PxeConfiguration } from './types/PxeConfiguration.types';
 import { PxeResourceChangeRequestHandler } from './types/PxeParametricEditor.types';
 import { PxeDiagnosticsReporter } from './types/PxeDiagnostics.types';
 import { createResourceChunkAfterChangeRequest } from './utils/createResourceChunkAfterChangeRequest';
 import { parseYaml, stringifyYaml } from './utils/yamlConversion';
-import { PxeParametricEditorNodeList } from './PxeParametricEditorNodeList';
 import { PxeDiagnosticsContext } from './PxeDiagnosticsContext';
 import { PxeResourceContext } from './PxeResourceContext';
-import { PxeExpandedSectionContext, useNewExpandedSectionState } from './PxeExpandedSectionContext';
+import { PxeResourceChangeRequestContext } from './PxeResourceChangeRequestContext';
+import { PxeParametricEditorTabs } from './PxeParametricEditorTabs';
 
 export type PxeParametricEditorProps = {
   readonly configuration: PxeConfiguration;
@@ -35,39 +34,32 @@ export type PxeParametricEditorProps = {
 };
 
 export const PxeParametricEditor: React.FC<PxeParametricEditorProps> = ({
-  configuration: { topLevelProperties, entries },
+  configuration: { topLevelProperties, tabs },
   yamlText,
-  onResourceChange,
+  onResourceChange: handleResourceChange,
   __diagnosticsReporter,
 }) => {
   const initialYamlObject = useRef(parseYaml(yamlText).yamlObject);
 
   const [resource, setResource] = useState(() => pick(initialYamlObject.current, topLevelProperties));
-  const previousResource = useRef(resource);
-  if (previousResource.current !== resource) {
-    previousResource.current = resource;
-    onResourceChange(stringifyYaml({ ...initialYamlObject.current, ...resource }));
-  }
-
-  const rootLevelExpandedSectionStateTuple = useNewExpandedSectionState();
 
   const handleResourceChangeRequest: PxeResourceChangeRequestHandler = useCallback(
     (changeRequest): void =>
-      setResource(prevResource => createResourceChunkAfterChangeRequest(prevResource, changeRequest)),
-    [],
+      setResource(prevResource => {
+        const updatedResource = createResourceChunkAfterChangeRequest(prevResource, changeRequest);
+        handleResourceChange(stringifyYaml({ ...initialYamlObject.current, ...updatedResource }));
+        return updatedResource;
+      }),
+    [handleResourceChange],
   );
 
-  const classes = useEditorStyles();
-
   return (
-    <div className={classes.root}>
-      <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
-        <PxeExpandedSectionContext.Provider value={rootLevelExpandedSectionStateTuple}>
-          <PxeResourceContext.Provider value={resource}>
-            <PxeParametricEditorNodeList entries={entries} onResourceChangeRequest={handleResourceChangeRequest} />
-          </PxeResourceContext.Provider>
-        </PxeExpandedSectionContext.Provider>
-      </PxeDiagnosticsContext.Provider>
-    </div>
+    <PxeDiagnosticsContext.Provider value={__diagnosticsReporter ?? null}>
+      <PxeResourceChangeRequestContext.Provider value={handleResourceChangeRequest}>
+        <PxeResourceContext.Provider value={resource}>
+          <PxeParametricEditorTabs tabs={tabs} />
+        </PxeResourceContext.Provider>
+      </PxeResourceChangeRequestContext.Provider>
+    </PxeDiagnosticsContext.Provider>
   );
 };

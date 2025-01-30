@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-import { Button, makeStyles } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 import { isEqual } from 'lodash';
 import React from 'react';
 import { IconButton } from '../../../../../../Controls';
-import { PxeParametricEditorNode } from '../../../PxeParametricEditorNode';
 import { PxeConfigurationEntry, PxeNodeType, PxeValueDescriptor } from '../../../types/PxeConfiguration.types';
-import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
-import { isSectionNode } from '../../../utils/nodePredicates';
 import { PxeResourceChangeRequest } from '../../../types/PxeParametricEditor.types';
 import { useEditorStyles } from '../../../../FirstClassEditors/styles';
+import { PxeParametricEditorNodeList } from '../../../PxeParametricEditorNodeList';
+import { PxeResourceChangeRequestContext } from '../../../PxeResourceChangeRequestContext';
+import { PXE_RAIL_BAR_HEIGHT_ROSTER_ITEM } from '../../../PxeSharedStyles';
+import { PxeRosterBranch } from './PxeRosterBranch';
+import { generateValueLabel } from '../../../utils/generateLabelsForWidgets';
 
 type PxeRosterItemProps = {
   readonly rosterValueDescriptor: PxeValueDescriptor;
@@ -42,51 +43,32 @@ export const PxeRosterItem: React.FC<PxeRosterItemProps> = React.memo(
     onResourceChangeRequestForItem: handleResourceChangeRequestForItem,
     onItemDeletion: handleItemDeletion,
   }) => {
+    const isRosterFirstEntry = entries[0]?.type === PxeNodeType.Roster;
+
     const editorClasses = useEditorStyles();
-    const rosterClasses = useStyles();
 
     return (
-      <div className={rosterClasses.item} data-testid={`RosterItem_${rosterValueDescriptor.path}_${itemIndex}`}>
-        <div className={rosterClasses.itemContent}>
-          <PxeParametricEditorNode
-            configurationEntry={entries[0]}
-            onResourceChangeRequest={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
+      <PxeRosterBranch
+        data-testid={`RosterItem_${rosterValueDescriptor.path}_${itemIndex}`}
+        content={
+          <PxeResourceChangeRequestContext.Provider
+            value={changeRequest => handleResourceChangeRequestForItem(itemIndex, changeRequest)}
           >
-            {isSectionNode(entries[0]) && (
-              <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleItemDeletion(itemIndex)}>
-                Delete {generateValueLabel(rosterValueDescriptor)}
-              </Button>
-            )}
-          </PxeParametricEditorNode>
-        </div>
-        {entries[0].type !== PxeNodeType.Section && (
-          <div className={rosterClasses.itemActions}>
-            <IconButton
-              title="Delete"
-              className={editorClasses.iconButton}
-              onClick={() => handleItemDeletion(itemIndex)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        )}
-      </div>
+            <PxeParametricEditorNodeList entries={entries} isInRosterItem />
+          </PxeResourceChangeRequestContext.Provider>
+        }
+        actions={
+          <IconButton
+            title={`Delete ${generateValueLabel(rosterValueDescriptor, { singularize: true })}`}
+            className={editorClasses.iconButton}
+            onClick={() => handleItemDeletion(itemIndex)}
+          >
+            <CloseIcon />
+          </IconButton>
+        }
+        railBarHeight={isRosterFirstEntry ? PXE_RAIL_BAR_HEIGHT_ROSTER_ITEM : undefined}
+      />
     );
   },
   isEqual,
 );
-
-const useStyles = makeStyles(() => ({
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemContent: {
-    flex: '1 1 auto',
-  },
-  itemActions: {
-    flex: '0 0 auto',
-    paddingLeft: '16px',
-  },
-}));
