@@ -120,8 +120,9 @@ export const getPackageResourcesFromResourcesMap = (resourcesMap: PackageRevisio
     const resourcesYaml = getResourcesFromMultiResourceYaml(multiResourceYaml);
 
     return resourcesYaml.map((resourceYaml, index) => {
-      const k8sResource = loadYaml(resourceYaml) as KubernetesResource;
+      const k8sResource = loadYaml(resourceYaml) as KubernetesResource | null;
 
+      if (!k8sResource) return null;
       const uniqueId = `${k8sResource.kind}:${filename ?? k8sResource.metadata.name}:${index}`;
 
       return {
