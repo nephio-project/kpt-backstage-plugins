@@ -109,7 +109,11 @@ export const getPackageRevisionResourcesResource = (
 
 export const getPackageResourcesFromResourcesMap = (resourcesMap: PackageRevisionResourcesMap): PackageResource[] => {
   const yamlFileEntries = Object.entries(resourcesMap).filter(
-    file => file[0].endsWith('.yaml') || file[0] === 'Kptfile' || file[0].endsWith('/Kptfile'),
+    file => 
+      file[0].endsWith('.yaml') || 
+      file[0].endsWith('.yml') ||
+      file[0] === 'Kptfile' || 
+      file[0].endsWith('/Kptfile'),
   );
 
   const resources = yamlFileEntries.map(([filename, multiResourceYaml]) => {

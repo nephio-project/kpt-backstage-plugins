@@ -25,17 +25,9 @@ import {
 } from '../types/PackageRevision';
 import { toLowerCase } from './string';
 
-const getRevisionNumber = (revision: string, defaultNumber: number = NaN): number => {
-  if (revision && revision.startsWith('v')) {
-    const revisionNumber = parseInt(revision.substring(1), 10);
-
-    if (Number.isInteger(revisionNumber)) {
-      return revisionNumber;
-    }
-  }
-
-  return defaultNumber;
-};
+function getRevisionNumber(revision: number): number {
+  return revision;
+}
 
 const getNextRevision = (revision: string): string => {
   const revisionNumber = getRevisionNumber(revision, 0);
