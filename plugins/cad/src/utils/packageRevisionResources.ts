@@ -116,16 +116,16 @@ export const getPackageResourcesFromResourcesMap = (resourcesMap: PackageRevisio
       file[0].endsWith('/Kptfile'),
   );
 
-  const resources = yamlFileEntries.map(([filename, multiResourceYaml]) => {
+  const resources = yamlFileEntries.flatMap(([filename, multiResourceYaml]) => {
     const resourcesYaml = getResourcesFromMultiResourceYaml(multiResourceYaml);
 
-    return resourcesYaml.map((resourceYaml, index) => {
+    return resourcesYaml.flatMap((resourceYaml, index) => {
       const k8sResource = loadYaml(resourceYaml) as KubernetesResource | null;
 
-      if (!k8sResource) return null;
+      if (!k8sResource) return [];
       const uniqueId = `${k8sResource.kind}:${filename ?? k8sResource.metadata.name}:${index}`;
 
-      return {
+      return [{
         id: uniqueId,
         component: filename.substring(0, filename.lastIndexOf('/')),
         filename: filename,
@@ -135,11 +135,11 @@ export const getPackageResourcesFromResourcesMap = (resourcesMap: PackageRevisio
         yaml: resourceYaml,
         resourceIndex: index,
         isLocalConfigResource: !!k8sResource.metadata.annotations?.['config.kubernetes.io/local-config'],
-      };
+      }];
     });
   });
 
-  return resources.flat();
+  return resources;
 };
 
 const getResourcesForFile = (resourcesMap: PackageRevisionResourcesMap, filename: string): string[] => {
