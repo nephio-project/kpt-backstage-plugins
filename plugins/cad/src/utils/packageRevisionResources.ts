@@ -109,32 +109,36 @@ export const getPackageRevisionResourcesResource = (
 
 export const getPackageResourcesFromResourcesMap = (resourcesMap: PackageRevisionResourcesMap): PackageResource[] => {
   const yamlFileEntries = Object.entries(resourcesMap).filter(
-    file => file[0].endsWith('.yaml') || file[0] === 'Kptfile' || file[0].endsWith('/Kptfile'),
+    file =>
+      file[0].endsWith('.yaml') || file[0].endsWith('.yml') || file[0] === 'Kptfile' || file[0].endsWith('/Kptfile'),
   );
 
-  const resources = yamlFileEntries.map(([filename, multiResourceYaml]) => {
+  const resources = yamlFileEntries.flatMap(([filename, multiResourceYaml]) => {
     const resourcesYaml = getResourcesFromMultiResourceYaml(multiResourceYaml);
 
-    return resourcesYaml.map((resourceYaml, index) => {
-      const k8sResource = loadYaml(resourceYaml) as KubernetesResource;
+    return resourcesYaml.flatMap((resourceYaml, index) => {
+      const k8sResource = loadYaml(resourceYaml) as KubernetesResource | null;
 
+      if (!k8sResource) return [];
       const uniqueId = `${k8sResource.kind}:${filename ?? k8sResource.metadata.name}:${index}`;
 
-      return {
-        id: uniqueId,
-        component: filename.substring(0, filename.lastIndexOf('/')),
-        filename: filename,
-        kind: k8sResource.kind,
-        name: k8sResource.metadata.name,
-        namespace: k8sResource.metadata.namespace,
-        yaml: resourceYaml,
-        resourceIndex: index,
-        isLocalConfigResource: !!k8sResource.metadata.annotations?.['config.kubernetes.io/local-config'],
-      };
+      return [
+        {
+          id: uniqueId,
+          component: filename.substring(0, filename.lastIndexOf('/')),
+          filename: filename,
+          kind: k8sResource.kind,
+          name: k8sResource.metadata.name,
+          namespace: k8sResource.metadata.namespace,
+          yaml: resourceYaml,
+          resourceIndex: index,
+          isLocalConfigResource: !!k8sResource.metadata.annotations?.['config.kubernetes.io/local-config'],
+        },
+      ];
     });
   });
 
-  return resources.flat();
+  return resources;
 };
 
 const getResourcesForFile = (resourcesMap: PackageRevisionResourcesMap, filename: string): string[] => {
