@@ -25,19 +25,21 @@ import {
 } from '../types/PackageRevision';
 import { toLowerCase } from './string';
 
-const getRevisionNumber = (revision: string, defaultNumber: number = NaN): number => {
-  if (revision && revision.startsWith('v')) {
-    const revisionNumber = parseInt(revision.substring(1), 10);
-
+const getRevisionNumber = (revision: string | number, defaultNumber: number = NaN): number => {
+  // Handle integer revision (new Porch API returns int instead of string)
+  if (typeof revision === 'number' && Number.isInteger(revision)) {
+    return revision;
+  }
+  if (revision && String(revision).startsWith('v')) {
+    const revisionNumber = parseInt(String(revision).substring(1), 10);
     if (Number.isInteger(revisionNumber)) {
       return revisionNumber;
     }
   }
-
   return defaultNumber;
 };
 
-const getNextRevision = (revision: string): string => {
+const getNextRevision = (revision: string | number): string => {
   const revisionNumber = getRevisionNumber(revision, 0);
 
   return `v${revisionNumber + 1}`;
@@ -71,17 +73,63 @@ export const getUpstreamPackageRevisionDetails = (
   return undefined;
 };
 
-export const isLatestPublishedRevision = (packageRevision: PackageRevision): boolean => {
-  return (
-    packageRevision.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED &&
-    !!packageRevision.metadata.labels?.['kpt.dev/latest-revision']
-  );
+const getWorkspaceNameVersion = (workspaceName: string): number[] => {
+  // 'main' gets version [0] (lowest)
+  if (!workspaceName || workspaceName === 'main') return [0];
+  // 'v3.0.0' → [3, 0, 0]
+  const match = workspaceName.match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+  if (match) return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+  // fallback
+  return [0];
+};
+
+const compareWorkspaceVersions = (a: string, b: string): number => {
+  const aVer = getWorkspaceNameVersion(a);
+  const bVer = getWorkspaceNameVersion(b);
+  for (let i = 0; i < Math.max(aVer.length, bVer.length); i++) {
+    const diff = (bVer[i] ?? 0) - (aVer[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+};
+
+export const isLatestPublishedRevision = (
+  packageRevision: PackageRevision,
+  allRevisions?: PackageRevision[],
+): boolean => {
+  if (packageRevision.spec.lifecycle !== PackageRevisionLifecycle.PUBLISHED) {
+    return false;
+  }
+
+  // External catalog repos use revision -1 with no labels
+  if (packageRevision.spec.revision === -1 || packageRevision.spec.revision === '-1') {
+    if (allRevisions) {
+      // Find all revisions for the same package in the same repo
+      const siblings = allRevisions.filter(
+        r =>
+          r.spec.packageName === packageRevision.spec.packageName &&
+          r.spec.repository === packageRevision.spec.repository &&
+          r.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED &&
+          (r.spec.revision === -1 || r.spec.revision === '-1'),
+      );
+      // Sort by workspaceName version descending
+      const sorted = [...siblings].sort((a, b) =>
+        compareWorkspaceVersions(
+          a.spec.workspaceName ?? '',
+          b.spec.workspaceName ?? '',
+        ),
+      );
+      // Only the highest versioned one is "latest"
+      return sorted[0]?.metadata.name === packageRevision.metadata.name;
+    }
+    return true;
+  }
+
+  return !!packageRevision.metadata.labels?.['kpt.dev/latest-revision'];
 };
 
 export const findLatestPublishedRevision = (packageRevisions: PackageRevision[]): PackageRevision | undefined => {
-  const latestPublishedRevision = packageRevisions.find(isLatestPublishedRevision);
-
-  return latestPublishedRevision;
+  return packageRevisions.find(r => isLatestPublishedRevision(r, packageRevisions));
 };
 
 export const findPackageRevision = (
@@ -99,7 +147,9 @@ export const findPackageRevision = (
 };
 
 export const getPackageRevisionRevision = (packageRevision: PackageRevision): string => {
-  return packageRevision.spec.revision || '';
+  const revision = packageRevision.spec.revision;
+  if (revision === undefined || revision === null) return '';
+  return String(revision);
 };
 
 export const isPublishedRevision = (packageRevision: PackageRevision): boolean => {
@@ -130,7 +180,7 @@ export const filterPackageRevisions = (
       packageRevision.spec.packageName === packageName &&
       packageRevision.spec.repository === repositoryName &&
       (!isPublishedRevision(packageRevision) ||
-        Number.isFinite(getRevisionNumber(packageRevision.spec.revision || ''))),
+        Number.isFinite(getRevisionNumber(packageRevision.spec.revision ?? ''))),
   );
 };
 
@@ -146,8 +196,8 @@ export const getPackageRevision = (packageRevisions: PackageRevision[], fullPack
   return packageRevision;
 };
 
-export const canCloneRevision = (packageRevision: PackageRevision): boolean => {
-  return isLatestPublishedRevision(packageRevision);
+export const canCloneRevision = (packageRevision: PackageRevision, allRevisions?: PackageRevision[],): boolean => {
+  return isLatestPublishedRevision(packageRevision, allRevisions);
 };
 
 export const isNotAPublishedRevision = (packageRevision: PackageRevision): boolean => {

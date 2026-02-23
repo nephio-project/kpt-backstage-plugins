@@ -35,7 +35,7 @@ export type PackageRevisionSpec = {
   packageName: string;
   repository: string;
   workspaceName?: string;
-  revision?: string;
+  revision?: string | number;
   lifecycle: PackageRevisionLifecycle;
   tasks: PackageRevisionTask[];
   readinessGates?: ReadinessGate[];

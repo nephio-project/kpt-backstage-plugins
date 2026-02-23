@@ -53,7 +53,7 @@ export const getPackageSummariesForRepository = (
   allRepositories: Repository[],
 ): PackageSummary[] => {
   const latestPackageRevisions = packageRevisions.filter(
-    packageRevision => isNotAPublishedRevision(packageRevision) || isLatestPublishedRevision(packageRevision),
+    packageRevision => isNotAPublishedRevision(packageRevision) || isLatestPublishedRevision(packageRevision, packageRevisions),
   );
 
   latestPackageRevisions.sort(sortByPackageNameAndRevisionComparison);
