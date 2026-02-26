@@ -40,6 +40,8 @@ const getRevisionNumber = (revision: string | number, defaultNumber: number = Na
 };
 
 const getNextRevision = (revision: string | number): string => {
+  
+  if (revision === -1 || revision === '-1') return 'v1';
   const revisionNumber = getRevisionNumber(revision, 0);
 
   return `v${revisionNumber + 1}`;
@@ -149,6 +151,9 @@ export const findPackageRevision = (
 export const getPackageRevisionRevision = (packageRevision: PackageRevision): string => {
   const revision = packageRevision.spec.revision;
   if (revision === undefined || revision === null) return '';
+  if (typeof revision === 'number') {
+    return revision === -1 ? '-1' : `v${revision}`;
+  }  
   return String(revision);
 };
 
@@ -232,6 +237,18 @@ export const getCloneTask = (fullPackageName: string): PackageRevisionTask => {
   return cloneTask;
 };
 
+export const getEditTask = (fullPackageName: string): PackageRevisionTask => {
+  return {
+    type: 'edit',
+    edit: {
+      sourceRef: {
+        name: fullPackageName,
+      },
+    },
+  };
+};
+
+
 export const getUpdateTask = (fullUpstreamPackageName: string): PackageRevisionTask => {
   const updateTask: PackageRevisionTask = {
     type: 'update',
@@ -273,7 +290,7 @@ export const getPackageRevisionResource = (
 };
 
 export const getNextPackageRevisionResource = (currentRevision: PackageRevision): PackageRevision => {
-  const { repository, packageName, tasks } = currentRevision.spec;
+  const { repository, packageName } = currentRevision.spec;
   const nextRevision = getNextRevision(getPackageRevisionRevision(currentRevision));
 
   const resource = getPackageRevisionResource(
@@ -281,7 +298,7 @@ export const getNextPackageRevisionResource = (currentRevision: PackageRevision)
     packageName,
     nextRevision,
     PackageRevisionLifecycle.DRAFT,
-    cloneDeep(tasks),
+    [getEditTask(currentRevision.metadata.name)],
   );
 
   return resource;
