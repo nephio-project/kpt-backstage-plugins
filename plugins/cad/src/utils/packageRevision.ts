@@ -162,14 +162,14 @@ export const isPublishedRevision = (packageRevision: PackageRevision): boolean =
 };
 
 export const getPackageRevisionTitle = (packageRevision: PackageRevision, packageNameOnly: boolean = false): string => {
-  const { packageName, lifecycle, revision } = packageRevision.spec;
+  const { packageName, lifecycle } = packageRevision.spec;
 
   if (packageNameOnly) {
     return packageName;
   }
 
   if (isPublishedRevision(packageRevision)) {
-    return `${packageName} ${revision}`;
+    return `${packageName} ${getPackageRevisionRevision(packageRevision)}`;
   }
 
   return `${packageName} ${toLowerCase(lifecycle)} revision`;
