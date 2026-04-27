@@ -206,8 +206,8 @@ export const AddPackagePage = ({ action }: AddPackagePageProps) => {
     ]);
 
     allRepositories.current = thisAllRepositories;
-    allClonablePackageRevisions.current = allPackages.filter(
-      packageRevision => canCloneRevision(packageRevision, allPackages),
+    allClonablePackageRevisions.current = allPackages.filter(packageRevision =>
+      canCloneRevision(packageRevision, allPackages),
     );
 
     const thisRepository = repositoryName ? getRepository(thisAllRepositories, repositoryName) : undefined;

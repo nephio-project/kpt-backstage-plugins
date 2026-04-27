@@ -65,7 +65,7 @@ export type PackageRevisionTaskInit = {
 export type PackageRevisionTaskEdit = {
   sourceRef: {
     name: string;
-  };    
+  };
 };
 
 export type PackageRevisionTaskClone = {
