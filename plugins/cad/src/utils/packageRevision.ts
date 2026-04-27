@@ -40,7 +40,6 @@ const getRevisionNumber = (revision: string | number, defaultNumber: number = Na
 };
 
 const getNextRevision = (revision: string | number): string => {
-  
   if (revision === -1 || revision === '-1') return 'v1';
   const revisionNumber = getRevisionNumber(revision, 0);
 
@@ -116,10 +115,7 @@ export const isLatestPublishedRevision = (
       );
       // Sort by workspaceName version descending
       const sorted = [...siblings].sort((a, b) =>
-        compareWorkspaceVersions(
-          a.spec.workspaceName ?? '',
-          b.spec.workspaceName ?? '',
-        ),
+        compareWorkspaceVersions(a.spec.workspaceName ?? '', b.spec.workspaceName ?? ''),
       );
       // Only the highest versioned one is "latest"
       return sorted[0]?.metadata.name === packageRevision.metadata.name;
@@ -153,7 +149,7 @@ export const getPackageRevisionRevision = (packageRevision: PackageRevision): st
   if (revision === undefined || revision === null) return '';
   if (typeof revision === 'number') {
     return revision === -1 ? '-1' : `v${revision}`;
-  }  
+  }
   return String(revision);
 };
 
@@ -201,7 +197,7 @@ export const getPackageRevision = (packageRevisions: PackageRevision[], fullPack
   return packageRevision;
 };
 
-export const canCloneRevision = (packageRevision: PackageRevision, allRevisions?: PackageRevision[],): boolean => {
+export const canCloneRevision = (packageRevision: PackageRevision, allRevisions?: PackageRevision[]): boolean => {
   return isLatestPublishedRevision(packageRevision, allRevisions);
 };
 
@@ -248,7 +244,6 @@ export const getEditTask = (fullPackageName: string): PackageRevisionTask => {
   };
 };
 
-
 export const getUpdateTask = (fullUpstreamPackageName: string): PackageRevisionTask => {
   const updateTask: PackageRevisionTask = {
     type: 'update',
@@ -293,13 +288,9 @@ export const getNextPackageRevisionResource = (currentRevision: PackageRevision)
   const { repository, packageName } = currentRevision.spec;
   const nextRevision = getNextRevision(getPackageRevisionRevision(currentRevision));
 
-  const resource = getPackageRevisionResource(
-    repository,
-    packageName,
-    nextRevision,
-    PackageRevisionLifecycle.DRAFT,
-    [getEditTask(currentRevision.metadata.name)],
-  );
+  const resource = getPackageRevisionResource(repository, packageName, nextRevision, PackageRevisionLifecycle.DRAFT, [
+    getEditTask(currentRevision.metadata.name),
+  ]);
 
   return resource;
 };
