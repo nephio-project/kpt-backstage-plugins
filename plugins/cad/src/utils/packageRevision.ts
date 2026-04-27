@@ -80,7 +80,7 @@ const getWorkspaceNameVersion = (workspaceName: string): number[] => {
   if (!workspaceName || workspaceName === 'main') return [0];
   // 'v3.0.0' → [3, 0, 0]
   const match = workspaceName.match(/^v?(\d+)\.(\d+)\.(\d+)$/);
-  if (match) return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+  if (match) return [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10)];
   // fallback
   return [0];
 };
