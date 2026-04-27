@@ -25,13 +25,13 @@ import {
 } from '../types/PackageRevision';
 import { toLowerCase } from './string';
 
-const getRevisionNumber = (revision: string | number, defaultNumber: number = NaN): number => {
+const getRevisionNumber = (revision: string | number, defaultNumber: number = Number.NaN): number => {
   // Handle integer revision (new Porch API returns int instead of string)
   if (typeof revision === 'number' && Number.isInteger(revision)) {
     return revision;
   }
   if (revision && String(revision).startsWith('v')) {
-    const revisionNumber = parseInt(String(revision).substring(1), 10);
+    const revisionNumber = Number.parseInt(String(revision).substring(1), 10);
     if (Number.isInteger(revisionNumber)) {
       return revisionNumber;
     }
@@ -78,8 +78,8 @@ const getWorkspaceNameVersion = (workspaceName: string): number[] => {
   // 'main' gets version [0] (lowest)
   if (!workspaceName || workspaceName === 'main') return [0];
   // 'v3.0.0' → [3, 0, 0]
-  const match = workspaceName.match(/^v?(\d+)\.(\d+)\.(\d+)$/);
-  if (match) return [parseInt(match[1], 10), parseInt(match[2], 10), parseInt(match[3], 10)];
+  const match = /^v?(\d+)\.(\d+)\.(\d+)$/.exec(workspaceName);
+  if (match) return [Number.parseInt(match[1], 10), Number.parseInt(match[2], 10), Number.parseInt(match[3], 10)];
   // fallback
   return [0];
 };
@@ -344,9 +344,8 @@ export const getPackageConditions = (packageRevision: PackageRevision): Conditio
   const allConditions = cloneDeep(conditions);
 
   const readinessConditions = readinessGates.map(gate => gate.conditionType);
-  const existingConditions = conditions.map(condition => condition.type);
-
-  const missingReadinessConditions = readinessConditions.filter(type => !existingConditions.includes(type));
+  const existingConditions = new Set(conditions.map(condition => condition.type));
+  const missingReadinessConditions = readinessConditions.filter(type => !existingConditions.has(type));
   missingReadinessConditions.forEach(type =>
     allConditions.push({
       type: type,
