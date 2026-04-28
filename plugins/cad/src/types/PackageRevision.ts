@@ -35,7 +35,7 @@ export type PackageRevisionSpec = {
   packageName: string;
   repository: string;
   workspaceName?: string;
-  revision?: string;
+  revision?: string | number;
   lifecycle: PackageRevisionLifecycle;
   tasks: PackageRevisionTask[];
   readinessGates?: ReadinessGate[];
@@ -53,12 +53,19 @@ export type PackageRevisionTask = {
   clone?: PackageRevisionTaskClone;
   update?: PackageRevisionTaskUpdate;
   eval?: PackageRevisionTaskEval;
+  edit?: PackageRevisionTaskEdit;
 };
 
 export type PackageRevisionTaskInit = {
   description: string;
   keywords?: string[];
   site?: string;
+};
+
+export type PackageRevisionTaskEdit = {
+  sourceRef: {
+    name: string;
+  };
 };
 
 export type PackageRevisionTaskClone = {

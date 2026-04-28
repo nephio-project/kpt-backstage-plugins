@@ -25,19 +25,22 @@ import {
 } from '../types/PackageRevision';
 import { toLowerCase } from './string';
 
-const getRevisionNumber = (revision: string, defaultNumber: number = NaN): number => {
-  if (revision && revision.startsWith('v')) {
-    const revisionNumber = parseInt(revision.substring(1), 10);
-
+const getRevisionNumber = (revision: string | number, defaultNumber: number = Number.NaN): number => {
+  // Handle integer revision (new Porch API returns int instead of string)
+  if (typeof revision === 'number' && Number.isInteger(revision)) {
+    return revision;
+  }
+  if (revision && String(revision).startsWith('v')) {
+    const revisionNumber = Number.parseInt(String(revision).substring(1), 10);
     if (Number.isInteger(revisionNumber)) {
       return revisionNumber;
     }
   }
-
   return defaultNumber;
 };
 
-const getNextRevision = (revision: string): string => {
+const getNextRevision = (revision: string | number): string => {
+  if (revision === -1 || revision === '-1') return 'v1';
   const revisionNumber = getRevisionNumber(revision, 0);
 
   return `v${revisionNumber + 1}`;
@@ -71,17 +74,60 @@ export const getUpstreamPackageRevisionDetails = (
   return undefined;
 };
 
-export const isLatestPublishedRevision = (packageRevision: PackageRevision): boolean => {
-  return (
-    packageRevision.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED &&
-    !!packageRevision.metadata.labels?.['kpt.dev/latest-revision']
-  );
+const getWorkspaceNameVersion = (workspaceName: string): number[] => {
+  // 'main' gets version [0] (lowest)
+  if (!workspaceName || workspaceName === 'main') return [0];
+  // 'v3.0.0' → [3, 0, 0]
+  const match = /^v?(\d+)\.(\d+)\.(\d+)$/.exec(workspaceName);
+  if (match) return [Number.parseInt(match[1], 10), Number.parseInt(match[2], 10), Number.parseInt(match[3], 10)];
+  // fallback
+  return [0];
+};
+
+const compareWorkspaceVersions = (a: string, b: string): number => {
+  const aVer = getWorkspaceNameVersion(a);
+  const bVer = getWorkspaceNameVersion(b);
+  for (let i = 0; i < Math.max(aVer.length, bVer.length); i++) {
+    const diff = (bVer[i] ?? 0) - (aVer[i] ?? 0);
+    if (diff !== 0) return diff;
+  }
+  return 0;
+};
+
+export const isLatestPublishedRevision = (
+  packageRevision: PackageRevision,
+  allRevisions?: PackageRevision[],
+): boolean => {
+  if (packageRevision.spec.lifecycle !== PackageRevisionLifecycle.PUBLISHED) {
+    return false;
+  }
+
+  // External catalog repos use revision -1 with no labels
+  if (packageRevision.spec.revision === -1 || packageRevision.spec.revision === '-1') {
+    if (allRevisions) {
+      // Find all revisions for the same package in the same repo
+      const siblings = allRevisions.filter(
+        r =>
+          r.spec.packageName === packageRevision.spec.packageName &&
+          r.spec.repository === packageRevision.spec.repository &&
+          r.spec.lifecycle === PackageRevisionLifecycle.PUBLISHED &&
+          (r.spec.revision === -1 || r.spec.revision === '-1'),
+      );
+      // Sort by workspaceName version descending
+      const sorted = [...siblings].sort((a, b) =>
+        compareWorkspaceVersions(a.spec.workspaceName ?? '', b.spec.workspaceName ?? ''),
+      );
+      // Only the highest versioned one is "latest"
+      return sorted[0]?.metadata.name === packageRevision.metadata.name;
+    }
+    return true;
+  }
+
+  return !!packageRevision.metadata.labels?.['kpt.dev/latest-revision'];
 };
 
 export const findLatestPublishedRevision = (packageRevisions: PackageRevision[]): PackageRevision | undefined => {
-  const latestPublishedRevision = packageRevisions.find(isLatestPublishedRevision);
-
-  return latestPublishedRevision;
+  return packageRevisions.find(r => isLatestPublishedRevision(r, packageRevisions));
 };
 
 export const findPackageRevision = (
@@ -99,7 +145,12 @@ export const findPackageRevision = (
 };
 
 export const getPackageRevisionRevision = (packageRevision: PackageRevision): string => {
-  return packageRevision.spec.revision || '';
+  const revision = packageRevision.spec.revision;
+  if (revision === undefined || revision === null) return '';
+  if (typeof revision === 'number') {
+    return revision === -1 ? '-1' : `v${revision}`;
+  }
+  return String(revision);
 };
 
 export const isPublishedRevision = (packageRevision: PackageRevision): boolean => {
@@ -107,14 +158,14 @@ export const isPublishedRevision = (packageRevision: PackageRevision): boolean =
 };
 
 export const getPackageRevisionTitle = (packageRevision: PackageRevision, packageNameOnly: boolean = false): string => {
-  const { packageName, lifecycle, revision } = packageRevision.spec;
+  const { packageName, lifecycle } = packageRevision.spec;
 
   if (packageNameOnly) {
     return packageName;
   }
 
   if (isPublishedRevision(packageRevision)) {
-    return `${packageName} ${revision}`;
+    return `${packageName} ${getPackageRevisionRevision(packageRevision)}`;
   }
 
   return `${packageName} ${toLowerCase(lifecycle)} revision`;
@@ -130,7 +181,7 @@ export const filterPackageRevisions = (
       packageRevision.spec.packageName === packageName &&
       packageRevision.spec.repository === repositoryName &&
       (!isPublishedRevision(packageRevision) ||
-        Number.isFinite(getRevisionNumber(packageRevision.spec.revision || ''))),
+        Number.isFinite(getRevisionNumber(packageRevision.spec.revision ?? ''))),
   );
 };
 
@@ -146,8 +197,8 @@ export const getPackageRevision = (packageRevisions: PackageRevision[], fullPack
   return packageRevision;
 };
 
-export const canCloneRevision = (packageRevision: PackageRevision): boolean => {
-  return isLatestPublishedRevision(packageRevision);
+export const canCloneRevision = (packageRevision: PackageRevision, allRevisions?: PackageRevision[]): boolean => {
+  return isLatestPublishedRevision(packageRevision, allRevisions);
 };
 
 export const isNotAPublishedRevision = (packageRevision: PackageRevision): boolean => {
@@ -180,6 +231,17 @@ export const getCloneTask = (fullPackageName: string): PackageRevisionTask => {
   };
 
   return cloneTask;
+};
+
+export const getEditTask = (fullPackageName: string): PackageRevisionTask => {
+  return {
+    type: 'edit',
+    edit: {
+      sourceRef: {
+        name: fullPackageName,
+      },
+    },
+  };
 };
 
 export const getUpdateTask = (fullUpstreamPackageName: string): PackageRevisionTask => {
@@ -223,16 +285,12 @@ export const getPackageRevisionResource = (
 };
 
 export const getNextPackageRevisionResource = (currentRevision: PackageRevision): PackageRevision => {
-  const { repository, packageName, tasks } = currentRevision.spec;
+  const { repository, packageName } = currentRevision.spec;
   const nextRevision = getNextRevision(getPackageRevisionRevision(currentRevision));
 
-  const resource = getPackageRevisionResource(
-    repository,
-    packageName,
-    nextRevision,
-    PackageRevisionLifecycle.DRAFT,
-    cloneDeep(tasks),
-  );
+  const resource = getPackageRevisionResource(repository, packageName, nextRevision, PackageRevisionLifecycle.DRAFT, [
+    getEditTask(currentRevision.metadata.name),
+  ]);
 
   return resource;
 };
@@ -286,9 +344,8 @@ export const getPackageConditions = (packageRevision: PackageRevision): Conditio
   const allConditions = cloneDeep(conditions);
 
   const readinessConditions = readinessGates.map(gate => gate.conditionType);
-  const existingConditions = conditions.map(condition => condition.type);
-
-  const missingReadinessConditions = readinessConditions.filter(type => !existingConditions.includes(type));
+  const existingConditions = new Set(conditions.map(condition => condition.type));
+  const missingReadinessConditions = readinessConditions.filter(type => !existingConditions.has(type));
   missingReadinessConditions.forEach(type =>
     allConditions.push({
       type: type,
